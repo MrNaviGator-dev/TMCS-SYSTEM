@@ -5,137 +5,94 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Hash;
+use App\Mail\PasswordResetOTP;
+use Carbon\Carbon;
 
 class ForgotPasswordController extends Controller
 {
-    /**
-     * Show the forgot password form
-     */
     public function showForm()
     {
         return view('auth.forgot-password');
     }
 
-    /**
-     * Handle forgot password request
-     */
     public function submit(Request $request)
     {
-        // Check if this is the first step (phone number only)
-        if (!$request->has('new_password') && !$request->has('security_answer')) {
-            $request->validate([
-                'phone_number' => 'required|string',
-            ], [
-                'phone_number.required' => 'Please enter your phone number',
-            ]);
+        // Custom validation to return session error
+        $validator = \Validator::make($request->all(), [
+            'email' => 'required|email|exists:users,email',
+        ], [
+            'email.required' => 'Please enter your email address',
+            'email.email' => 'Please enter a valid email address',
+            'email.exists' => 'Email not found in our system'
+        ]);
 
-            try {
-                // Normalize phone number and find user
-                $phoneNumber = $request->phone_number;
-                
-                // Remove any non-digit characters
-                $cleanPhone = preg_replace('/[^0-9]/', '', $phoneNumber);
-                
-                // Try different formats
-                $possibleFormats = [
-                    $cleanPhone,                    // Original format
-                    '255' . substr($cleanPhone, -9), // Ensure 255 prefix
-                    substr($cleanPhone, -9),        // Last 9 digits
-                    ltrim($cleanPhone, '0'),         // Remove leading 0
-                    '0' . substr($cleanPhone, -9),   // Add 0 prefix
-                ];
-                
-                $user = null;
-                foreach ($possibleFormats as $format) {
-                    $user = User::where('phone_number', $format)->first();
-                    if ($user) {
-                        \Log::info("User found with phone format: {$format}");
-                        break;
-                    }
-                }
-                
-                if (!$user) {
-                    \Log::warning("Password reset failed: User not found with phone number: {$phoneNumber}");
-                    return back()->with('error', 'Phone number not found in our system')->withInput();
-                }
-
-                // Store phone number in session and show password form
-                session(['phone_number' => $request->phone_number, 'show_password_form' => true]);
-
-                \Log::info("Password reset initiated for phone number: {$request->phone_number}");
-
-                return back()->with('success', 'Account found! Please answer the security question and set a new password.');
-
-            } catch (\Exception $e) {
-                \Log::error('Password lookup error: ' . $e->getMessage());
-                return back()->with('error', 'Account lookup failed. Please try again.')->withInput();
-            }
+        if ($validator->fails()) {
+            return back()->with('error', $validator->errors()->first())->withInput();
         }
 
-        // This is the second step (password reset)
+        try {
+            $user = User::where('email', $request->email)->first();
+
+            // Generate 4-digit OTP
+            $otp = str_pad(random_int(0, 9999), 4, '0', STR_PAD_LEFT);
+            
+            // Store OTP in database
+            $user->forgot_otp = $otp;
+            $user->forgot_otp_expires_at = Carbon::now()->addMinutes(10);
+            $user->save();
+
+            // Send OTP email using Laravel Mail
+            Mail::to($user->email)->send(new PasswordResetOTP($otp, $user));
+
+            // Store email in session for verification step
+            session(['reset_email' => $request->email, 'show_otp_form' => true]);
+
+            return back()->with('success', 'A 4-digit verification code has been sent to your email address.');
+
+        } catch (\Exception $e) {
+            \Log::error('OTP sending error: ' . $e->getMessage());
+            return back()->with('error', 'Failed to send verification code. Please try again.')->withInput();
+        }
+
+    }
+
+    public function verifyOTP(Request $request)
+    {
         $request->validate([
-            'phone_number' => 'required|string',
-            'security_answer' => 'required|string',
-            'new_password' => 'required|min:6',
-            'password_confirmation' => 'required|same:new_password',
+            'email' => 'required|email|exists:users,email',
+            'otp' => 'required|digits:4',
+            'password' => 'required|min:6|confirmed',
         ], [
-            'phone_number.required' => 'Please enter your phone number',
-            'security_answer.required' => 'Please answer the security question',
-            'new_password.required' => 'Please enter a new password',
-            'new_password.min' => 'Password must be at least 6 characters',
-            'password_confirmation.required' => 'Please confirm your new password',
-            'password_confirmation.same' => 'Password confirmation does not match',
+            'email.required' => 'Email is required',
+            'email.email' => 'Please enter a valid email address',
+            'email.exists' => 'This email is not registered',
+            'otp.required' => 'Please enter the verification code',
+            'otp.digits' => 'Verification code must be 4 digits',
+            'password.required' => 'Please enter a new password',
+            'password.min' => 'Password must be at least 6 characters',
+            'password.confirmed' => 'Password confirmation does not match',
         ]);
 
         try {
-            // Normalize phone number and find user
-            $phoneNumber = $request->phone_number;
-            
-            // Remove any non-digit characters
-            $cleanPhone = preg_replace('/[^0-9]/', '', $phoneNumber);
-            
-            // Try different formats
-            $possibleFormats = [
-                $cleanPhone,                    // Original format
-                '255' . substr($cleanPhone, -9), // Ensure 255 prefix
-                substr($cleanPhone, -9),        // Last 9 digits
-                ltrim($cleanPhone, '0'),         // Remove leading 0
-                '0' . substr($cleanPhone, -9),   // Add 0 prefix
-            ];
-            
-            $user = null;
-            foreach ($possibleFormats as $format) {
-                $user = User::where('phone_number', $format)->first();
-                if ($user) {
-                    \Log::info("User found with phone format: {$format}");
-                    break;
-                }
-            }
-            
-            if (!$user) {
-                \Log::warning("Password reset failed: User not found with phone number: {$phoneNumber}");
-                return back()->with('error', 'Phone number not found in our system')->withInput();
-            }
+            $user = User::where('email', $request->email)
+                        ->where('forgot_otp', $request->otp)
+                        ->where('forgot_otp_expires_at', '>', Carbon::now())
+                        ->first();
 
-            // Check security answer (for demo, we'll use a simple check)
-            // In a real application, you would store and check actual security answers
-            $validAnswers = ['moravian', 'catholic', 'anglican', 'pentecostal', 'methodist', 'lutheran', 'baptist', 'presbyterian'];
-            $userAnswer = strtolower(trim($request->security_answer));
-            
-            if (!in_array($userAnswer, $validAnswers)) {
-                \Log::warning("Password reset failed: Invalid security answer for phone number: {$phoneNumber}");
-                return back()->with('error', 'Invalid security answer. Please try again.')->withInput();
+            if (!$user) {
+                return back()->with('error', 'Invalid or expired verification code. Please try again.')->withInput();
             }
 
             // Update password
-            $user->password = Hash::make($request->new_password);
+            $user->password = Hash::make($request->password);
+            $user->forgot_otp = null;
+            $user->forgot_otp_expires_at = null;
             $user->save();
 
             // Clear session data
-            session()->forget(['phone_number', 'show_password_form']);
-
-            \Log::info("Password reset successful for user: {$user->email} (Phone: {$request->phone_number})");
+            session()->forget(['reset_email', 'show_otp_form']);
 
             return redirect('/login')->with('success', 'Password has been reset successfully. Please sign in with your new password.');
 
@@ -143,5 +100,17 @@ class ForgotPasswordController extends Controller
             \Log::error('Password reset error: ' . $e->getMessage());
             return back()->with('error', 'Password reset failed. Please try again.')->withInput();
         }
+    }
+
+    public function resendOTP(Request $request)
+    {
+        $email = session('reset_email');
+        
+        if (!$email) {
+            return redirect()->route('password.forgot')->with('error', 'Session expired. Please start over.');
+        }
+
+        $request->merge(['email' => $email]);
+        return $this->submit($request);
     }
 }

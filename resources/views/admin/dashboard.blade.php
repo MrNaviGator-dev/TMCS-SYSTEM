@@ -14,6 +14,35 @@
 </nav>
 
 <style>
+/* Mobile Navbar Styles */
+@media (max-width: 767px) {
+    .navbar {
+        padding: 0.5rem 1rem !important;
+        z-index: 1060 !important;
+    }
+    
+    .navbar-brand {
+        font-size: 1rem !important;
+        padding: 0.25rem 0 !important;
+    }
+    
+    .navbar-toggler {
+        position: absolute !important;
+        top: 0.5rem !important;
+        left: 0.5rem !important;
+        padding: 0.25rem 0.5rem !important;
+        border: none !important;
+        border-radius: 0.25rem !important;
+        z-index: 1061 !important;
+    }
+    
+    .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e") !important;
+        width: 24px !important;
+        height: 24px !important;
+    }
+}
+
 /* Mobile Sidebar Styles */
 @media (max-width: 767px) {
     #adminSidebarMenu {
@@ -321,7 +350,7 @@
     <div class="bg-dark p-3">
         <div class="list-group">
             <a href="#" class="list-group-item list-group-item-action bg-dark text-white" onclick="showMyProfile()">
-                <i class="bi bi-person-circle me-2"></i>My Profile
+                <i class="bi bi-person-circle me-2"></i>Personal Informations
             </a>
             <a href="#" class="list-group-item list-group-item-action bg-dark text-white" onclick="showManageUsers()">
                 <i class="bi bi-people-fill me-2"></i>Manage Users
@@ -376,7 +405,7 @@
                     <div class="list-group list-group-flush">
                         
                         <a href="#" class="list-group-item list-group-item-action" onclick="showMyProfile()" style="font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 400; letter-spacing: 0.4px; font-size: 0.9rem;">
-                            <i class="bi bi-person-circle me-2"></i>My Profile
+                            <i class="bi bi-person-circle me-2"></i>Personal Informations
                         </a>
                            <!-- Other Admin Functions -->
                            <a href="#" class="list-group-item list-group-item-action" onclick="showManageUsers()" style="font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 400; letter-spacing: 0.4px; font-size: 0.9rem;">
@@ -1066,277 +1095,6 @@
                 </div>
             </div>
 
-            <!-- Make Payments Section (Initially Hidden) -->
-            <div id="makePaymentsSection" class="content-section" style="display: none;">
-                <div class="card shadow-lg border-0">
-                    <div class="card-header bg-warning text-dark">
-                        <h4 class="mb-0">
-                            <i class="bi bi-cash-coin me-2"></i>Make Payments
-                        </h4>
-                    </div>
-                    <div class="card-body">
-                        <!-- Payment Statistics Cards -->
-                        <div class="row mb-4">
-                            <div class="col-md-4">
-                                <div class="card border-0 bg-gradient shadow-sm" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
-                                    <div class="card-body text-white">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <h6 class="card-title mb-1">Today's Payments</h6>
-                                                <h3 class="mb-0" id="todayPaymentsCount">0</h3>
-                                            </div>
-                                            <div class="text-end">
-                                                <i class="bi bi-calendar-day fs-1 opacity-75"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="card border-0 bg-gradient shadow-sm" style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);">
-                                    <div class="card-body text-white">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <h6 class="card-title mb-1">Total Amount</h6>
-                                                <h3 class="mb-0" id="totalPaymentsAmount">TZS 0</h3>
-                                            </div>
-                                            <div class="text-end">
-                                                <i class="bi bi-cash-stack fs-1 opacity-75"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-4">
-                                <div class="card border-0 bg-gradient shadow-sm" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
-                                    <div class="card-body text-white">
-                                        <div class="d-flex justify-content-between align-items-center">
-                                            <div>
-                                                <h6 class="card-title mb-1">Pending</h6>
-                                                <h3 class="mb-0" id="pendingPaymentsCount">0</h3>
-                                            </div>
-                                            <div class="text-end">
-                                                <i class="bi bi-hourglass-split fs-1 opacity-75"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Payment Form -->
-                        <div class="card shadow-sm mb-4">
-                            <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">
-                                    <i class="bi bi-plus-circle me-2"></i>New Payment Entry
-                                </h5>
-                                <button type="button" class="btn-close" onclick="hidePaymentForm()"></button>
-                            </div>
-                            <div class="card-body">
-                                <form id="makePaymentForm" enctype="multipart/form-data">
-                                    @csrf
-                                    <div class="row g-3">
-                                        <!-- Member Selection -->
-                                        <div class="col-md-6">
-                                            <label for="paymentUserSelect" class="form-label">
-                                                <i class="bi bi-person me-1"></i>Select Member <span class="text-danger">*</span>
-                                            </label>
-                                            <select class="form-select" id="paymentUserSelect" name="user_id" required onchange="handleMemberChange()">
-                                                <option value="">Choose a member...</option>
-                                                @foreach($allUsers as $user)
-                                                    <option value="{{ $user->id }}">{{ $user->name }} (TMCS-{{ str_pad($user->id, 4, '0', STR_PAD_LEFT) }})</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-
-                                        <!-- Payment Type -->
-                                        <div class="col-md-6">
-                                            <label for="paymentType" class="form-label">
-                                                <i class="bi bi-list-task me-1"></i>Payment Type <span class="text-danger">*</span>
-                                            </label>
-                                            <select class="form-select" id="paymentType" name="payment_type" required onchange="handlePaymentTypeChange()">
-                                                <option value="">Select payment type...</option>
-                                                <option value="membership">Membership Fee - TZS 2,000</option>
-                                                <option value="certificate">Certificate Fee - TZS 4,000</option>
-                                                <option value="zaka">Zaka - TZS 2,000</option>
-                                                <option value="donation">Donation</option>
-                                                <option value="event">Event Fee</option>
-                                                <option value="other">Other</option>
-                                            </select>
-                                        </div>
-
-                                        <!-- Payment Year -->
-                                        <div class="col-md-6">
-                                            <label for="paymentYear" class="form-label">
-                                                <i class="bi bi-calendar me-1"></i>Payment Year <span class="text-danger">*</span>
-                                            </label>
-                                            <select class="form-select" id="paymentYear" name="payment_year" required onchange="handleYearChange()">
-                                                <option value="">Select Year...</option>
-                                                <option value="{{ date('Y') }}">{{ date('Y') }}</option>
-                                                <option value="{{ date('Y') - 1 }}">{{ date('Y') - 1 }}</option>
-                                                <option value="{{ date('Y') + 1 }}">{{ date('Y') + 1 }}</option>
-                                                <option value="custom_year">Custom Year</option>
-                                            </select>
-                                        </div>
-
-                                        <!-- Custom Year Input -->
-                                        <div class="col-md-6" id="customYearDiv" style="display: none;">
-                                            <label for="customYear" class="form-label">
-                                                <i class="bi bi-calendar-plus me-1"></i>Enter Custom Year
-                                            </label>
-                                            <input type="number" class="form-control" id="customYear" name="custom_year" min="2020" max="2050" placeholder="e.g., 2030">
-                                        </div>
-
-                                        <!-- Amount -->
-                                        <div class="col-md-6">
-                                            <label for="paymentAmount" class="form-label">
-                                                <i class="bi bi-cash me-1"></i>Amount (TZS) <span class="text-danger">*</span>
-                                            </label>
-                                            <div class="input-group">
-                                                <span class="input-group-text">TZS</span>
-                                                <input type="number" class="form-control" id="paymentAmount" name="amount" min="0" step="0.01" required>
-                                            </div>
-                                        </div>
-
-                                        <!-- Payment Method -->
-                                        <div class="col-md-6">
-                                            <label for="paymentMethod" class="form-label">
-                                                <i class="bi bi-credit-card me-1"></i>Payment Method <span class="text-danger">*</span>
-                                            </label>
-                                            <select class="form-select" id="paymentMethod" name="payment_method" required onchange="showPaymentDetails()">
-                                                <option value="">Select method...</option>
-                                                <option value="cash">Cash</option>
-                                                <option value="bank_transfer">Bank Transfer</option>
-                                                <option value="mobile_money">Mobile Money</option>
-                                                <option value="cheque">Cheque</option>
-                                                <option value="online">Online Payment</option>
-                                            </select>
-                                        </div>
-
-                                        <!-- Sender Name -->
-                                        <div class="col-md-6">
-                                            <label for="senderName" class="form-label">
-                                                <i class="bi bi-person me-1"></i>Sender Name <span class="text-danger">*</span>
-                                            </label>
-                                            <input type="text" class="form-control" id="senderName" name="sender_name" placeholder="Enter sender's full name" required>
-                                        </div>
-
-                                        <!-- Installment Type -->
-                                        <div class="col-md-6" id="installmentOptions" style="display: none;">
-                                            <label for="installmentType" class="form-label">
-                                                <i class="bi bi-calendar-split me-1"></i>Payment Option
-                                            </label>
-                                            <select class="form-select" id="installmentType" name="installment_type" onchange="handleInstallmentChange()">
-                                                <option value="">Select payment option...</option>
-                                                <option value="full">Full Payment</option>
-                                            </select>
-                                        </div>
-
-                                        <!-- Description -->
-                                        <div class="col-12">
-                                            <label for="paymentDescription" class="form-label">
-                                                <i class="bi bi-text-paragraph me-1"></i>Description <span class="text-danger">*</span>
-                                            </label>
-                                            <textarea class="form-control" id="paymentDescription" name="description" rows="3" required placeholder="Enter payment description..."></textarea>
-                                        </div>
-
-                                        <!-- Payment Details Section -->
-                                        <div class="col-12" id="paymentDetailsSection" style="display: none;">
-                                            <div class="alert alert-info">
-                                                <h6 class="alert-heading">
-                                                    <i class="bi bi-info-circle me-2"></i>Payment Instructions
-                                                </h6>
-                                                <div id="paymentInstructions"></div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Installment Info -->
-                                        <div class="col-12" id="installmentInfo" style="display: none;">
-                                            <div class="alert alert-info d-flex align-items-center">
-                                                <i class="bi bi-info-circle me-2"></i>
-                                                <div id="installmentInfoText"></div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Attachment -->
-                                        <div class="col-12">
-                                            <label for="paymentAttachment" class="form-label">
-                                                <i class="bi bi-paperclip me-1"></i>Payment Proof <span class="text-danger">*</span>
-                                            </label>
-                                            <input type="file" class="form-control" id="paymentAttachment" name="attachment" accept="image/*,.pdf" onchange="previewAttachment(this)" required>
-                                            <div class="form-text">Upload payment receipt or proof (PNG, JPG, PDF - Max 2MB)</div>
-                                            <div id="attachmentPreview" class="mt-2" style="display: none;">
-                                                <div class="card">
-                                                    <div class="card-header d-flex justify-content-between align-items-center">
-                                                        <h6 class="mb-0">
-                                                            <i class="bi bi-eye me-2"></i>Preview
-                                                        </h6>
-                                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeAttachment()">
-                                                            <i class="bi bi-trash"></i> Remove
-                                                        </button>
-                                                    </div>
-                                                    <div class="card-body text-center p-3">
-                                                        <div id="attachmentPreviewContent"></div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Submit Buttons -->
-                                        <div class="col-12 mt-4">
-                                            <div class="d-flex justify-content-between gap-2">
-                                                <button type="button" class="btn btn-outline-secondary" onclick="resetPaymentForm()">
-                                                    <i class="bi bi-arrow-clockwise me-2"></i>Reset Form
-                                                </button>
-                                                <button type="submit" class="btn btn-warning px-4">
-                                                    <i class="bi bi-cash-coin me-2"></i>Process Payment
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-
-                        <!-- Recent Payments Table -->
-                        <div class="card shadow-sm">
-                            <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                                <h5 class="mb-0">
-                                    <i class="bi bi-clock-history me-2"></i>Recent Payments
-                                </h5>
-                                <button class="btn btn-sm btn-outline-primary" onclick="refreshPaymentHistory()">
-                                    <i class="bi bi-arrow-clockwise me-1"></i>Refresh
-                                </button>
-                            </div>
-                            <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table table-hover">
-                                        <thead class="table-light">
-                                            <tr>
-                                                <th>Date</th>
-                                                <th>Member</th>
-                                                <th>Type</th>
-                                                <th>Amount</th>
-                                                <th>Method</th>
-                                                <th>Status</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody id="recentPaymentsTable">
-                                            <tr>
-                                                <td colspan="7" class="text-center text-muted">
-                                                    <i class="bi bi-hourglass-split me-2"></i>Loading recent payments...
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
             <!-- Reports Section (Initially Hidden) -->
             <div id="reportsSection" class="content-section" style="display: none;">
                 <div class="card shadow-lg border-0">
@@ -1711,6 +1469,192 @@
                     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
                 }
             </style>
+            
+            <!-- Make Payments Section (Initially Hidden) -->
+            <div id="makePaymentsSection" class="content-section" style="display: none;">
+                <div class="card shadow-lg border-0">
+                    <div class="card-header bg-primary text-white">
+                        <h4 class="mb-0">
+                            <i class="bi bi-cash-coin me-2"></i>Make Payments
+                        </h4>
+                    </div>
+                    <div class="card-body">
+                        <!-- Tab Navigation -->
+                        <ul class="nav nav-tabs mb-4" id="paymentTabs" role="tablist">
+                            <li class="nav-item" role="presentation">
+                                <button class="nav-link active" id="personal-payment-tab" data-bs-toggle="tab" data-bs-target="#personal-payment" type="button" role="tab" aria-controls="personal-payment" aria-selected="true">
+                                    <i class="bi bi-person-check-fill me-2"></i>My Personal Payment
+                                </button>
+                            </li>
+                            <!-- <li class="nav-item" role="presentation">
+                                <button class="nav-link" id="member-payments-tab" data-bs-toggle="tab" data-bs-target="#member-payments" type="button" role="tab" aria-controls="member-payments" aria-selected="false">
+                                    <i class="bi bi-people-fill me-2"></i>Member Payments
+                                </button>
+                            </li> -->
+                        </ul>
+                        
+
+                        <!-- Tab Content -->
+                        <div class="tab-content" id="paymentTabContent">
+                            <!-- Personal Payment Tab -->
+                            <div class="tab-pane fade show active" id="personal-payment" role="tabpanel" aria-labelledby="personal-payment-tab">
+                                <form id="adminPaymentForm" enctype="multipart/form-data">
+                                    @csrf
+                                    <div class="row g-3">
+                                        <!-- Payment Type -->
+                                        <div class="col-md-6">
+                                            <label for="adminPaymentType" class="form-label">
+                                                <i class="bi bi-list-task me-1"></i>Payment Type <span class="text-danger">*</span>
+                                            </label>
+                                            <select class="form-select" id="adminPaymentType" name="payment_type" required onchange="handleAdminPaymentTypeChange()">
+                                                <option value="">Select Payment Type...</option>
+                                                <option value="membership">Membership Fee - TZS 2,000</option>
+                                                <option value="certificate">Certificate Fee - TZS 4,000</option>
+                                                <option value="zaka">Zaka - TZS 2,000</option>
+                                                <!-- <option value="donation">Donation</option>
+                                                <option value="event">Event Fee</option>
+                                                <option value="other">Other</option> -->
+                                            </select>
+                                        </div>
+
+                                        <!-- Payment Year -->
+                                        <div class="col-md-6">
+                                            <label for="adminPaymentYear" class="form-label">
+                                                <i class="bi bi-calendar me-1"></i>Payment Year <span class="text-danger">*</span>
+                                            </label>
+                                            <select class="form-select" id="adminPaymentYear" name="payment_year" required onchange="handleAdminYearChange()">
+                                                <option value="">Select Year...</option>
+                                                <option value="{{ date('Y') }}">{{ date('Y') }}</option>
+                                                <option value="{{ date('Y') - 1 }}">{{ date('Y') - 1 }}</option>
+                                                <option value="{{ date('Y') + 1 }}">{{ date('Y') + 1 }}</option>
+                                                <option value="custom_year">Custom Year (Enter New Year)</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Custom Year Input -->
+                                        <div class="col-md-6" id="adminCustomYearDiv" style="display: none;">
+                                            <label for="adminCustomYear" class="form-label">
+                                                <i class="bi bi-calendar-plus me-1"></i>Enter Custom Year
+                                            </label>
+                                            <input type="number" class="form-control" id="adminCustomYear" name="custom_year" min="2020" max="2050" placeholder="e.g., 2030">
+                                        </div>
+
+                                        <!-- Amount -->
+                                        <div class="col-md-6">
+                                            <label for="adminPaymentAmount" class="form-label">
+                                                <i class="bi bi-cash me-1"></i>Amount (TZS) <span class="text-danger">*</span>
+                                            </label>
+                                            <div class="input-group">
+                                                <span class="input-group-text">TZS</span>
+                                                <input type="number" class="form-control" id="adminPaymentAmount" name="amount" min="0" step="0.01" required>
+                                            </div>
+                                        </div>
+
+                                        <!-- Payment Method -->
+                                        <div class="col-md-6">
+                                            <label for="adminPaymentMethod" class="form-label">
+                                                <i class="bi bi-credit-card me-1"></i>Payment Method <span class="text-danger">*</span>
+                                            </label>
+                                            <select class="form-select" id="adminPaymentMethod" name="payment_method" required onchange="showAdminPaymentDetails()">
+                                                <option value="">Loading payment methods...</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Sender Name -->
+                                        <div class="col-md-6">
+                                            <label for="adminSenderName" class="form-label">
+                                                <i class="bi bi-person me-1"></i>Sender Name <span class="text-danger">*</span>
+                                            </label>
+                                            <input type="text" class="form-control" id="adminSenderName" name="sender_name" placeholder="Enter your full name" required>
+                                        </div>
+
+                                        <!-- Installment Type -->
+                                        <div class="col-md-6" id="adminInstallmentOptions" style="display: none;">
+                                            <label for="adminInstallmentType" class="form-label">
+                                                <i class="bi bi-calendar-split me-1"></i>Payment Option
+                                            </label>
+                                            <select class="form-select" id="adminInstallmentType" name="installment_type" onchange="handleAdminInstallmentChange()">
+                                                <option value="">Select payment option...</option>
+                                                <option value="full">Full Payment</option>
+                                            </select>
+                                        </div>
+
+                                        <!-- Description -->
+                                        <div class="col-12">
+                                            <label for="adminPaymentDescription" class="form-label">
+                                                <i class="bi bi-text-paragraph me-1"></i>Description <span class="text-danger">*</span>
+                                            </label>
+                                            <textarea class="form-control" id="adminPaymentDescription" name="description" rows="3" required placeholder="Enter payment description..."></textarea>
+                                        </div>
+
+                                        <!-- Payment Details Section -->
+                                        <div class="col-12" id="adminPaymentDetailsSection" style="display: none;">
+                                            <div class="alert alert-info">
+                                                <h6 class="alert-heading">
+                                                    <i class="bi bi-info-circle me-2"></i>Payment Instructions
+                                                </h6>
+                                                <div id="adminPaymentInstructions"></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Installment Info -->
+                                        <div class="col-12" id="adminInstallmentInfo" style="display: none;">
+                                            <div class="alert alert-info d-flex align-items-center">
+                                                <i class="bi bi-info-circle me-2"></i>
+                                                <div id="adminInstallmentInfoText"></div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Attachment -->
+                                        <div class="col-12">
+                                            <label for="adminPaymentAttachment" class="form-label">
+                                                <i class="bi bi-paperclip me-1"></i>Payment Proof <span class="text-danger">*</span>
+                                            </label>
+                                            <input type="file" class="form-control" id="adminPaymentAttachment" name="attachment" accept="image/*,.pdf" onchange="previewAdminAttachment(this)" required>
+                                            <div class="form-text">Upload payment receipt or proof (PNG, JPG, PDF - Max 2MB)</div>
+                                            <div id="adminAttachmentPreview" class="mt-2" style="display: none;">
+                                                <div class="card">
+                                                    <div class="card-header d-flex justify-content-between align-items-center">
+                                                        <h6 class="mb-0">
+                                                            <i class="bi bi-eye me-2"></i>Preview
+                                                        </h6>
+                                                        <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeAdminAttachment()">
+                                                            <i class="bi bi-trash"></i> Remove
+                                                        </button>
+                                                    </div>
+                                                    <div class="card-body text-center p-3">
+                                                        <div id="adminAttachmentPreviewContent"></div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Submit Buttons -->
+                                        <div class="col-12 mt-4">
+                                            <div class="d-flex justify-content-between gap-2">
+                                                <button type="button" class="btn btn-outline-secondary" onclick="resetAdminPaymentForm()">
+                                                    <i class="bi bi-arrow-clockwise me-2"></i>Reset Form
+                                                </button>
+                                                <button type="submit" class="btn btn-primary px-4">
+                                                    <i class="bi bi-cash-coin me-2"></i>Submit My Payment
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Member Payments Tab -->
+                            <div class="tab-pane fade" id="member-payments" role="tabpanel" aria-labelledby="member-payments-tab">
+                                <div class="alert alert-info">
+                                    <i class="bi bi-info-circle me-2"></i>
+                                    Member payment management functionality will be available here. You can view, approve, and manage member payments.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             
             <div id="memberPaymentsSection" class="content-section" style="display: none;">
                 <div class="card shadow-lg border-0">
@@ -2257,37 +2201,6 @@ function showManageLeaders() {
     }
     
     updateActiveMenu(2);
-}
-
-function showMakePayments() {
-    hideAllSections();
-    document.getElementById('makePaymentsSection').style.display = 'block';
-    
-    // Close mobile sidebar if open
-    const sidebar = document.getElementById('adminSidebarMenu');
-    if (sidebar && sidebar.classList.contains('show')) {
-        sidebar.classList.remove('show');
-    }
-    
-    // Initialize payment functionality
-    loadPaymentStatistics();
-    loadRecentPayments();
-    
-    updateActiveMenu(3);
-}
-
-function hidePaymentForm() {
-    document.getElementById('makePaymentsSection').style.display = 'none';
-    document.getElementById('welcomeSection').style.display = 'block';
-    
-    // Reset installment sections
-    document.getElementById('installmentOptions').style.display = 'none';
-    document.getElementById('installmentInfo').style.display = 'none';
-    document.getElementById('paymentDetailsSection').style.display = 'none';
-    document.getElementById('customYearDiv').style.display = 'none';
-    
-    // Reset form
-    resetPaymentForm();
 }
 
 
@@ -3956,9 +3869,9 @@ function hideAllSections() {
     document.getElementById('addMemberForm').style.display = 'none';
     document.getElementById('manageUsersSection').style.display = 'none';
     document.getElementById('manageLeadersSection').style.display = 'none';
-    document.getElementById('makePaymentsSection').style.display = 'none';
     document.getElementById('paymentAccountsSection').style.display = 'none';
     document.getElementById('announcementsSection').style.display = 'none';
+    document.getElementById('makePaymentsSection').style.display = 'none';
     document.getElementById('memberPaymentsSection').style.display = 'none';
     document.getElementById('myProfileSection').style.display = 'none';
     document.getElementById('reportsSection').style.display = 'none';
@@ -3976,6 +3889,113 @@ function showAnnouncements() {
     
     updateActiveMenu(event.target.closest('.list-group-item'));
     loadAnnouncements();
+}
+
+function showMakePayments() {
+    hideAllSections();
+    document.getElementById('makePaymentsSection').style.display = 'block';
+    
+    // Close mobile sidebar if open
+    const sidebar = document.getElementById('adminSidebarMenu');
+    if (sidebar && sidebar.classList.contains('show')) {
+        sidebar.classList.remove('show');
+    }
+    
+    updateActiveMenu(event.target.closest('.list-group-item'));
+    resetAdminPaymentForm();
+    
+    // Load payment accounts for the dropdown
+    loadPaymentAccountsForMakePayments();
+}
+
+function loadPaymentAccountsForMakePayments() {
+    const paymentMethodSelect = document.getElementById('adminPaymentMethod');
+    
+    console.log('Loading payment accounts for make payments...');
+    
+    // Set loading state
+    paymentMethodSelect.innerHTML = '<option value="">Loading payment methods...</option>';
+    
+    // Load real accounts from database
+    fetch('/admin/payments/accounts')
+        .then(response => {
+            console.log('Response status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Received data:', data);
+            if (data.success && data.accounts && data.accounts.length > 0) {
+                console.log('Accounts received:', data.accounts);
+                populatePaymentMethodsFromAccounts(data.accounts);
+            } else {
+                console.log('No accounts found, using default options');
+                populateDefaultPaymentMethods();
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching payment accounts:', error);
+            console.log('Using default options due to error');
+            populateDefaultPaymentMethods();
+        });
+}
+
+function populatePaymentMethodsFromAccounts(accounts) {
+    console.log('populatePaymentMethodsFromAccounts called with:', accounts);
+    const paymentMethodSelect = document.getElementById('adminPaymentMethod');
+    
+    // Clear existing options
+    paymentMethodSelect.innerHTML = '<option value="">Select method...</option>';
+    
+    if (!accounts || accounts.length === 0) {
+        console.log('No accounts found');
+        paymentMethodSelect.innerHTML = '<option value="">No payment methods available</option>';
+        return;
+    }
+    
+    // Group accounts by type
+    const mobileAccounts = accounts.filter(account => account.account_type === 'mobile');
+    const bankAccounts = accounts.filter(account => account.account_type === 'bank');
+    
+    console.log('Mobile accounts:', mobileAccounts);
+    console.log('Bank accounts:', bankAccounts);
+    
+    // Add Mobile Money accounts
+    if (mobileAccounts.length > 0) {
+        mobileAccounts.forEach(account => {
+            paymentMethodSelect.innerHTML += `<option value="mobile_${account.id}">Mobile: ${account.account_name} (${account.account_number})</option>`;
+        });
+    }
+    
+    // Add Bank Transfer accounts
+    if (bankAccounts.length > 0) {
+        bankAccounts.forEach(account => {
+            paymentMethodSelect.innerHTML += `<option value="bank_${account.id}">Bank: ${account.account_name} (${account.account_number})</option>`;
+        });
+    }
+    
+    // If no accounts found, show message
+    if (mobileAccounts.length === 0 && bankAccounts.length === 0) {
+        paymentMethodSelect.innerHTML = '<option value="">No payment methods available</option>';
+    }
+    
+    console.log('Final dropdown HTML:', paymentMethodSelect.innerHTML);
+}
+
+function populateDefaultPaymentMethods() {
+    console.log('populateDefaultPaymentMethods called!');
+    const paymentMethodSelect = document.getElementById('adminPaymentMethod');
+    
+    if (!paymentMethodSelect) {
+        console.error('adminPaymentMethod element not found!');
+        return;
+    }
+    
+    // No default options - only database accounts should be shown
+    paymentMethodSelect.innerHTML = `
+        <option value="">No payment methods available</option>
+    `;
+    
+    console.log('Default options populated. Current HTML:', paymentMethodSelect.innerHTML);
 }
 
 function loadAnnouncements() {
@@ -7579,163 +7599,34 @@ function viewAnnouncementImage(imageSrc, announcementTitle) {
     });
 }
 
-// Make Payments Functions
-function loadPaymentStatistics() {
-    fetch('/admin/payments/statistics')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                document.getElementById('todayPaymentsCount').textContent = data.today_count || 0;
-                document.getElementById('totalPaymentsAmount').textContent = 'TZS ' + (data.total_amount ? number_format(data.total_amount, 2) : '0');
-                document.getElementById('pendingPaymentsCount').textContent = data.pending_count || 0;
-            }
-        })
-        .catch(error => {
-            console.error('Error loading payment statistics:', error);
-        });
-}
-
-function loadRecentPayments() {
-    const tbody = document.getElementById('recentPaymentsTable');
-    tbody.innerHTML = `
-        <tr>
-            <td colspan="7" class="text-center text-muted">
-                <i class="bi bi-hourglass-split me-2"></i>Loading recent payments...
-            </td>
-        </tr>
-    `;
-    
-    fetch('/admin/payments/recent')
-        .then(response => response.json())
-        .then(data => {
-            if (data.success && data.payments.length > 0) {
-                tbody.innerHTML = data.payments.map(payment => `
-                    <tr>
-                        <td>${new Date(payment.created_at).toLocaleDateString()}</td>
-                        <td>
-                            <div class="d-flex align-items-center">
-                                <div class="ms-2">
-                                    <div class="fw-bold">${payment.user.name}</div>
-                                    <small class="text-muted">TMCS-${String(payment.user.id).padStart(4, '0')}</small>
-                                </div>
-                            </div>
-                        </td>
-                        <td><span class="badge bg-info">${capitalizeFirst(payment.payment_type)}</span></td>
-                        <td class="fw-bold">TZS ${number_format(payment.amount, 2)}</td>
-                        <td><span class="badge bg-secondary">${capitalizeFirst(payment.payment_method)}</span></td>
-                        <td>
-                            <span class="badge ${getStatusClass(payment.status)}">
-                                ${capitalizeFirst(payment.status)}
-                            </span>
-                        </td>
-                        <td>
-                            <div class="btn-group btn-group-sm" role="group">
-                                <button class="btn btn-outline-primary" onclick="viewPaymentDetails(${payment.id})" title="View Details">
-                                    <i class="bi bi-eye"></i>
-                                </button>
-                                ${payment.status === 'pending' ? `
-                                    <button class="btn btn-outline-success" onclick="approvePayment(${payment.id})" title="Approve">
-                                        <i class="bi bi-check-circle"></i>
-                                    </button>
-                                    <button class="btn btn-outline-danger" onclick="rejectPayment(${payment.id})" title="Reject">
-                                        <i class="bi bi-x-circle"></i>
-                                    </button>
-                                ` : ''}
-                            </div>
-                        </td>
-                    </tr>
-                `).join('');
-            } else {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="7" class="text-center text-muted">
-                            <i class="bi bi-inbox me-2"></i>No recent payments found
-                        </td>
-                    </tr>
-                `;
-            }
-        })
-        .catch(error => {
-            console.error('Error loading recent payments:', error);
-            tbody.innerHTML = `
-                <tr>
-                    <td colspan="7" class="text-center text-danger">
-                        <i class="bi bi-exclamation-triangle me-2"></i>Error loading payments
-                    </td>
-                </tr>
-            `;
-        });
-}
-
-function refreshPaymentHistory() {
-    loadRecentPayments();
-    loadPaymentStatistics();
-}
-
-function resetPaymentForm() {
-    const form = document.getElementById('makePaymentForm');
-    if (form) {
-        form.reset();
-        
-        // Reset all dynamic sections
-        document.getElementById('installmentOptions').style.display = 'none';
-        document.getElementById('installmentInfo').style.display = 'none';
-        document.getElementById('paymentDetailsSection').style.display = 'none';
-        document.getElementById('customYearDiv').style.display = 'none';
-        
-        // Clear attachment preview
-        document.getElementById('attachmentPreview').style.display = 'none';
-        document.getElementById('attachmentPreviewContent').innerHTML = '';
-        
-        // Make amount input editable
-        document.getElementById('paymentAmount').readOnly = false;
-    }
-}
-
-function handleMemberChange() {
-    const memberSelect = document.getElementById('paymentUserSelect');
-    const senderNameInput = document.getElementById('senderName');
-    
-    // Auto-fill sender name with selected member's name
-    if (memberSelect.value) {
-        const selectedOption = memberSelect.options[memberSelect.selectedIndex];
-        const memberName = selectedOption.text.split(' (')[0]; // Extract name before TMCS ID
-        senderNameInput.value = memberName;
-    } else {
-        senderNameInput.value = '';
-    }
-}
-
-function handlePaymentTypeChange() {
-    const paymentType = document.getElementById('paymentType').value;
-    const installmentOptions = document.getElementById('installmentOptions');
-    const installmentInfo = document.getElementById('installmentInfo');
-    const amountInput = document.getElementById('paymentAmount');
+// Admin Personal Payment Functions
+function handleAdminPaymentTypeChange() {
+    const paymentType = document.getElementById('adminPaymentType').value;
+    const installmentOptions = document.getElementById('adminInstallmentOptions');
+    const installmentInfo = document.getElementById('adminInstallmentInfo');
+    const amountInput = document.getElementById('adminPaymentAmount');
     
     if (paymentType === 'membership') {
         installmentOptions.style.display = 'block';
         installmentInfo.style.display = 'block';
-        document.getElementById('installmentInfoText').innerHTML = 
+        document.getElementById('adminInstallmentInfoText').innerHTML = 
             '<strong>Membership Fee:</strong> TZS 2,000 per year. Full payment required.';
         amountInput.value = '2000';
         amountInput.readOnly = true;
-        document.getElementById('installmentType').value = 'full';
     } else if (paymentType === 'certificate') {
         installmentOptions.style.display = 'block';
         installmentInfo.style.display = 'block';
-        document.getElementById('installmentInfoText').innerHTML = 
+        document.getElementById('adminInstallmentInfoText').innerHTML = 
             '<strong>Certificate Fee:</strong> TZS 4,000 for students in second year and above preparing for graduation. Full payment required.';
         amountInput.value = '4000';
         amountInput.readOnly = true;
-        document.getElementById('installmentType').value = 'full';
     } else if (paymentType === 'zaka') {
         installmentOptions.style.display = 'block';
         installmentInfo.style.display = 'block';
-        document.getElementById('installmentInfoText').innerHTML = 
+        document.getElementById('adminInstallmentInfoText').innerHTML = 
             '<strong>Zaka:</strong> TZS 2,000 voluntary contribution. Full payment required.';
         amountInput.value = '2000';
         amountInput.readOnly = true;
-        document.getElementById('installmentType').value = 'full';
     } else {
         installmentOptions.style.display = 'none';
         installmentInfo.style.display = 'none';
@@ -7743,267 +7634,307 @@ function handlePaymentTypeChange() {
         amountInput.value = '';
     }
     
-    // Auto-fill description
-    autoFillDescription();
+    // Auto-fill description based on payment type
+    autoFillAdminDescription();
 }
 
-function handleYearChange() {
-    const yearSelect = document.getElementById('paymentYear').value;
-    const customYearDiv = document.getElementById('customYearDiv');
-    const customYearInput = document.getElementById('customYear');
+function handleAdminYearChange() {
+    const yearSelect = document.getElementById('adminPaymentYear').value;
+    const customYearDiv = document.getElementById('adminCustomYearDiv');
     
     if (yearSelect === 'custom_year') {
         customYearDiv.style.display = 'block';
-        customYearInput.required = true;
+        document.getElementById('adminCustomYear').required = true;
     } else {
         customYearDiv.style.display = 'none';
-        customYearInput.required = false;
-        customYearInput.value = '';
+        document.getElementById('adminCustomYear').required = false;
+        document.getElementById('adminCustomYear').value = '';
     }
 }
 
-function handleInstallmentChange() {
-    const installmentType = document.getElementById('installmentType').value;
-    const amountInput = document.getElementById('paymentAmount');
-    const paymentType = document.getElementById('paymentType').value;
+function handleAdminInstallmentChange() {
+    const installmentType = document.getElementById('adminInstallmentType').value;
+    const paymentType = document.getElementById('adminPaymentType').value;
+    const amountInput = document.getElementById('adminPaymentAmount');
     
-    // All payments are now full payment only
     if (installmentType === 'full') {
-        if (paymentType === 'membership') {
-            amountInput.value = '2000';
-        } else if (paymentType === 'certificate') {
-            amountInput.value = '4000';
-        } else if (paymentType === 'zaka') {
-            amountInput.value = '2000';
-        }
-        amountInput.readOnly = true;
-    } else {
-        amountInput.readOnly = false;
+        // Keep the full amount
+        if (paymentType === 'membership') amountInput.value = '2000';
+        else if (paymentType === 'certificate') amountInput.value = '4000';
+        else if (paymentType === 'zaka') amountInput.value = '2000';
     }
     
-    autoFillDescription();
+    autoFillAdminDescription();
 }
 
-function autoFillDescription() {
-    const paymentType = document.getElementById('paymentType').value;
-    const descriptionInput = document.getElementById('paymentDescription');
-    const amount = document.getElementById('paymentAmount').value;
-    const installmentType = document.getElementById('installmentType').value;
-    
-    if (!paymentType || !amount) {
-        return;
-    }
+function autoFillAdminDescription() {
+    const paymentType = document.getElementById('adminPaymentType').value;
+    const installmentType = document.getElementById('adminInstallmentType').value;
+    const descriptionField = document.getElementById('adminPaymentDescription');
+    const yearValue = document.getElementById('adminPaymentYear').value;
     
     let description = '';
     
-    switch(paymentType) {
-        case 'membership':
-            description = `Membership fee payment - TZS ${amount}`;
-            break;
-        case 'certificate':
-            description = `Certificate fee payment for second year students and above - TZS ${amount}`;
-            break;
-        case 'zaka':
-            description = `Zaka payment - TZS ${amount} per year`;
-            break;
-        case 'donation':
-            description = `Donation payment - TZS ${amount}`;
-            break;
-        case 'event':
-            description = `Event fee payment - TZS ${amount}`;
-            break;
-        case 'other':
-            description = `Other payment - TZS ${amount}`;
-            break;
+    if (paymentType === 'membership') {
+        description = 'Membership fee payment';
+    } else if (paymentType === 'certificate') {
+        description = 'Certificate fee payment';
+    } else if (paymentType === 'zaka') {
+        description = 'Zaka contribution';
+    } else if (paymentType === 'donation') {
+        description = 'Donation contribution';
+    } else if (paymentType === 'event') {
+        description = 'Event fee payment';
+    } else if (paymentType === 'other') {
+        description = 'Other payment';
+    }
+    
+    if (yearValue && yearValue !== 'custom_year') {
+        description += ` for ${yearValue}`;
     }
     
     if (installmentType === 'full') {
         description += ' (Full payment)';
     }
     
-    descriptionInput.value = description;
+    descriptionField.value = description;
 }
 
-function showPaymentDetails() {
-    const paymentMethod = document.getElementById('paymentMethod').value;
-    const paymentDetailsSection = document.getElementById('paymentDetailsSection');
-    const paymentInstructions = document.getElementById('paymentInstructions');
+function showAdminPaymentDetails() {
+    const paymentMethod = document.getElementById('adminPaymentMethod').value;
+    const detailsSection = document.getElementById('adminPaymentDetailsSection');
+    const instructionsDiv = document.getElementById('adminPaymentInstructions');
     
-    let instructions = '';
-    
-    switch(paymentMethod) {
-        case 'cash':
-            instructions = '<strong>Cash Payment:</strong> Please collect the cash amount and provide a receipt to the member.';
-            break;
-        case 'bank_transfer':
-            instructions = '<strong>Bank Transfer:</strong> Please verify the bank transfer receipt and confirm the transaction details.';
-            break;
-        case 'mobile_money':
-            instructions = '<strong>Mobile Money:</strong> Please check the mobile money transaction confirmation and verify the sender details.';
-            break;
-        case 'cheque':
-            instructions = '<strong>Cheque Payment:</strong> Please verify the cheque details and ensure proper clearance before approval.';
-            break;
-        case 'online':
-            instructions = '<strong>Online Payment:</strong> Please verify the online payment confirmation and transaction ID.';
-            break;
-        default:
-            paymentDetailsSection.style.display = 'none';
-            return;
+    if (paymentMethod) {
+        detailsSection.style.display = 'block';
+        
+        let instructions = '';
+        
+        // Handle dynamic account options (mobile_1, bank_2, etc.)
+        if (paymentMethod.startsWith('mobile_')) {
+            const selectedOption = document.querySelector('#adminPaymentMethod option[value="' + paymentMethod + '"]');
+            const accountText = selectedOption ? selectedOption.textContent : '';
+            instructions = `
+                <strong>Mobile Money Payment Instructions:</strong><br>
+                <strong>Account:</strong> ${accountText}<br>
+                Please make the payment to the mobile money number above.<br>
+                <em>Upload the transaction confirmation message as proof of payment.</em>
+            `;
+        } else if (paymentMethod.startsWith('bank_')) {
+            const selectedOption = document.querySelector('#adminPaymentMethod option[value="' + paymentMethod + '"]');
+            const accountText = selectedOption ? selectedOption.textContent : '';
+            instructions = `
+                <strong>Bank Transfer Instructions:</strong><br>
+                <strong>Account:</strong> ${accountText}<br>
+                Please transfer the amount to the bank account above.<br>
+                <em>Upload the transfer receipt as proof of payment.</em>
+            `;
+        } else {
+            // Fallback for any other payment methods
+            switch(paymentMethod) {
+                case 'cash':
+                    instructions = `
+                        <strong>Cash Payment Instructions:</strong><br>
+                        Please deposit cash at the church office and obtain a receipt.<br>
+                        <strong>Office Hours:</strong> Monday - Friday, 9:00 AM - 4:00 PM
+                    `;
+                    break;
+                case 'bank_transfer':
+                    instructions = `
+                        <strong>Bank Transfer Instructions:</strong><br>
+                        Please transfer to the church bank account.<br>
+                        <em>Upload the transfer receipt as proof of payment.</em>
+                    `;
+                    break;
+                case 'mobile_money':
+                    instructions = `
+                        <strong>Mobile Money Instructions:</strong><br>
+                        Please send money to the church mobile money number.<br>
+                        <em>Upload the transaction confirmation as proof.</em>
+                    `;
+                    break;
+                case 'cheque':
+                    instructions = `
+                        <strong>Cheque Payment Instructions:</strong><br>
+                        Please make cheques payable to the church.<br>
+                        Submit at the church office during office hours.
+                    `;
+                    break;
+                case 'online':
+                    instructions = `
+                        <strong>Online Payment Instructions:</strong><br>
+                        Click the button below to proceed with secure online payment.<br>
+                        <button class="btn btn-primary mt-2" onclick="processOnlinePayment()">
+                            <i class="bi bi-credit-card me-2"></i>Pay Online
+                        </button>
+                    `;
+                    break;
+                default:
+                    instructions = 'Please select a payment method to see instructions.';
+            }
+        }
+        
+        instructionsDiv.innerHTML = instructions;
+    } else {
+        detailsSection.style.display = 'none';
     }
-    
-    paymentInstructions.innerHTML = instructions;
-    paymentDetailsSection.style.display = 'block';
 }
 
-function previewAttachment(input) {
-    const file = input.files[0];
-    const preview = document.getElementById('attachmentPreview');
-    const previewContent = document.getElementById('attachmentPreviewContent');
+function previewAdminAttachment(input) {
+    const preview = document.getElementById('adminAttachmentPreview');
+    const previewContent = document.getElementById('adminAttachmentPreviewContent');
     
-    if (file) {
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        
+        // Check file size (2MB limit)
+        if (file.size > 2 * 1024 * 1024) {
+            alert('File size must be less than 2MB');
+            input.value = '';
+            return;
+        }
+        
         const reader = new FileReader();
         
         reader.onload = function(e) {
-            if (file.type.startsWith('image/')) {
-                previewContent.innerHTML = `<img src="${e.target.result}" class="img-fluid" style="max-height: 300px;" alt="Payment proof preview">`;
-            } else if (file.type === 'application/pdf') {
-                previewContent.innerHTML = `<i class="bi bi-file-earmark-pdf fs-1 text-danger"></i><br><small class="text-muted">PDF Document: ${file.name}</small>`;
+            const fileType = file.type;
+            
+            if (fileType.startsWith('image/')) {
+                previewContent.innerHTML = `<img src="${e.target.result}" class="img-fluid" style="max-height: 300px;" alt="Payment proof">`;
+            } else if (fileType === 'application/pdf') {
+                previewContent.innerHTML = `
+                    <div class="text-center">
+                        <i class="bi bi-file-earmark-pdf" style="font-size: 4rem; color: #dc3545;"></i>
+                        <p class="mt-2 mb-0">${file.name}</p>
+                        <small class="text-muted">PDF Document</small>
+                    </div>
+                `;
             } else {
-                previewContent.innerHTML = `<i class="bi bi-file-earmark fs-1 text-secondary"></i><br><small class="text-muted">File: ${file.name}</small>`;
+                previewContent.innerHTML = `
+                    <div class="text-center">
+                        <i class="bi bi-file-earmark" style="font-size: 4rem; color: #6c757d;"></i>
+                        <p class="mt-2 mb-0">${file.name}</p>
+                        <small class="text-muted">File</small>
+                    </div>
+                `;
             }
+            
+            preview.style.display = 'block';
         };
         
         reader.readAsDataURL(file);
-        preview.style.display = 'block';
-    } else {
-        preview.style.display = 'none';
-        previewContent.innerHTML = '';
     }
 }
 
-function removeAttachment() {
-    const attachmentInput = document.getElementById('paymentAttachment');
-    const preview = document.getElementById('attachmentPreview');
-    const previewContent = document.getElementById('attachmentPreviewContent');
-    
-    attachmentInput.value = '';
-    preview.style.display = 'none';
-    previewContent.innerHTML = '';
+function removeAdminAttachment() {
+    document.getElementById('adminPaymentAttachment').value = '';
+    document.getElementById('adminAttachmentPreview').style.display = 'none';
+    document.getElementById('adminAttachmentPreviewContent').innerHTML = '';
 }
 
-function capitalizeFirst(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-}
-
-function getStatusClass(status) {
-    switch(status) {
-        case 'completed': return 'bg-success';
-        case 'rejected': return 'bg-danger';
-        case 'pending': return 'bg-warning';
-        default: return 'bg-secondary';
+function resetAdminPaymentForm() {
+    const form = document.getElementById('adminPaymentForm');
+    if (form) {
+        form.reset();
+        
+        // Hide conditional sections
+        document.getElementById('adminCustomYearDiv').style.display = 'none';
+        document.getElementById('adminInstallmentOptions').style.display = 'none';
+        document.getElementById('adminInstallmentInfo').style.display = 'none';
+        document.getElementById('adminPaymentDetailsSection').style.display = 'none';
+        document.getElementById('adminAttachmentPreview').style.display = 'none';
+        
+        // Clear preview
+        document.getElementById('adminAttachmentPreviewContent').innerHTML = '';
+        
+        // Remove readonly from amount field
+        document.getElementById('adminPaymentAmount').readOnly = false;
     }
 }
 
-function viewPaymentDetails(paymentId) {
-    // Implementation for viewing payment details
-    console.log('View payment details:', paymentId);
-}
-
-function approvePayment(paymentId) {
-    if (confirm('Are you sure you want to approve this payment?')) {
-        fetch(`/admin/payments/${paymentId}/approve`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Payment approved successfully!');
-                refreshPaymentHistory();
-            } else {
-                alert('Error: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error approving payment:', error);
-            alert('Error approving payment. Please try again.');
-        });
-    }
-}
-
-function rejectPayment(paymentId) {
-    if (confirm('Are you sure you want to reject this payment?')) {
-        fetch(`/admin/payments/${paymentId}/reject`, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                alert('Payment rejected successfully!');
-                refreshPaymentHistory();
-            } else {
-                alert('Error: ' + data.message);
-            }
-        })
-        .catch(error => {
-            console.error('Error rejecting payment:', error);
-            alert('Error rejecting payment. Please try again.');
-        });
-    }
-}
-
-// Payment Form Submission
+// Handle admin payment form submission
 document.addEventListener('DOMContentLoaded', function() {
-    const paymentForm = document.getElementById('makePaymentForm');
-    if (paymentForm) {
-        paymentForm.addEventListener('submit', function(e) {
+    const adminPaymentForm = document.getElementById('adminPaymentForm');
+    
+    if (adminPaymentForm) {
+        adminPaymentForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
             const formData = new FormData(this);
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const originalText = submitBtn.innerHTML;
             
             // Show loading state
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
             submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Processing...';
             submitBtn.disabled = true;
             
-            // Handle custom year
-            const yearSelect = document.getElementById('paymentYear').value;
-            if (yearSelect === 'custom_year') {
-                const customYear = document.getElementById('customYear').value;
-                formData.set('payment_year', customYear);
-            }
+            // Add admin user ID to form data
+            formData.append('user_id', '{{ Auth::id() }}');
             
-            fetch('/admin/payments/store', {
+            fetch('/admin/payments/store-personal', {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json'
                 }
             })
             .then(response => response.json())
             .then(data => {
                 if (data.success) {
-                    alert('Payment processed successfully!');
-                    resetPaymentForm();
-                    refreshPaymentHistory();
+                    // Show success message
+                    const successAlert = document.createElement('div');
+                    successAlert.className = 'alert alert-success alert-dismissible fade show';
+                    successAlert.innerHTML = `
+                        <i class="bi bi-check-circle me-2"></i>${data.message}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    `;
+                    
+                    // Insert at the top of the personal-payment tab
+                    const personalPaymentTab = document.getElementById('personal-payment');
+                    personalPaymentTab.insertBefore(successAlert, personalPaymentTab.firstChild);
+                    
+                    // Reset form
+                    resetAdminPaymentForm();
+                    
+                    // Auto-hide success message after 5 seconds
+                    setTimeout(() => {
+                        successAlert.remove();
+                    }, 5000);
+                    
                 } else {
-                    alert('Error: ' + data.message);
+                    // Show error message
+                    const errorAlert = document.createElement('div');
+                    errorAlert.className = 'alert alert-danger alert-dismissible fade show';
+                    errorAlert.innerHTML = `
+                        <i class="bi bi-exclamation-triangle me-2"></i>${data.message || 'Payment submission failed'}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                    `;
+                    
+                    const personalPaymentTab = document.getElementById('personal-payment');
+                    personalPaymentTab.insertBefore(errorAlert, personalPaymentTab.firstChild);
+                    
+                    // Auto-hide error message after 5 seconds
+                    setTimeout(() => {
+                        errorAlert.remove();
+                    }, 5000);
                 }
             })
             .catch(error => {
-                console.error('Error processing payment:', error);
-                alert('Error processing payment. Please try again.');
+                console.error('Error:', error);
+                
+                const errorAlert = document.createElement('div');
+                errorAlert.className = 'alert alert-danger alert-dismissible fade show';
+                errorAlert.innerHTML = `
+                    <i class="bi bi-exclamation-triangle me-2"></i>An error occurred while processing your payment
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                `;
+                
+                const personalPaymentTab = document.getElementById('personal-payment');
+                personalPaymentTab.insertBefore(errorAlert, personalPaymentTab.firstChild);
             })
             .finally(() => {
+                // Restore button state
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
             });

@@ -282,7 +282,7 @@
         <!-- Center Content -->
         <div class="hero-content">
             <h1 class="hero-title">
-                <i class="bi bi-mortarboard-fill me-3"></i>Welcome to TMCS TEKU
+                <i class="bi bi-mortarboard-fill me-3"></i><span style="color: #FFD700;">Welcome to</span> TMCS TEKU
             </h1>
             <p class="hero-subtitle">Tanzania Movement of Catholic Students</p>
             <p class="hero-description">
@@ -309,7 +309,7 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <p class="footer-text">© 2026 MrNaviGator DigitalHub@2026 | For Better Services</p>
+        <p class="footer-text">@ 2026 MrNaviGator DigitalHub@2026 | For Better Services</p>
     </footer>
 
     <style>
@@ -318,8 +318,8 @@
         bottom: 0;
         left: 0;
         right: 0;
-        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-        color: white;
+        background: #f8f9fa;
+        color: #0066cc;
         text-align: center;
         padding: 0.7rem;
         font-size: 0.95rem;
@@ -329,7 +329,10 @@
     .footer-text {
         margin: 0;
         opacity: 0.9;
-        font-weight: 500;
+        font-weight: bold;
+        font-family: 'Times New Roman', Times, serif;
+        /* font-style: italic; */
+        letter-spacing: 0.5px;
     }
     </style>
 

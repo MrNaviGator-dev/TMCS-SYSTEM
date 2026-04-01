@@ -7,8 +7,17 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\AnnouncementController;
 
+
 Route::get('/', function () {
     return view('welcome');
+});
+
+use Illuminate\Support\Facades\Mail;
+use App\Mail\TestMail;
+
+Route::get('/test-email', function () {
+    Mail::to('digitalhubmrnavigator@gmail.com')->send(new TestMail());
+    return "Email Sent!";
 });
 
 // Authentication routes
@@ -17,8 +26,10 @@ Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
 // Forgot password routes
-Route::get('/forgot-password', [ForgotPasswordController::class, 'showForm'])->name('forgot-password');
-Route::post('/forgot-password', [ForgotPasswordController::class, 'submit']);
+Route::get('/forgot-password', [ForgotPasswordController::class, 'showForm'])->name('password.forgot');
+Route::post('/forgot-password', [ForgotPasswordController::class, 'submit'])->name('password.submit');
+Route::post('/verify-otp', [ForgotPasswordController::class, 'verifyOTP'])->name('password.verify-otp');
+Route::post('/resend-otp', [ForgotPasswordController::class, 'resendOTP'])->name('password.resend-otp');
 
 // Registration routes
 Route::get('/register', [RegisterController::class, 'showForm']);
@@ -64,10 +75,10 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/payments/history', [\App\Http\Controllers\PaymentController::class, 'history'])->name('leader.payments.history');
         
         // Announcements routes for leaders
-        Route::get('/announcements', [AnnouncementController::class, 'index'])->name('leader.announcements.index');
-        Route::post('/announcements', [AnnouncementController::class, 'create'])->name('leader.announcements.create');
-        Route::put('/announcements/{id}', [AnnouncementController::class, 'update'])->name('leader.announcements.update');
-        Route::delete('/announcements/{id}', [AnnouncementController::class, 'destroy'])->name('leader.announcements.destroy');
+        Route::get('/announcements', [\App\Http\Controllers\AnnouncementController::class, 'index'])->name('leader.announcements.index');
+        Route::post('/announcements', [\App\Http\Controllers\AnnouncementController::class, 'create'])->name('leader.announcements.create');
+        Route::put('/announcements/{id}', [\App\Http\Controllers\AnnouncementController::class, 'update'])->name('leader.announcements.update');
+        Route::delete('/announcements/{id}', [\App\Http\Controllers\AnnouncementController::class, 'destroy'])->name('leader.announcements.destroy');
         
         // Reports routes for leaders
         Route::post('/reports/generate-general', [\App\Http\Controllers\Leader\ReportController::class, 'generateGeneralReport'])->name('leader.reports.generate-general');
@@ -114,6 +125,10 @@ Route::middleware(['auth'])->group(function () {
         
         // Payment Accounts routes for members
         Route::get('/payment-accounts', [\App\Http\Controllers\Member\PaymentAccountController::class, 'index'])->name('member.payment-accounts.index');
+        
+        // PDF Reports routes for members
+        Route::get('/pdf-reports', [\App\Http\Controllers\Member\DashboardController::class, 'getPdfReports'])->name('member.pdf-reports');
+        Route::get('/download-pdf-report/{reportId}', [\App\Http\Controllers\Member\DashboardController::class, 'downloadPdfReport'])->name('member.download-pdf-report');
     });
 
     // Admin User Management Routes
@@ -131,11 +146,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/payments/all', [\App\Http\Controllers\Admin\PaymentController::class, 'getAllPayments'])->name('admin.payments.all');
         Route::post('/payments/{paymentId}/approve', [\App\Http\Controllers\Admin\PaymentController::class, 'approvePayment'])->name('admin.payments.approve');
         Route::post('/payments/{paymentId}/reject', [\App\Http\Controllers\Admin\PaymentController::class, 'rejectPayment'])->name('admin.payments.reject');
-        
-        // Make Payments Routes
-        Route::get('/payments/statistics', [\App\Http\Controllers\Admin\PaymentController::class, 'getPaymentStatistics'])->name('admin.payments.statistics');
-        Route::get('/payments/recent', [\App\Http\Controllers\Admin\PaymentController::class, 'getRecentPayments'])->name('admin.payments.recent');
-        Route::post('/payments/store', [\App\Http\Controllers\Admin\PaymentController::class, 'storePayment'])->name('admin.payments.store');
+        Route::post('/payments/store-personal', [\App\Http\Controllers\Admin\PaymentController::class, 'storePersonalPayment'])->name('admin.payments.store-personal');
+        Route::get('/payments/accounts', [\App\Http\Controllers\Admin\PaymentController::class, 'getPaymentAccounts'])->name('admin.payments.accounts');
         Route::delete('/users/delete', [\App\Http\Controllers\Admin\UserManagementController::class, 'deleteUser'])->name('admin.users.delete');
         
         // Bulk User Management Routes

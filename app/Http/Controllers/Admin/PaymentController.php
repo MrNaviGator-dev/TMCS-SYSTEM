@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Payment;
+use App\Models\Account;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -128,84 +129,32 @@ class PaymentController extends Controller
         }
     }
 
-    /**
-     * Get payment statistics for dashboard
-     */
-    public function getPaymentStatistics()
+    public function storePersonalPayment(Request $request)
     {
         try {
-            $today = now()->format('Y-m-d');
+            // Get the raw payment method value
+            $paymentMethod = $request->input('payment_method');
             
-            $todayCount = Payment::whereDate('created_at', $today)->count();
-            $totalAmount = Payment::where('status', 'completed')->sum('amount');
-            $pendingCount = Payment::where('status', 'pending')->count();
-
-            return response()->json([
-                'success' => true,
-                'today_count' => $todayCount,
-                'total_amount' => $totalAmount,
-                'pending_count' => $pendingCount
-            ]);
-
-        } catch (\Exception $e) {
-            Log::error('Error fetching payment statistics: ' . $e->getMessage());
+            // Handle dynamic payment account values (mobile_1, bank_2, etc.)
+            $actualPaymentMethod = $paymentMethod;
+            if (strpos($paymentMethod, 'mobile_') === 0) {
+                $actualPaymentMethod = 'mobile_money';
+            } elseif (strpos($paymentMethod, 'bank_') === 0) {
+                $actualPaymentMethod = 'bank_transfer';
+            }
             
-            return response()->json([
-                'success' => false,
-                'message' => 'Error fetching statistics: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * Get recent payments for dashboard
-     */
-    public function getRecentPayments()
-    {
-        try {
-            $payments = Payment::with('user')
-                ->orderBy('created_at', 'desc')
-                ->limit(10)
-                ->get();
-
-            return response()->json([
-                'success' => true,
-                'payments' => $payments
-            ]);
-
-        } catch (\Exception $e) {
-            Log::error('Error fetching recent payments: ' . $e->getMessage());
-            
-            return response()->json([
-                'success' => false,
-                'message' => 'Error fetching recent payments: ' . $e->getMessage()
-            ], 500);
-        }
-    }
-
-    /**
-     * Store a new payment (admin creating payment)
-     */
-    public function storePayment(Request $request)
-    {
-        try {
             // Validate request
             $validated = $request->validate([
-                'user_id' => 'required|exists:users,id',
                 'payment_type' => 'required|string|in:membership,certificate,zaka,donation,event,other',
                 'amount' => 'required|numeric|min:0',
                 'description' => 'required|string|max:1000',
-                'payment_method' => 'required|string|max:100',
+                'payment_method' => 'required|string', // Remove strict validation to accept dynamic values
                 'sender_name' => 'required|string|max:255',
-                'payment_year' => 'required|integer|min:1900|max:2100',
-                'installment_type' => 'nullable|string|max:50',
-                'attachment' => 'required|file|mimes:jpeg,png,jpg,pdf|max:2048'
-            ]);
-
-            Log::info('Admin payment submission:', [
-                'user_id' => $validated['user_id'],
-                'amount' => $validated['amount'],
-                'payment_type' => $validated['payment_type']
+                'attachment' => 'required|file|mimes:jpeg,jpg,png,pdf|max:2048',
+                'payment_year' => 'required|string',
+                'custom_year' => 'nullable|integer|min:2020|max:2050',
+                'installment_type' => 'nullable|string|in:full',
+                'user_id' => 'required|exists:users,id'
             ]);
 
             // Handle file upload
@@ -216,37 +165,82 @@ class PaymentController extends Controller
                 $attachmentPath = $file->storeAs('payment_proofs', $filename, 'public');
             }
 
-            // Create payment record
+            // Determine payment year
+            $paymentYear = $validated['payment_year'];
+            if ($paymentYear === 'custom_year' && !empty($validated['custom_year'])) {
+                $paymentYear = $validated['custom_year'];
+            }
+
+            // Create the payment record for admin
             $payment = Payment::create([
-                'user_id' => $validated['user_id'],
+                'user_id' => $validated['user_id'], // Admin's user ID
                 'payment_type' => $validated['payment_type'],
                 'amount' => $validated['amount'],
                 'description' => $validated['description'],
-                'payment_method' => $validated['payment_method'],
+                'payment_method' => $actualPaymentMethod, // Use the processed payment method
                 'sender_name' => $validated['sender_name'],
-                'payment_year' => $validated['payment_year'],
-                'installment_type' => $validated['installment_type'],
+                'installment_type' => $validated['installment_type'] ?? null,
+                'payment_year' => $paymentYear,
                 'attachment' => $attachmentPath,
-                'status' => 'completed' // Admin-created payments are automatically completed
+                'status' => 'completed' // Admin payments are automatically completed
             ]);
 
-            Log::info('Payment created successfully:', [
-                'payment_id' => $payment->id,
-                'amount' => $payment->amount
-            ]);
+            Log::info('Admin personal payment created: ' . $payment->id . ' by user: ' . $validated['user_id']);
 
             return response()->json([
                 'success' => true,
-                'message' => 'Payment processed successfully!',
+                'message' => 'Payment submitted successfully! Your payment has been recorded as completed.',
                 'payment' => $payment
             ]);
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::error('Validation error in admin personal payment: ' . json_encode($e->errors()));
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Validation failed: ' . implode(', ', $e->validator->errors()->all())
+            ], 422);
+            
         } catch (\Exception $e) {
-            Log::error('Error processing admin payment: ' . $e->getMessage());
+            Log::error('Error storing admin personal payment: ' . $e->getMessage());
             
             return response()->json([
                 'success' => false,
                 'message' => 'Error processing payment: ' . $e->getMessage()
+            ], 500);
+        }
+    }
+
+    /**
+     * Get payment accounts for dropdown
+     */
+    public function getPaymentAccounts()
+    {
+        try {
+            Log::info('Admin requesting payment accounts');
+            
+            // Get all active accounts
+            $accounts = Account::active()->get();
+            
+            Log::info('Found accounts: ' . $accounts->count());
+            
+            // Group accounts by type for better organization
+            $mobileAccounts = $accounts->where('account_type', 'mobile');
+            $bankAccounts = $accounts->where('account_type', 'bank');
+            
+            return response()->json([
+                'success' => true,
+                'accounts' => $accounts,
+                'mobile_accounts' => $mobileAccounts,
+                'bank_accounts' => $bankAccounts
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Error fetching payment accounts: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error fetching payment accounts: ' . $e->getMessage()
             ], 500);
         }
     }

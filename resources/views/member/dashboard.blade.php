@@ -1916,13 +1916,16 @@
                             <i class="bi bi-house-door me-2"></i>Dashboard
                         </a>
                         <a href="#" class="list-group-item list-group-item-action" onclick="showMyProfile()">
-                            <i class="bi bi-person me-2"></i>My Profile
+                            <i class="bi bi-person me-2"></i>Personal Informations
                         </a>
                         <a href="#" class="list-group-item list-group-item-action" onclick="showPaymentForm()">
                             <i class="bi bi-plus-circle me-2"></i>Make Payment
                         </a>
                         <a href="#" class="list-group-item list-group-item-action" onclick="showPaymentHistory()">
                             <i class="bi bi-clock-history me-2"></i>Payment History
+                        </a>
+                        <a href="#" class="list-group-item list-group-item-action" onclick="showPdfReports()">
+                            <i class="bi bi-file-pdf me-2"></i>PDF Reports
                         </a>
                         <a href="#" class="list-group-item list-group-item-action" onclick="showAnnouncements()">
                             <i class="bi bi-megaphone me-2"></i>Announcements
@@ -2139,6 +2142,27 @@
                         
                         <div id="announcementsList">
                             <!-- Announcements will be loaded here -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- PDF Reports Section (Initially Hidden) -->
+                <div id="pdfReportsSection" class="payment-form-section">
+                    <div class="payment-form-card">
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <h4 class="mb-0">
+                                <i class="bi bi-file-pdf-fill me-2"></i>PDF Reports
+                            </h4>
+                            <div>
+                                <button type="button" class="btn btn-sm btn-outline-secondary me-2" onclick="loadPdfReports()">
+                                    <i class="bi bi-arrow-clockwise me-1"></i>Refresh
+                                </button>
+                                <button type="button" class="btn-close" onclick="hidePdfReports()"></button>
+                            </div>
+                        </div>
+                        
+                        <div id="pdfReportsContent">
+                            <!-- PDF reports will be loaded here -->
                         </div>
                     </div>
                 </div>
@@ -3245,6 +3269,7 @@
             document.getElementById('myProfileSection').style.display = 'none';
             document.getElementById('paymentHistorySection').style.display = 'none';
             document.getElementById('announcementsSection').style.display = 'none';
+            document.getElementById('pdfReportsSection').style.display = 'none';
             document.getElementById('welcomeSection').style.display = 'none';
         }
         
@@ -3292,6 +3317,179 @@
             }
             
             loadAnnouncements();
+        }
+        
+        function showPdfReports() {
+            hideAllSections();
+            document.getElementById('pdfReportsSection').style.display = 'block';
+            
+            // Close mobile sidebar if open
+            const sidebar = document.getElementById('memberSidebarMenu');
+            if (sidebar && sidebar.classList.contains('show')) {
+                sidebar.classList.remove('show');
+            }
+            
+            loadPdfReports();
+        }
+        
+        function hidePdfReports() {
+            document.getElementById('pdfReportsSection').style.display = 'none';
+            document.getElementById('welcomeSection').style.display = 'block';
+        }
+        
+        function loadPdfReports() {
+            // Load available PDF reports for the member
+            fetch('/member/pdf-reports')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        displayPdfReports(data.reports);
+                    } else {
+                        console.error('Failed to load PDF reports:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading PDF reports:', error);
+                });
+        }
+        
+        function displayPdfReports(reports) {
+            const container = document.getElementById('pdfReportsContent');
+            
+            if (!reports || reports.length === 0) {
+                container.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="bi bi-file-pdf fs-1 text-muted mb-3"></i>
+                        <h5 class="text-muted">No PDF Reports Available</h5>
+                        <p class="text-muted">No reports have been generated yet.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let html = '';
+            reports.forEach(report => {
+                html += `
+                    <div class="col-md-6 col-lg-4 mb-3">
+                        <div class="card h-100 border-0 shadow-sm">
+                            <div class="card-body text-center">
+                                <i class="bi bi-file-pdf fs-1 text-danger mb-3"></i>
+                                <h6 class="card-title">${report.title}</h6>
+                                <p class="card-text small text-muted">${report.description}</p>
+                                <p class="card-text small text-muted">Generated: ${new Date(report.created_at).toLocaleDateString()}</p>
+                                <button class="btn btn-sm btn-primary" onclick="downloadPdfReport('${report.id}', '${report.filename}')">
+                                    <i class="bi bi-download me-1"></i>Download
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = `<div class="row">${html}</div>`;
+        }
+        
+        function downloadPdfReport(reportId, filename) {
+            // Show loading state
+            const button = event.target;
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Generating...';
+            button.disabled = true;
+            
+            fetch(`/member/download-pdf-report/${reportId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Create download link
+                        const link = document.createElement('a');
+                        link.href = data.report_url;
+                        link.download = data.filename;
+                        link.style.display = 'none';
+                        document.body.appendChild(link);
+                        link.click();
+                        document.body.removeChild(link);
+                        
+                        // Show success message
+                        showSuccessToast('PDF generated and downloaded successfully!');
+                    } else {
+                        showErrorToast('Error generating PDF: ' + data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error downloading PDF:', error);
+                    showErrorToast('Error downloading PDF report');
+                })
+                .finally(() => {
+                    // Restore button state
+                    button.innerHTML = originalText;
+                    button.disabled = false;
+                });
+        }
+        
+        function showSuccessToast(message) {
+            // Create toast notification
+            const toast = document.createElement('div');
+            toast.className = 'toast align-items-center text-white bg-success border-0';
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'assertive');
+            toast.setAttribute('aria-atomic', 'true');
+            toast.style.position = 'fixed';
+            toast.style.top = '20px';
+            toast.style.right = '20px';
+            toast.style.zIndex = '9999';
+            
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="bi bi-check-circle me-2"></i>${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Show toast
+            const bsToast = new bootstrap.Toast(toast);
+            bsToast.show();
+            
+            // Remove after hide
+            toast.addEventListener('hidden.bs.toast', () => {
+                document.body.removeChild(toast);
+            });
+        }
+        
+        function showErrorToast(message) {
+            // Create error toast notification
+            const toast = document.createElement('div');
+            toast.className = 'toast align-items-center text-white bg-danger border-0';
+            toast.setAttribute('role', 'alert');
+            toast.setAttribute('aria-live', 'assertive');
+            toast.setAttribute('aria-atomic', 'true');
+            toast.style.position = 'fixed';
+            toast.style.top = '20px';
+            toast.style.right = '20px';
+            toast.style.zIndex = '9999';
+            
+            toast.innerHTML = `
+                <div class="d-flex">
+                    <div class="toast-body">
+                        <i class="bi bi-exclamation-triangle me-2"></i>${message}
+                    </div>
+                    <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast"></button>
+                </div>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            // Show toast
+            const bsToast = new bootstrap.Toast(toast);
+            bsToast.show();
+            
+            // Remove after hide
+            toast.addEventListener('hidden.bs.toast', () => {
+                document.body.removeChild(toast);
+            });
         }
         
         function hideAnnouncements() {

@@ -1,0 +1,7927 @@
+    @extends('layouts.app')
+
+@section('content')
+<!-- Mobile Navigation Toggle -->
+<nav class="navbar navbar-dark bg-dark d-md-none fixed-top">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+            <i class="fas fa-tachometer-alt me-2"></i>
+            TMCS Leader
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+    </div>
+</nav>
+
+<!-- Mobile Sidebar Overlay -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+<div class="container-fluid" style="padding-top: 56px;">
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3 col-lg-2 d-md-block bg-gradient-dark sidebar collapse" id="sidebarMenu">
+            <div class="position-sticky pt-3" style="top: 56px;">
+                <ul class="nav flex-column">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#" onclick="showDashboard()" style="font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 400; letter-spacing: 0.4px; font-size: 0.9rem;">
+                            <i class="bi bi-speedometer2 me-2"></i>
+                            <span>Dashboard</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showProfile()" style="font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 400; letter-spacing: 0.4px; font-size: 0.9rem;">
+                            <i class="bi bi-person me-2"></i>
+                            <span>Personal Informations</span>
+                        </a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showUsers()" style="font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 400; letter-spacing: 0.4px; font-size: 0.9rem;">
+                            <i class="bi bi-people me-2"></i>
+                            <span>Manage Users</span>
+                        </a>
+                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPendingUsers()" style="font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 400; letter-spacing: 0.4px; font-size: 0.9rem;">
+                            <i class="bi bi-clock me-2"></i>
+                            <span>Manage Users</span>
+                        </a>
+                    </li>
+                    <!-- <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showAnnouncements()" style="font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 400; letter-spacing: 0.4px; font-size: 0.9rem;">
+                            <i class="bi bi-megaphone me-2"></i>
+                            <span>Announcements</span>
+                        </a>
+                    </li> -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPaymentForm()" style="font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 400; letter-spacing: 0.4px; font-size: 0.9rem;">
+                            <i class="bi bi-credit-card me-2"></i>
+                            <span>Make Payment</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showNewUpdates()" style="font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 400; letter-spacing: 0.4px; font-size: 0.9rem;">
+                            <i class="bi bi-newspaper me-2"></i>
+                            <span>New Updates</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showPaymentHistory()" style="font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 400; letter-spacing: 0.4px; font-size: 0.9rem;">
+                            <i class="bi bi-clock-history me-2"></i>
+                            <span>Payments History</span>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="showReports()" style="font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 400; letter-spacing: 0.4px; font-size: 0.9rem;">
+                            <i class="bi bi-file-earmark me-2"></i>
+                            <span>System Reports</span>
+                        </a>
+                    </li>              
+                    <li class="nav-item mt-3">
+                        <a class="nav-link text-danger" href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" style="font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 400; letter-spacing: 0.4px; font-size: 0.9rem;">
+                            <i class="bi bi-box-arrow-right me-2"></i>
+                            <span>Logout</span>
+                        </a>
+                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                            @csrf
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+            <!-- Dashboard Welcome Card -->
+            <div class="card shadow-lg border-0 mb-4">
+                <div class="card-header bg-gradient-primary text-white border-0 py-3 py-md-4">
+                    <div class="row align-items-center">
+                        <div class="col-md-8 col-12">
+                            <h2 class="mb-2 mb-md-2 fs-4 fs-md-3">
+                                <i class="fas fa-tachometer-alt me-2"></i>
+                                Leader Dashboard
+                            </h2>
+                            <p class="mb-0 fs-6 fs-md-5">
+                                <i class="fas fa-user me-2"></i>
+                                Welcome back, <strong data-user-name="{{ auth()->user()->name }}">{{ auth()->user()->name }}</strong>
+                            </p>
+                            <small class="text-white-50 d-none d-md-block">
+                                <i class="fas fa-calendar me-1"></i>
+                                {{ now()->format('l, F j, Y') }}
+                            </small>
+                        </div>
+                        <div class="col-md-4 col-12 text-center text-md-end mt-3 mt-md-0">
+                            <div class="bg-white bg-opacity-25 rounded-circle d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                <i class="fas fa-user-tie fa-lg text-white"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Content -->
+            <div id="dashboardContent" class="content-section">
+                <!-- Statistics Cards -->
+                <div class="row mb-4 dashboard-stats-mobile">
+                    <!-- Total Users Card -->
+                    <div class="col-xl-4 col-md-6 col-sm-12 mb-3">
+                        <div class="card shadow-lg border-0 h-100">
+                            <div class="card-header bg-primary text-white border-0 py-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0 text-white fs-6 fs-md-6">Total System Users</h6>
+                                        <small class="text-white-50 d-none d-md-block" style="font-size: 0.7rem;">All registered users</small>
+                                    </div>
+                                    <div class="bg-white bg-opacity-25 rounded-circle p-1" style="width: 30px; height: 30px;">
+                                        <i class="fas fa-users text-white" style="font-size: 12px;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body bg-white py-2">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h3 class="text-primary fw-bold mb-1 fs-4 fs-md-3">{{ number_format($totalUsers) }}</h3>
+                                        <div class="progress bg-primary bg-opacity-10" style="height: 6px;">
+                                            <div class="progress-bar bg-primary" style="width: 100%;"></div>
+                                        </div>
+                                        <small class="text-muted mt-1 d-block d-none d-md-block" style="font-size: 0.7rem;">100% of total system</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-light border-0 py-1">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted fs-7 fs-md-7">
+                                        <i class="fas fa-chart-line me-1"></i>
+                                        Total Users
+                                    </small>
+                                    <span class="badge bg-primary bg-opacity-25 text-primary fs-7 fs-md-7">
+                                        <i class="fas fa-users me-1"></i>{{ $totalUsers }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Active Users Card -->
+                    <div class="col-xl-4 col-md-6 col-sm-12 mb-3">
+                        <div class="card shadow-lg border-0 h-100">
+                            <div class="card-header bg-success text-white border-0 py-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0 text-white fs-6 fs-md-6">Active/Approved Members</h6>
+                                        <small class="text-white-50 d-none d-md-block" style="font-size: 0.7rem;">Verified users</small>
+                                    </div>
+                                    <div class="bg-white bg-opacity-25 rounded-circle p-1" style="width: 30px; height: 30px;">
+                                        <i class="fas fa-user-check text-white" style="font-size: 12px;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body bg-white py-2">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h3 class="text-success fw-bold mb-1 fs-4 fs-md-3">{{ number_format($activeUsers) }}</h3>
+                                        <div class="progress bg-success bg-opacity-10" style="height: 6px;">
+                                            <div class="progress-bar bg-success" style="width: {{ $totalUsers > 0 ? ($activeUsers / $totalUsers) * 100 : 0 }}%;"></div>
+                                        </div>
+                                        <small class="text-muted mt-1 d-block d-none d-md-block" style="font-size: 0.7rem;">{{ $totalUsers > 0 ? round(($activeUsers / $totalUsers) * 100, 1) : 0 }}% of total users</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-light border-0 py-1">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted fs-7 fs-md-7">
+                                        <i class="fas fa-check-circle me-1"></i>
+                                        Active Rate
+                                    </small>
+                                    <span class="badge bg-success bg-opacity-25 text-success fs-7 fs-md-7">
+                                        <i class="fas fa-user-check me-1"></i>{{ $activeUsers }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Pending Users Card -->
+                    <div class="col-xl-4 col-md-6 col-sm-12 mb-3">
+                        <div class="card shadow-lg border-0 h-100">
+                            <div class="card-header bg-warning text-white border-0 py-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <h6 class="mb-0 text-white fs-6 fs-md-6">Pending Approvals</h6>
+                                        <small class="text-white-50 d-none d-md-block" style="font-size: 0.7rem;">Awaiting review</small>
+                                    </div>
+                                    <div class="bg-white bg-opacity-25 rounded-circle p-1" style="width: 30px; height: 30px;">
+                                        <i class="fas fa-hourglass-half text-white" style="font-size: 14px;"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-body bg-white py-2">
+                                <div class="row align-items-center">
+                                    <div class="col">
+                                        <h3 class="text-warning fw-bold mb-1 fs-4 fs-md-3">{{ number_format($pendingUsers) }}</h3>
+                                        <div class="progress bg-warning bg-opacity-10" style="height: 6px;">
+                                            <div class="progress-bar bg-warning" style="width: {{ $totalUsers > 0 ? ($pendingUsers / $totalUsers) * 100 : 0 }}%;"></div>
+                                        </div>
+                                        <small class="text-muted mt-1 d-block d-none d-md-block" style="font-size: 0.7rem;">{{ $totalUsers > 0 ? round(($pendingUsers / $totalUsers) * 100, 1) : 0 }}% pending</small>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-footer bg-white border-0 py-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <small class="text-muted fs-7 fs-md-7">
+                                        <i class="fas fa-hourglass-half me-1"></i>
+                                        Pending Rate
+                                    </small>
+                                    <span class="badge bg-warning bg-opacity-25 text-warning fs-7 fs-md-7">
+                                        <i class="fas fa-user-clock me-1"></i>{{ $pendingUsers }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- System Overview Card -->
+                <div class="row">
+                    <div class="col-12">
+                        <div class="card shadow-lg border-0 bg-white">
+                            <div class="card-header bg-gradient-primary text-white border-0 py-2">
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <h6 class="m-0 font-weight-bold" style="font-size: 0.85rem;">
+                                        <i class="fas fa-chart-line me-2"></i>System Overview
+                                    </h6>
+                                    <span class="badge bg-white bg-opacity-25 text-white" style="font-size: 0.65rem;">
+                                        <i class="fas fa-sync-alt me-1"></i>Live Data
+                                    </span>
+                                </div>
+                            </div>
+                            <div class="card-body bg-white py-2">
+                                <div class="row">
+                                    <div class="col-md-4 mb-2">
+                                        <div class="card border-0 bg-light shadow-sm h-100">
+                                            <div class="card-body text-center py-2">
+                                                <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">
+                                                    <i class="fas fa-percentage text-primary" style="font-size: 16px;"></i>
+                                                </div>
+                                                <h5 class="text-primary font-weight-bold mb-1" style="font-size: 0.9rem;">{{ $totalUsers > 0 ? round(($activeUsers / $totalUsers) * 100, 1) : 0 }}%</h5>
+                                                <p class="text-muted mb-0" style="font-size: 0.7rem;">Active Rate</p>
+                                                <div class="mt-1">
+                                                    <span class="badge bg-success" style="font-size: 0.6rem;">{{ $activeUsers }} users</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <div class="card border-0 bg-light shadow-sm h-100">
+                                            <div class="text-center">
+                                                <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">
+                                                    <i class="fas fa-users text-info" style="font-size: 16px;"></i>
+                                                </div>
+                                                <h5 class="text-info font-weight-bold mb-1" style="font-size: 0.9rem;">100%</h5>
+                                                <p class="text-muted mb-0" style="font-size: 0.7rem;">Complete List</p>
+                                                <div class="mt-1">
+                                                    <span class="badge bg-info" style="font-size: 0.6rem;">{{ $totalUsers }} users</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 mb-2">
+                                        <div class="card border-0 bg-light shadow-sm h-100">
+                                            <div class="card-body text-center py-2">
+                                                <div class="bg-info bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-2" style="width: 40px; height: 40px;">
+                                                    <i class="fas fa-check-double text-info" style="font-size: 16px;"></i>
+                                                </div>
+                                                <h5 class="text-info font-weight-bold mb-1" style="font-size: 0.9rem;">{{ $totalUsers > 0 ? round(($activeUsers / $totalUsers) * 100, 1) : 0 }}%</h5>
+                                                <p class="text-muted mb-0" style="font-size: 0.7rem;">Approval Rate</p>
+                                                <div class="mt-1">
+                                                    <span class="badge bg-info" style="font-size: 0.6rem;">{{ $activeUsers }} approved</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Additional Stats -->
+                                <div class="row mt-2">
+                                    <div class="col-12">
+                                        <div class="bg-light rounded-lg p-2">
+                                            <div class="row text-center">
+                                                <div class="col-md-3">
+                                                    <div class="bg-white rounded p-2 mb-1">
+                                                        <i class="fas fa-users text-primary" style="font-size: 16px;"></i>
+                                                        <h6 class="text-dark mb-0" style="font-size: 0.9rem;">{{ $totalUsers }}</h6>
+                                                        <small class="text-muted" style="font-size: 0.65rem;">Total Registrations</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="bg-white rounded p-2 mb-1">
+                                                        <i class="fas fa-calendar-plus text-success" style="font-size: 16px;"></i>
+                                                        <h6 class="text-success mb-0" style="font-size: 0.9rem;">+{{ rand(5, 15) }}</h6>
+                                                        <small class="text-muted" style="font-size: 0.65rem;">This Month</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="bg-white rounded p-2 mb-1">
+                                                        <i class="fas fa-user-check text-primary" style="font-size: 16px;"></i>
+                                                        <h6 class="text-primary mb-0" style="font-size: 0.9rem;">{{ rand(10, 50) }}</h6>
+                                                        <small class="text-muted" style="font-size: 0.65rem;">Active Today</small>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <div class="bg-white rounded p-2 mb-1">
+                                                        <i class="fas fa-users text-info" style="font-size: 16px;"></i>
+                                                        <h6 class="text-info mb-0" style="font-size: 0.9rem;">Complete</h6>
+                                                        <small class="text-muted" style="font-size: 0.65rem;">All Users Listed</small>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- All Users Content -->
+            <div id="pendingUsersContent" class="content-section" style="display: none;">
+                <div class="card shadow-lg border-0 bg-white">
+                    <div class="card-header bg-gradient-info text-white border-0 py-2">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="m-0 font-weight-bold" style="font-size: 0.85rem;">
+                                <i class="fas fa-users me-2"></i>All Users
+                            </h6>
+                            <span class="badge bg-white bg-opacity-25 text-white" style="font-size: 0.65rem;">
+                                <i class="fas fa-user-friends me-1"></i>{{ $pendingApprovalUsers->count() }} Total
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body bg-white py-2">
+                        <!-- Search and Filter -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <div class="input-group input-group-sm" style="font-size: 0.8rem;">
+                                    <span class="input-group-text" style="font-size: 0.75rem;">
+                                        <i class="fas fa-search"></i>
+                                    </span>
+                                    <input type="text" class="form-control" id="pendingSearchInput" placeholder="Search all users by name, email...">
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select form-select-sm" id="pendingGenderFilter" style="font-size: 0.8rem;">
+                                    <option value="">All Genders</option>
+                                    <option value="Male">Male</option>
+                                    <option value="Female">Female</option>
+                                    <option value="Other">Other</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <select class="form-select form-select-sm" id="pendingStudyFilter" style="font-size: 0.8rem;">
+                                    <option value="">All Years</option>
+                                    <option value="Year 1">Year 1</option>
+                                    <option value="Year 2">Year 2</option>
+                                    <option value="Year 3">Year 3</option>
+                                    <option value="Year 4">Year 4</option>
+                                    <option value="Year 5">Year 5</option>
+                                    <option value="Graduate">Graduate</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Pending Users Table -->
+                        <div class="table-responsive users-management-mobile" style="overflow-x: auto; white-space: nowrap;">
+                            <table class="table table-hover align-middle d-none d-md-table" style="font-size: 0.85rem; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); margin-bottom: 20px; min-width: 1200px;">
+                                <thead class="table-dark">
+                                    <tr>
+                                        <th class="d-none d-md-table-cell" style="font-size: 0.75rem; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: 600; border: none; position: relative;">S/NO</th>
+                                        <th style="font-size: 0.75rem; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: 600; border: none; position: relative;">Name/Details</th>
+                                        <th style="font-size: 0.75rem; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: 600; border: none; position: relative;">Email</th>
+                                        <th style="font-size: 0.75rem; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: 600; border: none; position: relative;">Phone</th>
+                                        <th class="d-none d-lg-table-cell" style="font-size: 0.75rem; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: 600; border: none; position: relative;">Role</th>
+                                        <th class="d-none d-md-table-cell" style="font-size: 0.75rem; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: 600; border: none; position: relative;">Year</th>
+                                        <th class="d-none d-lg-table-cell" style="font-size: 0.75rem; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: 600; border: none; position: relative;">Status</th>
+                                        <th class="d-none d-lg-table-cell" style="font-size: 0.75rem; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: 600; border: none; position: relative;">Applied</th>
+                                        <th style="font-size: 0.75rem; padding: 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: 600; border: none; position: relative;" class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pendingUsersTableBody">
+                                    @foreach($pendingApprovalUsers as $index => $user)
+                                    <tr class="pending-user-row" data-name="{{ $user->name }}" data-email="{{ $user->email }}" data-gender="{{ $user->gender }}" data-role="{{ $user->role }}" data-year="{{ $user->year_of_study }}" style="transition: all 0.3s ease; border-bottom: 1px solid #f8f9fa;">
+                                        <td class="d-none d-md-table-cell" style="font-size: 0.75rem; padding: 15px; font-weight: 600; color: #6c757d;">{{ $index + 1 }}</td>
+                                        <td style="font-size: 0.75rem; padding: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">
+                                            <div class="d-flex align-items-center">
+                                                <div class="ms-2">
+                                                    <div class="fw-bold text-primary" style="font-size: 0.85rem; margin-bottom: 2px; white-space: nowrap;">{{ $user->name }}</div>
+                                                    <small class="text-muted d-none d-md-block" style="font-size: 0.7rem;">
+                                                        <i class="fas fa-id-badge me-1"></i>ID: TMCS - {{ str_pad($user->id, 4, '0', STR_PAD_LEFT) }}
+                                                    </small>
+                                                    <div class="d-md-none">
+                                                        <small class="text-muted" style="font-size: 0.65rem;">
+                                                            <i class="fas fa-envelope me-1"></i>{{ $user->email }}
+                                                        </small>
+                                                    </div>
+                                                    <div class="d-md-none mt-1">
+                                                        @php
+                                                            $role = $user->role ?? 'Member';
+                                                            $roleBadgeClass = 'bg-secondary';
+                                                            $roleIcon = 'fas fa-user';
+                                                            if ($role === 'Leader') {
+                                                                $roleBadgeClass = 'bg-success';
+                                                                $roleIcon = 'fas fa-crown';
+                                                            } elseif ($role === 'Admin') {
+                                                                $roleBadgeClass = 'bg-danger';
+                                                                $roleIcon = 'fas fa-user-shield';
+                                                            } elseif ($role === 'Member') {
+                                                                $roleBadgeClass = 'bg-primary';
+                                                                $roleIcon = 'fas fa-user';
+                                                            } elseif ($role === 'Treasurer') {
+                                                                $roleBadgeClass = 'bg-warning';
+                                                                $roleIcon = 'fas fa-coins';
+                                                            } elseif ($role === 'Secretary') {
+                                                                $roleBadgeClass = 'bg-info';
+                                                                $roleIcon = 'fas fa-pen';
+                                                            }
+                                                        @endphp
+                                                        <span class="badge {{ $roleBadgeClass }} text-white me-1" style="font-size: 0.6rem; padding: 3px 6px; border-radius: 10px;" title="Raw role: '{{ $user->role }}' | Processed: '{{ $role }}'">
+                                                            <i class="{{ $roleIcon }} me-1" style="font-size: 0.5rem;"></i>{{ $role }}
+                                                        </span>
+                                                        <span class="badge bg-info text-white me-1" style="font-size: 0.6rem; padding: 3px 6px; border-radius: 10px;">
+                                                            <i class="fas fa-graduation-cap me-1" style="font-size: 0.5rem;"></i>{{ $user->year_of_study ?? 'N/A' }}
+                                                        </span>
+                                                        @php
+                                                            $status = $user->membership_status ?? 'Pending';
+                                                            $badgeClass = 'bg-warning';
+                                                            $icon = 'fas fa-clock';
+                                                            if ($status === 'Active') {
+                                                                $badgeClass = 'bg-success';
+                                                                $icon = 'fas fa-check-circle';
+                                                            } elseif ($status === 'Rejected') {
+                                                                $badgeClass = 'bg-danger';
+                                                                $icon = 'fas fa-times-circle';
+                                                            } elseif ($status === 'Premium') {
+                                                                $badgeClass = 'bg-primary';
+                                                                $icon = 'fas fa-crown';
+                                                            }
+                                                        @endphp
+                                                        <span class="badge {{ $badgeClass }} text-white" style="font-size: 0.6rem; padding: 3px 6px; border-radius: 10px;">
+                                                            <i class="{{ $icon }} me-1" style="font-size: 0.5rem;"></i>{{ $status }}
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td style="font-size: 0.75rem; padding: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px;">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-envelope text-muted me-2" style="font-size: 0.7rem;"></i>
+                                                <span style="font-size: 0.75rem; color: #495057; white-space: nowrap;">{{ $user->email }}</span>
+                                            </div>
+                                        </td>
+                                        <td style="font-size: 0.75rem; padding: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 120px;">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-phone text-muted me-2" style="font-size: 0.7rem;"></i>
+                                                <span style="font-size: 0.75rem; color: #495057; white-space: nowrap;">{{ $user->phone_number ?? 'N/A' }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="d-none d-lg-table-cell" style="font-size: 0.75rem; padding: 15px;">
+                                            @php
+                                                $role = $user->role ?? 'Member';
+                                                $roleBadgeClass = 'bg-secondary';
+                                                $roleIcon = 'fas fa-user';
+                                                if ($role === 'Leader') {
+                                                    $roleBadgeClass = 'bg-success';
+                                                    $roleIcon = 'fas fa-crown';
+                                                } elseif ($role === 'Admin') {
+                                                    $roleBadgeClass = 'bg-danger';
+                                                    $roleIcon = 'fas fa-user-shield';
+                                                } elseif ($role === 'Member') {
+                                                    $roleBadgeClass = 'bg-primary';
+                                                    $roleIcon = 'fas fa-user';
+                                                } elseif ($role === 'Treasurer') {
+                                                    $roleBadgeClass = 'bg-warning';
+                                                    $roleIcon = 'fas fa-coins';
+                                                } elseif ($role === 'Secretary') {
+                                                    $roleBadgeClass = 'bg-info';
+                                                    $roleIcon = 'fas fa-pen';
+                                                }
+                                            @endphp
+                                            <span class="badge {{ $roleBadgeClass }} text-white" style="font-size: 0.7rem; padding: 5px 10px; border-radius: 20px;" title="Raw role: '{{ $user->role }}' | Processed: '{{ $role }}'">
+                                                <i class="{{ $roleIcon }} me-1" style="font-size: 0.6rem;"></i>{{ $role }}
+                                            </span>
+                                        </td>
+                                        <td class="d-none d-md-table-cell" style="font-size: 0.75rem; padding: 15px;">
+                                            <span class="badge bg-info text-white" style="font-size: 0.7rem; padding: 5px 10px; border-radius: 20px;">
+                                                <i class="fas fa-graduation-cap me-1" style="font-size: 0.6rem;"></i>{{ $user->year_of_study ?? 'N/A' }}
+                                            </span>
+                                        </td>
+                                        <td class="d-none d-lg-table-cell" style="font-size: 0.75rem; padding: 15px;">
+                                            @php
+                                                $status = $user->membership_status ?? 'Pending';
+                                                $badgeClass = 'bg-warning';
+                                                $icon = 'fas fa-clock';
+                                                if ($status === 'Active') {
+                                                    $badgeClass = 'bg-success';
+                                                    $icon = 'fas fa-check-circle';
+                                                } elseif ($status === 'Rejected') {
+                                                    $badgeClass = 'bg-danger';
+                                                    $icon = 'fas fa-times-circle';
+                                                } elseif ($status === 'Premium') {
+                                                    $badgeClass = 'bg-primary';
+                                                    $icon = 'fas fa-crown';
+                                                }
+                                            @endphp
+                                            <span class="badge {{ $badgeClass }} text-white" style="font-size: 0.7rem; padding: 5px 10px; border-radius: 20px;">
+                                                <i class="{{ $icon }} me-1" style="font-size: 0.6rem;"></i>{{ $status }}
+                                            </span>
+                                        </td>
+                                        <td class="d-none d-lg-table-cell" style="font-size: 0.75rem; padding: 15px;">
+                                            <div class="d-flex align-items-center">
+                                                <i class="fas fa-calendar text-muted me-2" style="font-size: 0.7rem;"></i>
+                                                <span style="font-size: 0.75rem; color: #495057;">{{ $user->created_at->format('M d, Y') }}</span>
+                                            </div>
+                                        </td>
+                                        <td style="font-size: 0.75rem; padding: 15px;" class="text-center">
+                                            <button type="button" class="btn btn-sm btn-outline-primary" onclick="viewPendingUser({{ $user->id }})" style="border-radius: 8px; transition: all 0.3s ease; min-height: 40px;">
+                                                <i class="fas fa-eye d-md-none"></i>
+                                                <span class="d-none d-md-inline"><i class="fas fa-eye me-1"></i>View</span>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                            
+                            <!-- Mobile Card View -->
+                            <div class="d-md-none">
+                                @foreach($pendingApprovalUsers as $index => $user)
+                                <div class="card mb-3 shadow-sm pending-user-card" data-name="{{ $user->name }}" data-email="{{ $user->email }}" data-gender="{{ $user->gender }}" data-role="{{ $user->role }}" data-year="{{ $user->year_of_study }}" style="border-radius: 12px; border: 1px solid #e9ecef;">
+                                    <div class="card-body p-3">
+                                        <!-- User Header -->
+                                        <div class="d-flex justify-content-between align-items-start mb-3">
+                                            <div>
+                                                <h6 class="mb-1 fw-bold text-primary" style="font-size: 0.9rem;">{{ $user->name }}</h6>
+                                                <small class="text-muted" style="font-size: 0.7rem;">
+                                                    <i class="fas fa-id-badge me-1"></i>ID: TMCS-{{ str_pad($user->id, 4, '0', STR_PAD_LEFT) }}
+                                                </small>
+                                            </div>
+                                            <div class="text-end">
+                                                @php
+                                                    $status = $user->membership_status ?? 'Pending';
+                                                    $badgeClass = 'bg-warning';
+                                                    $icon = 'fas fa-clock';
+                                                    if ($status === 'Active') {
+                                                        $badgeClass = 'bg-success';
+                                                        $icon = 'fas fa-check-circle';
+                                                    } elseif ($status === 'Rejected') {
+                                                        $badgeClass = 'bg-danger';
+                                                        $icon = 'fas fa-times-circle';
+                                                    } elseif ($status === 'Premium') {
+                                                        $badgeClass = 'bg-primary';
+                                                        $icon = 'fas fa-crown';
+                                                    }
+                                                @endphp
+                                                <span class="badge {{ $badgeClass }} text-white" style="font-size: 0.6rem; padding: 4px 8px; border-radius: 12px;">
+                                                    <i class="{{ $icon }} me-1" style="font-size: 0.5rem;"></i>{{ $status }}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Contact Info -->
+                                        <div class="mb-3">
+                                            <div class="mb-2">
+                                                <small class="text-muted d-block" style="font-size: 0.65rem; margin-bottom: 2px;">Email</small>
+                                                <small style="font-size: 0.75rem; color: #495057; word-break: break-all;">
+                                                    <i class="fas fa-envelope text-muted me-1" style="font-size: 0.6rem;"></i>{{ $user->email }}
+                                                </small>
+                                            </div>
+                                            <div class="mb-2">
+                                                <small class="text-muted d-block" style="font-size: 0.65rem; margin-bottom: 2px;">Phone</small>
+                                                <small style="font-size: 0.75rem; color: #495057;">
+                                                    <i class="fas fa-phone text-muted me-1" style="font-size: 0.6rem;"></i>{{ $user->phone_number ?? 'N/A' }}
+                                                </small>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Role and Study Info -->
+                                        <div class="d-flex justify-content-between align-items-center mb-3">
+                                            <div>
+                                                @php
+                                                    $role = $user->role ?? 'Member';
+                                                    $roleBadgeClass = 'bg-secondary';
+                                                    $roleIcon = 'fas fa-user';
+                                                    if ($role === 'Leader') {
+                                                        $roleBadgeClass = 'bg-success';
+                                                        $roleIcon = 'fas fa-crown';
+                                                    } elseif ($role === 'Admin') {
+                                                        $roleBadgeClass = 'bg-danger';
+                                                        $roleIcon = 'fas fa-user-shield';
+                                                    } elseif ($role === 'Member') {
+                                                        $roleBadgeClass = 'bg-primary';
+                                                        $roleIcon = 'fas fa-user';
+                                                    } elseif ($role === 'Treasurer') {
+                                                        $roleBadgeClass = 'bg-warning';
+                                                        $roleIcon = 'fas fa-coins';
+                                                    } elseif ($role === 'Secretary') {
+                                                        $roleBadgeClass = 'bg-info';
+                                                        $roleIcon = 'fas fa-pen';
+                                                    }
+                                                @endphp
+                                                <span class="badge {{ $roleBadgeClass }} text-white me-2" style="font-size: 0.6rem; padding: 4px 8px; border-radius: 12px;">
+                                                    <i class="{{ $roleIcon }} me-1" style="font-size: 0.5rem;"></i>{{ $role }}
+                                                </span>
+                                                <span class="badge bg-info text-white" style="font-size: 0.6rem; padding: 4px 8px; border-radius: 12px;">
+                                                    <i class="fas fa-graduation-cap me-1" style="font-size: 0.5rem;"></i>{{ $user->year_of_study ?? 'N/A' }}
+                                                </span>
+                                            </div>
+                                            <div>
+                                                <small class="text-muted" style="font-size: 0.6rem;">
+                                                    <i class="fas fa-calendar me-1"></i>{{ $user->created_at->format('M d, Y') }}
+                                                </small>
+                                            </div>
+                                        </div>
+                                        
+                                        <!-- Action Button -->
+                                        <div class="text-center">
+                                            <button type="button" class="btn btn-sm btn-primary w-100" onclick="viewPendingUser({{ $user->id }})" style="border-radius: 8px; transition: all 0.3s ease;">
+                                                <i class="fas fa-eye me-1"></i>View Details
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                @endforeach
+                            </div>
+                        </div>
+
+                        <!-- Pagination -->
+                        <nav aria-label="Pending Users pagination">
+                            <ul class="pagination pagination-sm justify-content-center mb-0">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1" style="font-size: 0.7rem;">Previous</a>
+                                </li>
+                                <li class="page-item active">
+                                    <a class="page-link" href="#" style="font-size: 0.7rem;">1</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#" style="font-size: 0.7rem;">2</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#" style="font-size: 0.7rem;">3</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#" style="font-size: 0.7rem;">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            <div id="usersContent" class="content-section" style="display: none;">
+                <div class="card shadow-lg border-0 bg-white users-management-mobile">
+                    <div class="card-header bg-gradient-primary text-white border-0 py-2 py-md-3">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="m-0 font-weight-bold fs-7 fs-md-6">
+                                <i class="fas fa-users me-2"></i>Manage Users
+                            </h6>
+                            <span class="badge bg-white bg-opacity-25 text-white fs-7 fs-md-6">
+                                <i class="fas fa-database me-1"></i>{{ $allUsers->count() }} Total Users
+                            </span>
+                        </div>
+                    </div>
+                    <div class="card-body bg-white py-2 py-md-3">
+                        <!-- Search and Filter -->
+                        <div class="row g-2 g-md-3 mb-3">
+                            <div class="col-md-6 col-12">
+                                <div class="input-group input-group-sm" style="font-size: 0.8rem;">
+                                    <span class="input-group-text" style="font-size: 0.75rem;">
+                                        <i class="fas fa-search"></i>
+                                    </span>
+                                    <input type="text" class="form-control" id="userSearchInput" placeholder="Search users by name, email...">
+                                </div>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <select class="form-select form-select-sm" id="statusFilter" style="font-size: 0.8rem;">
+                                    <option value="">All Status</option>
+                                    <option value="Active">Active</option>
+                                    <option value="pending">Pending</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3 col-6">
+                                <select class="form-select form-select-sm" id="roleFilter" style="font-size: 0.8rem;">
+                                    <option value="">All Roles</option>
+                                    <option value="admin">Admin</option>
+                                    <option value="leader">Leader</option>
+                                    <option value="member">Member</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Users Table -->
+                        <div class="table-responsive users-management-mobile">
+                            <table class="table table-hover table-striped align-middle" style="font-size: 0.8rem; border-radius: 12px; overflow: hidden; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08); margin-bottom: 20px;">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th class="d-none d-md-table-cell" style="font-size: 0.75rem; padding: 12px 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: 600; border: none; position: relative; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);">S/NO</th>
+                                        <th style="font-size: 0.75rem; padding: 12px 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: 600; border: none; position: relative; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);">Name/Info</th>
+                                        <th class="d-none d-lg-table-cell" style="font-size: 0.75rem; padding: 12px 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: 600; border: none; position: relative; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);">Email</th>
+                                        <th class="d-none d-md-table-cell" style="font-size: 0.75rem; padding: 12px 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: 600; border: none; position: relative; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);">Role</th>
+                                        <th class="d-none d-lg-table-cell" style="font-size: 0.75rem; padding: 12px 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: 600; border: none; position: relative; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);">Status</th>
+                                        <th class="d-none d-md-table-cell" style="font-size: 0.75rem; padding: 12px 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: 600; border: none; position: relative; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);">Joined</th>
+                                        <th style="font-size: 0.75rem; padding: 12px 15px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; font-weight: 600; border: none; position: relative; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);" class="text-center">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="usersTableBody">
+                                    @foreach($allUsers as $index => $user)
+                                    <tr class="user-row" data-name="{{ $user->name }}" data-email="{{ $user->email }}" data-status="{{ $user->membership_status }}" data-role="{{ $user->role }}">
+                                        <td class="d-none d-md-table-cell" style="font-size: 0.75rem; padding: 15px; border-bottom: 1px solid #e9ecef;">{{ $index + 1 }}</td>
+                                        <td style="font-size: 0.75rem; padding: 15px; border-bottom: 1px solid #e9ecef;">
+                                            <div class="d-flex align-items-center">
+                                                <div class="d-inline-flex align-items-center justify-content-center me-2" style="width: 30px; height: 30px;">
+                                                    <i class="fas fa-user text-primary" style="font-size: 12px;"></i>
+                                                </div>
+                                                <div>
+                                                    <div class="fw-bold" style="font-size: 0.75rem;">{{ $user->name }}</div>
+                                                    <small class="text-muted d-none d-md-block" style="font-size: 0.65rem;">ID: TMCS - {{ str_pad($user->id, 4, '0', STR_PAD_LEFT) }}</small>
+                                                    <div class="d-md-none mt-1">
+                                                        <small class="text-muted" style="font-size: 0.6rem;">
+                                                            <i class="fas fa-envelope me-1"></i>{{ $user->email }}
+                                                        </small>
+                                                    </div>
+                                                    <div class="d-md-none mt-1">
+                                                        @if($user->role == 'admin')
+                                                            <span class="badge bg-danger text-white me-1" style="font-size: 0.55rem; padding: 2px 4px; border-radius: 8px;"><i class="fas fa-crown" style="font-size: 0.4rem;"></i>Admin</span>
+                                                        @elseif($user->role == 'leader')
+                                                            <span class="badge bg-success text-white me-1" style="font-size: 0.55rem; padding: 2px 4px; border-radius: 8px;"><i class="fas fa-user-tie" style="font-size: 0.4rem;"></i>Leader</span>
+                                                        @else
+                                                            <span class="badge bg-info text-white me-1" style="font-size: 0.55rem; padding: 2px 4px; border-radius: 8px;"><i class="fas fa-user" style="font-size: 0.4rem;"></i>Member</span>
+                                                        @endif
+                                                        @if($user->membership_status == 'Active')
+                                                            <span class="badge bg-success" style="font-size: 0.55rem; padding: 2px 4px; border-radius: 8px;"><i class="fas fa-check-circle" style="font-size: 0.4rem;"></i>Active</span>
+                                                        @else
+                                                            <span class="badge bg-warning" style="font-size: 0.55rem; padding: 2px 4px; border-radius: 8px;"><i class="fas fa-clock" style="font-size: 0.4rem;"></i>Pending</span>
+                                                        @endif
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="d-none d-lg-table-cell" style="font-size: 0.75rem; padding: 15px; border-bottom: 1px solid #e9ecef;">
+                                            <span style="font-size: 0.8rem; color: #495057;">{{ $user->email }}</span>
+                                        </td>
+                                        <td class="d-none d-md-table-cell" style="font-size: 0.75rem; padding: 15px; border-bottom: 1px solid #e9ecef;">
+                                            @if($user->role == 'admin')
+                                                <span class="badge bg-danger text-white px-3 py-2" style="font-size: 0.65rem; font-weight: 600; border-radius: 20px; box-shadow: 0 4px 8px rgba(220, 53, 69, 0.2);"><i class="fas fa-crown me-1"></i>Administrator</span>
+                                            @elseif($user->role == 'leader')
+                                                <span class="badge bg-success text-white px-3 py-2" style="font-size: 0.65rem; font-weight: 600; border-radius: 20px; box-shadow: 0 4px 8px rgba(40, 167, 69, 0.2);"><i class="fas fa-user-tie me-1"></i>Leader</span>
+                                            @else
+                                                <span class="badge bg-info text-white px-3 py-2" style="font-size: 0.65rem; font-weight: 600; border-radius: 20px; box-shadow: 0 4px 8px rgba(23, 162, 184, 0.2);"><i class="fas fa-user me-1"></i>Member</span>
+                                            @endif
+                                        </td>
+                                        <td class="d-none d-lg-table-cell" style="font-size: 0.75rem; padding: 15px; border-bottom: 1px solid #e9ecef;">
+                                            @if($user->membership_status == 'Active')
+                                                <span class="badge bg-success px-3 py-2" style="font-size: 0.6rem; border-radius: 15px; box-shadow: 0 2px 4px rgba(40, 167, 69, 0.2);"><i class="fas fa-check-circle me-1"></i>Active</span>
+                                            @else
+                                                <span class="badge bg-warning px-3 py-2" style="font-size: 0.6rem; border-radius: 15px; box-shadow: 0 2px 4px rgba(255, 193, 7, 0.2);"><i class="fas fa-clock me-1"></i>Pending</span>
+                                            @endif
+                                        </td>
+                                        <td class="d-none d-md-table-cell" style="font-size: 0.75rem; padding: 15px; border-bottom: 1px solid #e9ecef;">
+                                            <span style="font-size: 0.7rem;">{{ $user->created_at->format('M j, Y') }}</span>
+                                        </td>
+                                        <td style="font-size: 0.75rem; padding: 15px; border-bottom: 1px solid #e9ecef;">
+                                            <div class="btn-group btn-group-sm" role="group">
+                                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="viewUser({{ $user->id }})" style="font-size: 0.7rem; min-height: 40px;">
+                                                    <i class="fas fa-eye d-md-none"></i>
+                                                    <span class="d-none d-md-inline"><i class="fas fa-eye me-1"></i>View</span>
+                                                </button>
+                                                                                            </div>
+                                        </td>
+                                    </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <nav aria-label="Users pagination">
+                            <ul class="pagination pagination-sm justify-content-center mb-0">
+                                <li class="page-item disabled">
+                                    <a class="page-link" href="#" tabindex="-1" style="font-size: 0.7rem;">Previous</a>
+                                </li>
+                                <li class="page-item active">
+                                    <a class="page-link" href="#" style="font-size: 0.7rem;">1</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#" style="font-size: 0.7rem;">2</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#" style="font-size: 0.7rem;">3</a>
+                                </li>
+                                <li class="page-item">
+                                    <a class="page-link" href="#" style="font-size: 0.7rem;">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Pending Users Content (Initially Hidden) -->
+            <div id="pendingUsersContent" class="content-section" style="display: none;">
+                <div class="card shadow">
+                    <div class="card-header py-3">
+                        <h6 class="m-0 font-weight-bold text-warning">Pending Approvals</h6>
+                    </div>
+                    <div class="card-body">
+                        <p>Pending user approvals will be displayed here.</p>
+                        <p>Review and approve/reject user registration requests.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Announcements Content (Initially Hidden) -->
+            <div id="announcementsContent" class="content-section" style="display: none;">
+                <div class="card shadow">
+                    <div class="card-header py-3 d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 font-weight-bold text-primary">
+                            <i class="bi bi-megaphone me-2"></i>Announcements
+                        </h6>
+                        <div>
+                            <button type="button" class="btn btn-info btn-sm me-2" onclick="viewRecentAnnouncements()">
+                                <i class="bi bi-clock-history me-1"></i>View Recent
+                            </button>
+                            <button type="button" class="btn btn-primary btn-sm" onclick="showCreateAnnouncementForm()">
+                                <i class="bi bi-plus-circle me-1"></i>Create Announcement
+                            </button>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <!-- Create Announcement Form (Initially Hidden) -->
+                        <div id="createAnnouncementForm" class="mb-4" style="display: none;">
+                            <div class="card border-primary">
+                                <div class="card-header bg-primary text-white">
+                                    <h6 class="mb-0">
+                                        <i class="bi bi-plus-circle me-2"></i>Create New Announcement
+                                    </h6>
+                                </div>
+                                <div class="card-body py-3">
+                                    <form id="leaderAnnouncementForm" enctype="multipart/form-data">
+                                        <div class="row g-2">
+                                            <div class="col-md-6">
+                                                <label class="form-label small">Title</label>
+                                                <input type="text" class="form-control form-control-sm" id="announcementTitle" name="title" required placeholder="Enter title..." autocomplete="off">
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small">Priority</label>
+                                                <select class="form-select form-select-sm" id="announcementPriority" name="priority" required>
+                                                    <option value="normal">Normal</option>
+                                                    <option value="important">Important</option>
+                                                    <option value="urgent">Urgent</option>
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="row g-2 mt-2">
+                                            <div class="col-md-12">
+                                                <label class="form-label small">Message</label>
+                                                <textarea class="form-control form-control-sm" id="announcementMessage" name="message" rows="3" required placeholder="Enter your message..." style="resize: vertical;"></textarea>
+                                            </div>
+                                        </div>
+                                        <div class="row g-2 mt-2">
+                                            <div class="col-md-6">
+                                                <label class="form-label small">Audience</label>
+                                                <select class="form-select form-select-sm" id="announcementAudience" name="audience" required>
+                                                    <option value="all">All Users</option>
+                                                    <option value="members">Members Only</option>
+                                                    <option value="leaders">Leaders Only</option>
+                                                    <option value="admins">Admins Only</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label class="form-label small">Expiry Date</label>
+                                                <input type="date" class="form-control form-control-sm" id="announcementExpiry" name="expiry_date" min="">
+                                            </div>
+                                        </div>
+                                        <div class="row g-2 mt-2">
+                                            <div class="col-md-12">
+                                                <label class="form-label small">Image (Optional)</label>
+                                                <div class="announcement-image-upload">
+                                                    <div class="image-upload-area" id="leaderImageUploadArea" style="min-height: 70px; border: 2px dashed #dee2e6; border-radius: 8px; padding: 15px; text-align: center; cursor: pointer; transition: all 0.3s ease;">
+                                                        <input type="file" id="leaderAnnouncementImage" name="announcement_image" accept="image/*" style="display: none;" onchange="previewLeaderAnnouncementImage(event)">
+                                                        <div class="upload-placeholder" id="leaderUploadPlaceholder">
+                                                            <i class="bi bi-cloud-upload fs-4 text-muted mb-1"></i>
+                                                            <h6 class="small mb-0">Click to upload image</h6>
+                                                            <p class="text-muted mb-0 small">PNG, JPG, GIF up to 2MB</p>
+                                                        </div>
+                                                    </div>
+                                                    <div id="leaderImagePreview" class="mt-2" style="display: none;">
+                                                        <img src="" alt="Preview" class="img-fluid rounded" style="max-height: 120px;">
+                                                        <button type="button" class="btn btn-sm btn-outline-danger mt-2" onclick="clearLeaderAnnouncementImage()">
+                                                            <i class="bi bi-trash"></i> Remove
+                                                        </button>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row g-2 mt-3">
+                                            <div class="col-12">
+                                                <div class="d-flex gap-2">
+                                                    <button type="submit" class="btn btn-primary btn-sm flex-fill flex-sm-grow-0">
+                                                        <i class="bi bi-send me-2"></i>Publish Announcement
+                                                    </button>
+                                                    <button type="button" class="btn btn-outline-secondary btn-sm flex-fill flex-sm-grow-0" onclick="hideCreateAnnouncementForm()">
+                                                        <i class="bi bi-x-circle me-2"></i>Cancel
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            <!-- New Updates Content (Initially Hidden) -->
+            <div id="newUpdatesContent" class="content-section" style="display: none;">
+                <div class="card shadow">
+                    <div class="card-header bg-gradient-primary text-white py-3">
+                        <h6 class="m-0 font-weight-bold">
+                            <i class="bi bi-newspaper me-2"></i>Create New Update
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <form id="newUpdateForm">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="updateTitle" class="form-label">
+                                        <i class="bi bi-type me-1"></i>Title
+                                    </label>
+                                    <input type="text" class="form-control" id="updateTitle" name="title" required placeholder="Enter update title...">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="updateCategory" class="form-label">
+                                        <i class="bi bi-tag me-1"></i>Category
+                                    </label>
+                                    <select class="form-select" id="updateCategory" name="category" required>
+                                        <option value="">Select category...</option>
+                                        <option value="announcement">Announcement</option>
+                                        <option value="news">News</option>
+                                        <option value="event">Event</option>
+                                        <option value="maintenance">Maintenance</option>
+                                        <option value="feature">New Feature</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-12">
+                                    <label for="updateMessage" class="form-label">
+                                        <i class="bi bi-text-paragraph me-1"></i>Message
+                                    </label>
+                                    <textarea class="form-control" id="updateMessage" name="message" rows="4" required placeholder="Enter your message..."></textarea>
+                                </div>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="updatePriority" class="form-label">
+                                        <i class="bi bi-exclamation-triangle me-1"></i>Priority
+                                    </label>
+                                    <select class="form-select" id="updatePriority" name="priority" required>
+                                        <option value="normal" selected>Normal</option>
+                                        <option value="important">Important</option>
+                                        <option value="urgent">Urgent</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="updateAudience" class="form-label">
+                                        <i class="bi bi-people me-1"></i>Audience
+                                    </label>
+                                    <select class="form-select" id="updateAudience" name="audience" required>
+                                        <option value="all">All Users</option>
+                                        <option value="members">Members Only</option>
+                                        <option value="leaders">Leaders Only</option>
+                                        <option value="admins">Admins Only</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <label for="updateExpiry" class="form-label">
+                                        <i class="bi bi-calendar-x me-1"></i>Expiry Date (Optional)
+                                    </label>
+                                    <input type="date" class="form-control" id="updateExpiry" name="expiry_date">
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="updateImage" class="form-label">
+                                        <i class="bi bi-image me-1"></i>Image (Optional)
+                                    </label>
+                                    <input type="file" class="form-control" id="updateImage" name="image" accept="image/*">
+                                </div>
+                            </div>
+                            <div class="row mt-3">
+                                <div class="col-12">
+                                    <div class="d-flex flex-column flex-sm-row gap-2">
+                                        <button type="submit" class="btn btn-info flex-sm-fill">
+                                            <i class="bi bi-send me-1"></i>Publish Update
+                                        </button>
+                                        <button type="button" class="btn btn-outline-secondary flex-sm-fill" onclick="clearNewUpdateForm()">
+                                            <i class="bi bi-x-circle me-1"></i>Clear
+                                        </button>
+                                        <button type="button" class="btn btn-outline-info flex-sm-fill" onclick="viewRecentUpdates()">
+                                            <i class="bi bi-clock-history me-1"></i>View Recent Updates
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recent Updates Section (Initially Hidden) -->
+            <div id="recentUpdatesContent" class="content-section" style="display: none;">
+                <div class="card shadow">
+                    <div class="card-header bg-gradient-primary text-white py-2 d-flex justify-content-between align-items-center">
+                        <h6 class="m-0 font-weight-bold fs-6">
+                            <i class="bi bi-clock-history me-1"></i>Recent Updates
+                        </h6>
+                        <button type="button" class="btn btn-outline-light btn-sm" onclick="refreshRecentUpdates()">
+                            <i class="bi bi-arrow-clockwise"></i>
+                        </button>
+                    </div>
+                    <div class="card-body p-2">
+                        <div id="recentUpdatesList">
+                            <div class="text-center py-3">
+                                <div class="spinner-border spinner-border-sm text-primary" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                                <p class="mt-2 text-muted">Loading recent updates...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+                                                <!-- Payment Form Content (Initially Hidden) -->
+            <div id="paymentContent" class="content-section" style="display: none;">
+                <div class="card shadow payment-form-mobile">
+                    <div class="card-header bg-gradient-primary text-white border-0 py-2 py-md-3">
+                        <h6 class="m-0 font-weight-bold fs-6 fs-md-5">
+                            <i class="bi bi-credit-card me-2"></i>Make Payment
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <form id="leaderPaymentForm" enctype="multipart/form-data">
+                            <!-- First Row - Payment Type, Year, Amount -->
+                            <div class="row g-2 g-md-3">
+                                <div class="col-12 col-md-4 mb-3 mb-md-3">
+                                    <label for="paymentType" class="form-label fs-7 fs-md-6">
+                                        <i class="bi bi-list-task me-1"></i>Payment Type
+                                    </label>
+                                    <select class="form-select form-select-sm" id="paymentType" name="payment_type" required onchange="handlePaymentTypeChange()">
+                                        <option value="">Select Payment Type...</option>
+                                        <option value="membership">Membership Fee - TZS 2,000</option>
+                                        <option value="certificate">Certificate Fee - TZS 4,000</option>
+                                        <option value="zaka">Zaka - TZS 2,000</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-md-4 mb-3 mb-md-3">
+                                    <label for="paymentYear" class="form-label fs-7 fs-md-6">
+                                        <i class="bi bi-calendar me-1"></i>Payment Year
+                                    </label>
+                                    <select class="form-select form-select-sm" id="paymentYear" name="payment_year" required onchange="handleYearChange()">
+                                        <option value="">Select Year...</option>
+                                        <option value="new_year">New Year (Enter Custom Year)</option>
+                                    </select>
+                                </div>
+                                <div class="col-12 col-md-4 mb-3 mb-md-3" id="customYearDiv" style="display: none;">
+                                    <label for="customYear" class="form-label fs-7 fs-md-6">
+                                        <i class="bi bi-calendar-plus me-1"></i>Enter Year
+                                    </label>
+                                    <input type="number" class="form-control form-control-sm" id="customYear" name="custom_year" min="1900" max="2100" placeholder="e.g., 2025">
+                                </div>
+                                <div class="col-12 col-md-4 mb-3 mb-md-3">
+                                    <label for="amount" class="form-label fs-7 fs-md-6">Amount (TZS)</label>
+                                    <input type="number" class="form-control form-control-sm" id="amount" name="amount" placeholder="0.00" step="0.01" required>
+                                </div>
+                            </div>
+                            
+                            <!-- Installment Options (Initially Hidden) -->
+                            <div class="row" id="installmentOptions" style="display: none;">
+                                <div class="col-12 mb-3">
+                                    <label for="installmentType" class="form-label fs-7 fs-md-6">
+                                        <i class="bi bi-calendar-split me-1"></i>Payment Option
+                                    </label>
+                                    <select class="form-select form-select-sm" id="installmentType" name="installment_type" onchange="handleInstallmentChange()">
+                                        <option value="">Select Payment Option...</option>
+                                        <option value="full">Full Payment</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <!-- Installment Info Display -->
+                            <div class="row" id="installmentInfo" style="display: none;">
+                                <div class="col-12">
+                                    <div class="alert alert-info d-flex align-items-center">
+                                        <i class="bi bi-info-circle me-2"></i>
+                                        <div id="installmentInfoText"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Description Field -->
+                            <div class="mb-3">
+                                <label for="description" class="form-label fs-7 fs-md-6">
+                                    <i class="bi bi-text-paragraph me-1"></i>Description
+                                </label>
+                                <textarea class="form-control form-control-sm" id="description" name="description" rows="3" placeholder="Enter payment details..." required></textarea>
+                            </div>
+                            
+                            <!-- Payment Method and Sender Name -->
+                            <div class="row g-2 g-md-3">
+                                <div class="col-12 col-md-6 mb-3 mb-md-3">
+                                    <label for="paymentMethod" class="form-label fs-7 fs-md-6">
+                                        <i class="bi bi-credit-card me-1"></i>Payment Method
+                                    </label>
+                                    <select class="form-select form-select-sm" id="paymentMethod" name="payment_method" required onchange="showPaymentDetails()">
+                                        <option value="">Select Payment Method...</option>
+                                        <!-- Payment accounts will be loaded here dynamically -->
+                                    </select>
+                                </div>
+                                
+                                <div class="col-12 col-md-6 mb-3 mb-md-3">
+                                    <label for="senderName" class="form-label fs-7 fs-md-6">
+                                        <i class="bi bi-person me-1"></i>Sender Name
+                                    </label>
+                                    <input type="text" class="form-control form-control-sm" id="senderName" name="sender_name" placeholder="Enter your full name" required>
+                                </div>
+                            </div>
+                            
+                            <!-- Payment Details Section (Initially Hidden) -->
+                            <div class="row" id="paymentDetailsSection" style="display: none;">
+                                <div class="col-12">
+                                    <div class="alert alert-info">
+                                        <h6 class="alert-heading fs-6 fs-md-5">
+                                            <i class="bi bi-info-circle me-2"></i>Payment Instructions
+                                        </h6>
+                                        <div id="paymentInstructions"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Attachment Upload -->
+                            <div class="mb-3">
+                                <label for="attachment" class="form-label fs-7 fs-md-6">
+                                    <i class="bi bi-paperclip me-1"></i>Attachment (Receipt/Proof) <span class="text-danger">*</span>
+                                </label>
+                                <input type="file" class="form-control form-control-sm" id="attachment" name="attachment" accept="image/*,.pdf" onchange="previewAttachment(this)" required>
+                                <div id="attachmentPreview" class="mt-2" style="display: none;">
+                                    <div class="card">
+                                        <div class="card-header d-flex justify-content-between align-items-center py-2 py-md-3">
+                                            <h6 class="mb-0 fs-7 fs-md-6">
+                                                <i class="bi bi-eye me-2"></i>Preview
+                                            </h6>
+                                            <button type="button" class="btn btn-sm btn-outline-danger" onclick="removeAttachment()">
+                                                <i class="bi bi-trash"></i> Remove
+                                            </button>
+                                        </div>
+                                        <div class="card-body text-center p-2 p-md-3">
+                                            <div id="attachmentPreviewContent"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="d-flex flex-column flex-md-row gap-2 gap-md-3">
+                                <button type="submit" class="btn btn-primary btn-sm w-100 w-md-auto">
+                                    <i class="bi bi-send me-2"></i>Submit Payment
+                                </button>
+                                <button type="button" class="btn btn-secondary btn-sm w-100 w-md-auto" onclick="hidePaymentForm()">
+                                    <i class="bi bi-x-circle me-2"></i>Cancel
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <!-- Payment History Section -->
+                <div id="paymentHistoryCard" class="card shadow mt-4 payment-history-mobile">
+                    <div class="card-header bg-gradient-primary text-white border-0 py-2 py-md-3">
+                        <h6 class="m-0 font-weight-bold fs-6 fs-md-5">
+                            <i class="bi bi-clock-history me-2"></i>Payment History
+                        </h6>
+                    </div>
+                    <div class="card-body">
+                        <!-- Payment Statistics Cards -->
+                        <div class="row g-2 g-md-3 mb-4">
+                            <!-- Completed Payments Card -->
+                            <div class="col-xl-4 col-md-6 col-sm-12 mb-3 mb-md-3">
+                                <div class="card shadow-lg border-0 h-100">
+                                    <div class="card-header bg-success text-white border-0 py-2">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-0 text-white fs-7 fs-md-6">
+                                                    <i class="bi bi-check-circle me-2"></i>Completed Payments
+                                                </h6>
+                                            </div>
+                                            <div class="text-white">
+                                                <i class="bi bi-cash-stack fs-4 fs-md-3"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <h3 class="text-success fw-bold mb-0 fs-4 fs-md-3" id="completedPaymentsCount">0</h3>
+                                        <p class="text-muted mb-0 fs-7 fs-md-6">Successfully processed</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Pending Payments Card -->
+                            <div class="col-xl-4 col-md-6 col-sm-12 mb-3 mb-md-3">
+                                <div class="card shadow-lg border-0 h-100">
+                                    <div class="card-header bg-warning text-white border-0 py-2">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-0 text-white fs-7 fs-md-6">
+                                                    <i class="bi bi-clock me-2"></i>Pending Payments
+                                                </h6>
+                                            </div>
+                                            <div class="text-white">
+                                                <i class="bi bi-hourglass-split fs-4 fs-md-3"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <h3 class="text-warning fw-bold mb-0 fs-4 fs-md-3" id="pendingPaymentsCount">0</h3>
+                                        <p class="text-muted mb-0 fs-7 fs-md-6">Awaiting approval</p>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Rejected Payments Card -->
+                            <div class="col-xl-4 col-md-6 col-sm-12 mb-3 mb-md-3">
+                                <div class="card shadow-lg border-0 h-100">
+                                    <div class="card-header bg-danger text-white border-0 py-2">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-0 text-white fs-7 fs-md-6">
+                                                    <i class="bi bi-x-circle me-2"></i>Rejected Payments
+                                                </h6>
+                                            </div>
+                                            <div class="text-white">
+                                                <i class="bi bi-x-octagon fs-4 fs-md-3"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <h3 class="text-danger fw-bold mb-0 fs-4 fs-md-3" id="rejectedPaymentsCount">0</h3>
+                                        <p class="text-muted mb-0 fs-7 fs-md-6">Payment declined</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Payment History Table -->
+                        <div id="paymentHistory">
+                            <!-- Payment history will be loaded here -->
+                            <div class="text-center py-3 py-md-4">
+                                <i class="bi bi-cash-stack fs-1 fs-md-1 text-muted mb-3"></i>
+                                <h6 class="fs-6 fs-md-5">No Payment History</h6>
+                                <p class="text-muted fs-7 fs-md-6">No payment records found. Submit your first payment above.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Reports Content (Initially Hidden) -->
+            <div id="reportsContent" class="content-section" style="display: none;">
+                <div class="card shadow reports-mobile">
+                    <div class="card-header py-2 py-md-3">
+                        <h6 class="m-0 font-weight-bold text-primary fs-6 fs-md-5">Reports</h6>
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-2 g-md-3 g-lg-4">
+                            <!-- General Report Card -->
+                            <div class="col-lg-6 col-md-12">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-header bg-gradient-primary text-white border-0 py-2 py-md-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-0 text-white fs-7 fs-md-6" style="font-weight: bold;">
+                                                    <i class="fas fa-chart-bar me-2"></i>
+                                                    General Report
+                                                </h6>
+                                                <small class="text-white-50 d-none d-md-block" style="font-size: 0.7rem;">System-wide analytics</small>
+                                            </div>
+                                            <div class="bg-white bg-opacity-25 rounded-circle p-1" style="width: 30px; height: 30px;">
+                                                <i class="fas fa-chart-line text-white" style="font-size: 12px;"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body bg-white py-2 py-md-3" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+                                        <div class="row g-2 g-md-3">
+                                            <div class="col-md-6 col-6 mb-2 mb-md-3">
+                                                <div class="card border-left border-primary" style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border: 2px solid #007bff; box-shadow: 0 4px 8px rgba(0,123,255,0.1);">
+                                                    <div class="card-body text-center p-2 p-md-3">
+                                                        <i class="fas fa-users fa-lg fa-md-2x text-primary mb-1 mb-md-2"></i>
+                                                        <h5 class="text-primary fs-6 fs-md-5" style="font-weight: bold;">{{ $totalUsers }}</h5>
+                                                        <p class="card-text fs-7 fs-md-6" style="font-weight: 600; color: #495057;">Total Users</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-6 mb-2 mb-md-3">
+                                                <div class="card border-left border-success" style="background: linear-gradient(135deg, #ffffff 0%, #d4edda 100%); border: 2px solid #28a745; box-shadow: 0 4px 8px rgba(40,167,69,0.1);">
+                                                    <div class="card-body text-center p-2 p-md-3">
+                                                        <i class="fas fa-dollar-sign fa-lg fa-md-2x text-success mb-1 mb-md-2"></i>
+                                                        <h5 class="text-success fs-6 fs-md-5" style="font-weight: bold;">{{ number_format($totalPayments, 2) }}</h5>
+                                                        <p class="card-text fs-7 fs-md-6" style="font-weight: 600; color: #495057;">Total Payments</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-6 mb-2 mb-md-3">
+                                                <div class="card border-left border-warning" style="background: linear-gradient(135deg, #ffffff 0%, #fff3cd 100%); border: 2px solid #ffc107; box-shadow: 0 4px 8px rgba(255,193,7,0.1);">
+                                                    <div class="card-body text-center p-2 p-md-3">
+                                                        <i class="fas fa-clock fa-lg fa-md-2x text-warning mb-1 mb-md-2"></i>
+                                                        <h5 class="text-warning fs-6 fs-md-5" style="font-weight: bold;">{{ $pendingPayments }}</h5>
+                                                        <p class="card-text fs-7 fs-md-6" style="font-weight: 600; color: #495057;">Pending Payments</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-6 mb-2 mb-md-3">
+                                                <div class="card border-left border-info" style="background: linear-gradient(135deg, #ffffff 0%, #d1ecf1 100%); border: 2px solid #17a2b8; box-shadow: 0 4px 8px rgba(23,162,184,0.1);">
+                                                    <div class="card-body text-center p-2 p-md-3">
+                                                        <i class="fas fa-chart-pie fa-lg fa-md-2x text-info mb-1 mb-md-2"></i>
+                                                        <h5 class="text-info fs-6 fs-md-5" style="font-weight: bold;">{{ number_format(($completedPayments ?? 0) / ($totalPayments ?? 1) * 100, 1) }}%</h5>
+                                                        <p class="card-text fs-7 fs-md-6" style="font-weight: 600; color: #495057;">Completion Rate</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-grid gap-2 mt-3">
+                                                <div class="row g-2">
+                                                    <div class="col-6">
+                                                        <a href="#" onclick="generateGeneralReport()" class="btn btn-primary btn-sm w-100">
+                                                            <i class="fas fa-file-pdf d-block mb-1" style="font-size: 1.2rem;"></i>
+                                                            <span class="d-block" style="font-size: 0.7rem;">Generate Report</span>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <a href="#" onclick="exportGeneralData()" class="btn btn-outline-primary btn-sm w-100">
+                                                            <i class="fas fa-download d-block mb-1" style="font-size: 1.2rem;"></i>
+                                                            <span class="d-block" style="font-size: 0.7rem;">Export Data</span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Member Reports Card -->
+                            <div class="col-lg-6 col-md-12">
+                                <div class="card border-0 shadow-sm h-100">
+                                    <div class="card-header bg-gradient-info text-white border-0 py-2 py-md-3" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+                                        <div class="d-flex justify-content-between align-items-center">
+                                            <div>
+                                                <h6 class="mb-0 text-white fs-7 fs-md-6" style="font-weight: bold;">
+                                                    <i class="fas fa-users me-2"></i>
+                                                    Member Reports
+                                                </h6>
+                                                <small class="text-white-50 d-none d-md-block" style="font-size: 0.7rem;">Member-specific analytics</small>
+                                            </div>
+                                            <div class="bg-white bg-opacity-25 rounded-circle p-1" style="width: 30px; height: 30px;">
+                                                <i class="fas fa-user-friends text-white" style="font-size: 12px;"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body bg-white py-2 py-md-3" style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+                                        <div class="row g-2 g-md-3">
+                                            <div class="col-md-6 col-6 mb-2 mb-md-3">
+                                                <div class="card border-left border-primary" style="background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%); border: 2px solid #007bff; box-shadow: 0 4px 8px rgba(0,123,255,0.1);">
+                                                    <div class="card-body text-center p-2 p-md-3">
+                                                        <i class="fas fa-user-check fa-lg fa-md-2x text-primary mb-1 mb-md-2"></i>
+                                                        <h5 class="text-primary fs-6 fs-md-5" style="font-weight: bold;">{{ $activeMembers }}</h5>
+                                                        <p class="card-text fs-7 fs-md-6" style="font-weight: 600; color: #495057;">Active Members</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-6 mb-2 mb-md-3">
+                                                <div class="card border-left border-success" style="background: linear-gradient(135deg, #ffffff 0%, #d4edda 100%); border: 2px solid #28a745; box-shadow: 0 4px 8px rgba(40,167,69,0.1);">
+                                                    <div class="card-body text-center p-2 p-md-3">
+                                                        <i class="fas fa-user-graduate fa-lg fa-md-2x text-success mb-1 mb-md-2"></i>
+                                                        <h5 class="text-success fs-6 fs-md-5" style="font-weight: bold;">{{ $newMembers }}</h5>
+                                                        <p class="card-text fs-7 fs-md-6" style="font-weight: 600; color: #495057;">New Members</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-6 mb-2 mb-md-3">
+                                                <div class="card border-left border-warning" style="background: linear-gradient(135deg, #ffffff 0%, #fff3cd 100%); border: 2px solid #ffc107; box-shadow: 0 4px 8px rgba(255,193,7,0.1);">
+                                                    <div class="card-body text-center p-2 p-md-3">
+                                                        <i class="fas fa-user-clock fa-lg fa-md-2x text-warning mb-1 mb-md-2"></i>
+                                                        <h5 class="text-warning fs-6 fs-md-5" style="font-weight: bold;">{{ $pendingMembers }}</h5>
+                                                        <p class="card-text fs-7 fs-md-6" style="font-weight: 600; color: #495057;">Pending Members</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6 col-6 mb-2 mb-md-3">
+                                                <div class="card border-left border-info" style="background: linear-gradient(135deg, #ffffff 0%, #d1ecf1 100%); border: 2px solid #17a2b8; box-shadow: 0 4px 8px rgba(23,162,184,0.1);">
+                                                    <div class="card-body text-center p-2 p-md-3">
+                                                        <i class="fas fa-gem fa-lg fa-md-2x text-info mb-1 mb-md-2"></i>
+                                                        <h5 class="text-info fs-6 fs-md-5" style="font-weight: bold;">{{ $premiumMembers }}</h5>
+                                                        <p class="card-text fs-7 fs-md-6" style="font-weight: 600; color: #495057;">Premium Members</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="d-grid gap-2 mt-3">
+                                                <div class="row g-2">
+                                                    <div class="col-6">
+                                                        <a href="#" onclick="generateMemberReport()" class="btn btn-info btn-sm w-100">
+                                                            <i class="fas fa-file-pdf d-block mb-1" style="font-size: 1.2rem;"></i>
+                                                            <span class="d-block" style="font-size: 0.7rem;">Generate Report</span>
+                                                        </a>
+                                                    </div>
+                                                    <div class="col-6">
+                                                        <a href="#" onclick="exportMemberData()" class="btn btn-outline-info btn-sm w-100">
+                                                            <i class="fas fa-download d-block mb-1" style="font-size: 1.2rem;"></i>
+                                                            <span class="d-block" style="font-size: 0.7rem;">Export Data</span>
+                                                        </a>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Profile Content (Initially Hidden) -->
+            <div id="profileContent" class="content-section" style="display: none;">
+                <!-- Compact Profile Header -->
+                <div class="card shadow border-0 mb-3 mb-md-4 bg-gradient-primary profile-mobile">
+                    <div class="card-body text-center py-2 py-md-3">
+                        <div class="position-relative d-inline-block profile-avatar">
+                            @if(auth()->user()->profile_picture)
+                                <img src="/uploads/profiles/{{ auth()->user()->profile_picture }}" 
+                                     alt="Profile" class="rounded-circle border-3 border-white shadow" 
+                                     style="width: 60px; height: 60px; object-fit: cover;">
+                            @else
+                                <div class="rounded-circle bg-white text-primary d-flex align-items-center justify-content-center shadow" 
+                                     style="width: 60px; height: 60px; border: 3px solid white;">
+                                    <i class="bi bi-person-fill" style="font-size: 1.5rem;"></i>
+                                </div>
+                            @endif
+                            <button type="button" class="btn btn-sm btn-light position-absolute bottom-0 end-0 rounded-circle shadow btn-camera" 
+                                    style="width: 24px; height: 24px; font-size: 0.6rem;" onclick="document.getElementById('profilePictureUpload').click()">
+                                <i class="bi bi-camera-fill"></i>
+                            </button>
+                        </div>
+                        <h5 class="text-white mt-2 mb-1 fs-6 fs-md-5" data-user-name="{{ auth()->user()->name }}">{{ auth()->user()->name }}</h5>
+                        <p class="text-white-50 mb-2 small d-none d-md-block">{{ auth()->user()->email }}</p>
+                        <span class="badge bg-white text-primary px-2 py-1 fs-7 fs-md-6">
+                            <i class="bi bi-shield-fill me-1"></i>{{ auth()->user()->role }}
+                        </span>
+                    </div>
+                </div>
+
+                
+                <!-- Compact Form Layout -->
+                <div class="card shadow border-0 profile-mobile">
+                    <div class="card-header bg-white border-0 pt-2 pt-md-3 pb-2">
+                        <div class="d-flex align-items-center justify-content-between">
+                            <h6 class="mb-0 text-primary fs-6 fs-md-5">
+                                <i class="bi bi-person-badge me-2"></i>Profile Information
+                            </h6>
+                            <div class="btn-group btn-group-sm" role="group">
+                                <button type="button" class="btn btn-outline-primary btn-sm" onclick="editPersonalInfo()">
+                                    <i class="bi bi-pencil-fill d-none d-md-inline"></i>
+                                    <i class="bi bi-pencil-fill d-md-none"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary btn-sm" onclick="viewPersonalInfo()">
+                                    <i class="bi bi-eye-fill d-none d-md-inline"></i>
+                                    <i class="bi bi-eye-fill d-md-none"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card-body">
+                        <form id="profileForm" class="row g-2 g-md-3">
+                            <!-- Personal Information Row -->
+                            <div class="col-12 mb-3">
+                                <small class="text-muted fw-semibold mb-2 d-block">PERSONAL DETAILS</small>
+                            </div>
+                            
+                            <div class="col-md-6 col-lg-4 col-12 mb-2">
+                                <label for="name" class="form-label small fw-semibold text-primary fs-7 fs-md-6">
+                                    <i class="bi bi-person-fill me-1"></i>Full Name
+                                </label>
+                                <input type="text" class="form-control form-control-sm" id="name" name="name"
+                                       value="{{ auth()->user()->name ?? '' }}" required>
+                            </div>
+                            
+                            <div class="col-md-6 col-lg-4 col-12 mb-2">
+                                <label for="email" class="form-label small fw-semibold text-primary fs-7 fs-md-6">
+                                    <i class="bi bi-envelope-fill me-1"></i>Email
+                                </label>
+                                <input type="email" class="form-control form-control-sm" id="email" name="email"
+                                       value="{{ auth()->user()->email ?? '' }}" required>
+                            </div>
+                            
+                            <div class="col-md-6 col-lg-4 col-12 mb-2">
+                                <label for="phone_number" class="form-label small fw-semibold text-primary fs-7 fs-md-6">
+                                    <i class="bi bi-telephone-fill me-1"></i>Phone
+                                </label>
+                                <input type="tel" class="form-control form-control-sm" id="phone_number" name="phone_number"
+                                       value="{{ auth()->user()->phone_number ?? '' }}" placeholder="+255 XXX XXX XXX">
+                                <!-- Debug: Show current value -->
+                                <small class="text-muted d-none d-md-block">Current: {{ auth()->user()->phone_number ?? 'NULL' }}</small>
+                            </div>
+                            
+                            <div class="col-md-6 col-lg-4 col-12 mb-2">
+                                <label for="gender" class="form-label small fw-semibold text-primary fs-7 fs-md-6">
+                                    <i class="bi bi-gender-ambiguous me-1"></i>Gender
+                                </label>
+                                <select class="form-select form-select-sm" id="gender" name="gender">
+                                    <option value="">Select Gender</option>
+                                    <option value="Male" {{ auth()->user()->gender == 'Male' ? 'selected' : '' }}>Male</option>
+                                    <option value="Female" {{ auth()->user()->gender == 'Female' ? 'selected' : '' }}>Female</option>
+                                    <option value="Other" {{ auth()->user()->gender == 'Other' ? 'selected' : '' }}>Other</option>
+                                </select>
+                                <!-- Debug: Show current value -->
+                                <small class="text-muted d-none d-md-block">Current: {{ auth()->user()->gender ?? 'NULL' }}</small>
+                            </div>
+                            
+                            <div class="col-md-6 col-lg-4 col-12 mb-2">
+                                <label for="home_diocese" class="form-label small fw-semibold text-primary fs-7 fs-md-6">
+                                    <i class="bi bi-geo-alt-fill me-1"></i>Diocese
+                                </label>
+                                <input type="text" class="form-control form-control-sm" id="home_diocese" name="home_diocese"
+                                       value="{{ auth()->user()->home_diocese ?? '' }}">
+                                <!-- Debug: Show current value -->
+                                <small class="text-muted d-none d-md-block">Current: {{ auth()->user()->home_diocese ?? 'NULL' }}</small>
+                            </div>
+                            
+                            <div class="col-md-6 col-lg-4 col-12 mb-2">
+                                <label for="year_of_study" class="form-label small fw-semibold text-primary fs-7 fs-md-6">
+                                    <i class="bi bi-book-fill me-1"></i>Year of Study
+                                </label>
+                                <select class="form-select form-select-sm" id="year_of_study" name="year_of_study">
+                                    <option value="">Select Year of Study</option>
+                                    <option value="Year 1" {{ auth()->user()->year_of_study == 'Year 1' ? 'selected' : '' }}>Year 1</option>
+                                    <option value="Year 2" {{ auth()->user()->year_of_study == 'Year 2' ? 'selected' : '' }}>Year 2</option>
+                                    <option value="Year 3" {{ auth()->user()->year_of_study == 'Year 3' ? 'selected' : '' }}>Year 3</option>
+                                    <option value="Year 4" {{ auth()->user()->year_of_study == 'Year 4' ? 'selected' : '' }}>Year 4</option>
+                                    <option value="Year 5" {{ auth()->user()->year_of_study == 'Year 5' ? 'selected' : '' }}>Year 5</option>
+                                    <option value="Graduate" {{ auth()->user()->year_of_study == 'Graduate' ? 'selected' : '' }}>Graduate</option>
+                                    <option value="Staff" {{ auth()->user()->year_of_study == 'Staff' ? 'selected' : '' }}>Staff</option>
+                                </select>
+                                <!-- Debug: Show current value -->
+                                <small class="text-muted d-none d-md-block">Current: {{ auth()->user()->year_of_study ?? 'NULL' }}</small>
+                            </div>
+
+                            <!-- Profile Picture Row -->
+                            <div class="col-12 mb-3">
+                                <small class="text-muted fw-semibold mb-2 d-block fs-7 fs-md-6">PROFILE PICTURE</small>
+                            </div>
+                            
+                            <div class="col-md-8 col-12 mb-2">
+                                <label for="profilePictureUpload" class="form-label small fw-semibold text-primary fs-7 fs-md-6">
+                                    <i class="bi bi-upload me-1"></i>Profile Picture
+                                </label>
+                                <input type="file" class="form-control form-control-sm" id="profilePictureUpload" name="profilePictureUpload"
+                                       accept="image/*" onchange="previewProfilePicture(event)">
+                                <small class="text-muted d-none d-md-block">Allowed formats: JPG, PNG, GIF (Max 2MB)</small>
+                            </div>
+                            
+                            <div class="col-md-4 col-12 mb-2">
+                                <label class="form-label text-muted small fs-7 fs-md-6">Preview</label>
+                                <div id="imagePreview" class="border rounded p-2 bg-light text-center" style="height: 60px; display: flex; align-items: center; justify-content: center;">
+                                    @if(auth()->user()->profile_picture)
+                                        <img src="{{ asset('uploads/profiles/' . auth()->user()->profile_picture) }}" alt="Current Profile" 
+                                             class="rounded" style="max-width: 100%; max-height: 100%; object-fit: cover;">
+                                    @else
+                                        <i class="bi bi-image text-muted" style="font-size: 1.5rem;"></i>
+                                    @endif
+                                </div>
+                            </div>
+
+                            <!-- System Information Row -->
+                            <div class="col-12 mb-3 mt-3">
+                                <small class="text-muted fw-semibold mb-2 d-block fs-7 fs-md-6">SYSTEM INFORMATION</small>
+                            </div>
+                            
+                            <div class="col-md-6 col-lg-4 col-12 mb-2">
+                                <label class="form-label small text-muted fs-7 fs-md-6">Role</label>
+                                <div class="form-control form-control-sm bg-light">
+                                    <i class="bi bi-shield-fill text-primary me-1"></i>{{ auth()->user()->role }}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 col-lg-4 col-12 mb-2">
+                                <label class="form-label small text-muted fs-7 fs-md-6">Registration Number</label>
+                                <div class="form-control form-control-sm bg-light">
+                                    <i class="bi bi-card-text text-primary me-1"></i>{{ auth()->user()->registration_number ?? 'N/A' }}
+                                </div>
+                            </div>
+                            
+                            <div class="col-md-6 col-lg-4 col-12 mb-2">
+                                <label class="form-label small text-muted fs-7 fs-md-6">Registration Date</label>
+                                <div class="form-control form-control-sm bg-light">
+                                    <i class="bi bi-calendar-fill text-primary me-1"></i>{{ auth()->user()->created_at ? \Carbon\Carbon::parse(auth()->user()->created_at)->format('M d, Y') : 'N/A' }}
+                                </div>
+                            </div>
+
+                                                        
+                            <div class="col-md-6 col-lg-4 col-12 mb-2">
+                                <label for="notifications" class="form-label small fw-semibold text-primary fs-7 fs-md-6">
+                                    <i class="bi bi-bell-fill me-1"></i>Notifications
+                                </label>
+                                <select class="form-select form-select-sm" id="notifications" name="notifications">
+                                    <option value="enabled">Enabled</option>
+                                    <option value="disabled">Disabled</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Action Buttons -->
+                            <div class="col-12 mt-3 mt-md-4">
+                                <div class="d-flex flex-column flex-md-row gap-2 gap-md-3 justify-content-end">
+                                    <button type="button" class="btn btn-secondary btn-sm w-100 w-md-auto" onclick="resetProfileForm()">
+                                        <i class="bi bi-arrow-clockwise me-1"></i>Reset
+                                    </button>
+                                    <button type="submit" class="btn btn-primary btn-sm w-100 w-md-auto" onclick="updateProfile(event)">
+                                        <i class="bi bi-check-circle me-1"></i>Update Profile
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+</div>
+
+<style>
+.sidebar {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 100;
+    padding: 48px 0 0;
+    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
+}
+
+.sidebar-sticky {
+    position: relative;
+    top: 0;
+    height: calc(100vh - 48px);
+    padding-top: .5rem;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+.nav-link {
+    color: #333;
+    padding: 0.75rem 1rem;
+    border-radius: 0.375rem;
+    margin: 0.125rem 0;
+}
+
+.nav-link:hover {
+    color: #007bff;
+    background-color: rgba(0, 123, 255, 0.1);
+}
+
+.nav-link.active {
+    color: #007bff;
+    background-color: rgba(0, 123, 255, 0.1);
+    font-weight: 500;
+}
+
+.border-left-primary {
+    border-left: 0.25rem solid #4e73df !important;
+}
+.border-left-success {
+    border-left: 0.25rem solid #1cc88a !important;
+}
+
+/* Modern Pending Users Table Styles */
+#pendingUsersTableBody tr {
+    transition: all 0.3s ease;
+    border-bottom: 1px solid #f8f9fa;
+}
+
+#pendingUsersTableBody tr:hover {
+    background-color: #f8f9ff;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.1);
+}
+
+#pendingUsersTableBody .btn-outline-primary:hover {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-color: transparent;
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.3);
+}
+
+#pendingUsersTableBody .badge {
+    transition: all 0.3s ease;
+}
+
+#pendingUsersTableBody .badge:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.table thead th {
+    position: relative;
+    border: none;
+}
+
+.table thead th::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+}
+.border-left-warning {
+    border-left: 0.25rem solid #f6c23e !important;
+}
+
+.border-left-secondary {
+    border-left: 0.25rem solid #858796 !important;
+}
+
+.border-left-danger {
+    border-left: 0.25rem solid #e74a3b !important;
+}
+
+.cursor-pointer {
+    cursor: pointer !important;
+}
+
+.cursor-pointer:hover {
+    opacity: 0.8;
+    transition: opacity 0.2s ease-in-out;
+}
+
+/* Mobile announcement image buttons */
+@media (max-width: 768px) {
+    .btn-group .btn {
+        min-width: 40px;
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+    }
+    
+    .btn-group .btn i {
+        font-size: 0.875rem;
+    }
+}
+
+/* Modern Card Styles */
+.bg-gradient-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+}
+
+.bg-gradient-success {
+    background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%) !important;
+}
+
+.bg-gradient-warning {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%) !important;
+}
+
+.bg-gradient-light {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+}
+
+.icon-circle {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.icon-circle:hover {
+    transform: scale(1.1);
+}
+
+.card {
+    transition: all 0.3s ease;
+    border: none !important;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15) !important;
+}
+
+.progress {
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.progress-bar {
+    border-radius: 10px;
+    transition: width 0.6s ease;
+}
+
+.badge {
+    font-size: 0.75rem;
+    padding: 0.5em 0.75em;
+    border-radius: 0.375rem;
+}
+
+.rounded-lg {
+    border-radius: 0.75rem !important;
+}
+
+/* Welcome Card Styles */
+.welcome-card {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    position: relative;
+    overflow: hidden;
+}
+
+.welcome-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="%23ffffff" fill-opacity="0.1" d="M0,96L48,112C96,128,192,160,288,160C384,160,480,128,576,122.7C672,117,768,139,864,154.7C960,171,1056,181,1152,165.3C1248,149,1344,107,1392,85.3L1440,64L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z"></path></svg>') no-repeat;
+    background-size: cover;
+    opacity: 0.3;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+}
+
+.content-section > div {
+    animation: fadeInUp 0.5s ease-out;
+}
+
+/* Profile section specific containment */
+#profileContent {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+    z-index: 1;
+}
+
+#profileContent .card {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    margin: 0 auto 1rem;
+    box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    border-radius: 0.5rem;
+}
+
+/* Ensure main content area contains profile properly */
+main {
+    position: relative;
+    width: 100%;
+    padding: 1rem;
+}
+
+main .content-section {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+    overflow: hidden;
+}
+
+.icon-circle {
+    animation: pulse 2s infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 767.98px) {
+    .sidebar {
+        position: static;
+        height: auto;
+        padding-top: 0;
+    }
+    
+    .icon-circle {
+        width: 50px;
+        height: 50px;
+    }
+    
+    .h3 {
+        font-size: 1.5rem !important;
+    }
+}
+</style>
+
+<script>
+// Test function to check if routes are working
+function testLeaderRoutes() {
+    console.log('Testing leader routes...');
+    
+    // Test the basic test route
+    fetch('/leader/test')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Test route response:', data);
+            if (data.success) {
+                console.log('✅ Leader routes are working!');
+            } else {
+                console.log('❌ Leader routes have issues');
+            }
+        })
+        .catch(error => {
+            console.error('❌ Test route failed:', error);
+        });
+}
+
+// Test direct API call without modal
+function testUserAPI(userId) {
+    console.log(`Testing user API for ID: ${userId}`);
+    
+    fetch(`/leader/user/${userId}`)
+        .then(response => {
+            console.log('API Response status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('API Response data:', data);
+            if (data.success) {
+                console.log('✅ User API working!', data.user);
+            } else {
+                console.log('❌ User API failed:', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('❌ User API error:', error);
+        });
+}
+
+// User Management Functions
+function viewUser(userId) {
+    // First test if routes are working
+    testLeaderRoutes();
+    
+    // Test direct API call
+    testUserAPI(userId);
+    
+    // Remove existing modal if any
+    const existingModal = document.getElementById('viewUserModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    // Create modal container first
+    const modalContainer = document.createElement('div');
+    modalContainer.id = 'viewUserModal';
+    modalContainer.className = 'modal fade';
+    modalContainer.tabIndex = '-1';
+    modalContainer.innerHTML = `
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-primary text-white">
+                    <h5 class="modal-title">
+                        <i class="fas fa-user me-2"></i>Loading...
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3 text-muted">Loading...</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Add modal to page
+    document.body.appendChild(modalContainer);
+    
+    // Show modal
+    const modal = new bootstrap.Modal(modalContainer);
+    modal.show();
+    
+    // Debug: Log the fetch attempt
+    console.log(`Fetching user details for ID: ${userId}`);
+    console.log(`Endpoint: /leader/user/${userId}`);
+    console.log('Modal element created:', !!document.getElementById('viewUserModal'));
+    
+    // Fetch user data from database
+    fetch(`/leader/user/${userId}`)
+        .then(response => {
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Response data:', data);
+            if (data.success) {
+                // Update modal with complete user data
+                updateUserModal(data.user);
+            } else {
+                // Show error message
+                showUserError(data.message || 'Failed to load user details');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching user details:', error);
+            console.error('Full error:', error.message);
+            showUserError('Error loading user details. Please try again. Error: ' + error.message);
+        });
+}
+
+function updateUserModal(user) {
+    // Wait a bit for modal to be fully rendered
+    setTimeout(() => {
+        const modalElement = document.getElementById('viewUserModal');
+        
+        if (!modalElement) {
+            console.error('Modal element not found');
+            showUserError('Modal element not found. Please try again.');
+            return;
+        }
+        
+        const modalBody = modalElement.querySelector('.modal-body');
+        const modalTitle = modalElement.querySelector('.modal-title');
+        const modalFooter = modalElement.querySelector('.modal-footer');
+        
+        if (!modalBody || !modalTitle || !modalFooter) {
+            console.error('Modal sub-elements not found:', {
+                modalBody: !!modalBody,
+                modalTitle: !!modalTitle,
+                modalFooter: !!modalFooter
+            });
+            showUserError('Modal sub-elements not found. Please try again.');
+            return;
+        }
+        
+        // Update modal title
+        modalTitle.innerHTML = '<i class="fas fa-user me-2"></i>User Details';
+        
+        // Fetch user profile picture specifically
+        fetchUserProfilePicture(user.id);
+        
+        // Create detailed user information HTML
+        const userDetailsHTML = `
+            <!-- User Profile Header -->
+            <div class="text-center mb-4 p-3 bg-gradient-primary bg-opacity-10 rounded-3">
+                <div id="profilePictureContainer" class="mb-3">
+                    <div class="bg-primary bg-opacity-40 rounded-circle d-inline-flex align-items-center justify-content-center mx-auto shadow-sm border border-3 border-white" style="width: 100px; height: 100px;">
+                        <i class="fas fa-user text-white" style="font-size: 42px;"></i>
+                    </div>
+                </div>
+                <div class="bg-white rounded-3 px-4 py-2 d-inline-block">
+                    <h4 class="mb-1 fw-bold text-dark">${user.name}</h4>
+                </div>
+                <div class="d-flex justify-content-center align-items-center gap-2">
+                    <span class="badge bg-dark text-white px-3 py-2">
+                        <i class="fas fa-hashtag me-1"></i>User ID: TMCS - ${String(user.id).padStart(4, '0')}
+                    </span>
+                    ${user.membership_status === 'Active' ? 
+                        '<span class="badge bg-success px-3 py-2"><i class="fas fa-check-circle me-1"></i>Active</span>' : 
+                        '<span class="badge bg-warning px-3 py-2"><i class="fas fa-clock me-1"></i>Pending</span>'
+                    }
+                </div>
+            </div>
+            
+            <!-- Information Cards Grid -->
+            <div class="row g-3">
+                <!-- Basic Information Card -->
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-white border-0 py-2">
+                            <h6 class="mb-0 text-primary fw-semibold">
+                                <i class="fas fa-user-circle me-2"></i>Basic Information
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label text-muted fw-semibold" style="font-size: 0.75rem;">
+                                    <i class="fas fa-envelope me-1"></i>Email
+                                </label>
+                                <div class="form-control-plaintext bg-light rounded px-3 py-2">${user.email}</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted fw-semibold" style="font-size: 0.75rem;">
+                                    <i class="fas fa-phone me-1"></i>Phone
+                                </label>
+                                <div class="form-control-plaintext bg-light rounded px-3 py-2">${user.phone_number || 'Not specified'}</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted fw-semibold" style="font-size: 0.75rem;">
+                                    <i class="fas fa-venus-mars me-1"></i>Gender
+                                </label>
+                                <div class="form-control-plaintext bg-light rounded px-3 py-2">${user.gender || 'Not specified'}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Academic Information Card -->
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-white border-0 py-2">
+                            <h6 class="mb-0 text-primary fw-semibold">
+                                <i class="fas fa-graduation-cap me-2"></i>Academic Information
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label text-muted fw-semibold" style="font-size: 0.75rem;">
+                                    <i class="fas fa-book me-1"></i>Year of Study
+                                </label>
+                                <div class="form-control-plaintext bg-light rounded px-3 py-2">${user.year_of_study || 'Not specified'}</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted fw-semibold" style="font-size: 0.75rem;">
+                                    <i class="fas fa-church me-1"></i>Home Diocese
+                                </label>
+                                <div class="form-control-plaintext bg-light rounded px-3 py-2">${user.home_diocese || 'Not specified'}</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted fw-semibold" style="font-size: 0.75rem;">
+                                    <i class="fas fa-id-card me-1"></i>Registration Number
+                                </label>
+                                <div class="form-control-plaintext bg-light rounded px-3 py-2 font-monospace">${user.registration_number || 'Not assigned'}</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Account Details Card -->
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-white border-0 py-2">
+                            <h6 class="mb-0 text-primary fw-semibold">
+                                <i class="fas fa-user-cog me-2"></i>Account Details
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label text-muted fw-semibold" style="font-size: 0.75rem;">
+                                    <i class="fas fa-user-tag me-1"></i>Role
+                                </label>
+                                <div class="p-2 rounded bg-light">
+                                    ${user.role === 'admin' ? 
+                                        '<span class="badge bg-danger text-white px-3 py-2" style="font-size: 0.65rem; font-weight: 600;"><i class="fas fa-crown me-1"></i>Administrator</span>' : 
+                                        user.role === 'leader' ? 
+                                        '<span class="badge bg-success text-white px-3 py-2" style="font-size: 0.65rem; font-weight: 600;"><i class="fas fa-user-tie me-1"></i>Leader</span>' : 
+                                        '<span class="badge bg-info text-white px-3 py-2" style="font-size: 0.65rem; font-weight: 600;"><i class="fas fa-user me-1"></i>Member</span>'
+                                    }
+                                </div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted fw-semibold" style="font-size: 0.75rem;">
+                                    <i class="fas fa-envelope-check me-1"></i>Email Verification
+                                </label>
+                                <div class="p-2 rounded bg-light">
+                                    ${user.membership_status === 'Active' ? 
+                                        '<span class="badge bg-success px-3 py-2"><i class="fas fa-check-circle me-1"></i>Active</span>' : 
+                                        user.membership_status === 'Pending' ? 
+                                        '<span class="badge bg-warning px-3 py-2"><i class="fas fa-clock me-1"></i>Pending</span>' : 
+                                        '<span class="badge bg-secondary px-3 py-2"><i class="fas fa-question me-1"></i>Not Verified</span>'
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- System Information Card -->
+                <div class="col-md-6">
+                    <div class="card border-0 shadow-sm h-100">
+                        <div class="card-header bg-white border-0 py-2">
+                            <h6 class="mb-0 text-primary fw-semibold">
+                                <i class="fas fa-clock me-2"></i>System Information
+                            </h6>
+                        </div>
+                        <div class="card-body">
+                            <div class="mb-3">
+                                <label class="form-label text-muted fw-semibold" style="font-size: 0.75rem;">
+                                    <i class="fas fa-calendar-plus me-1"></i>Registration Date
+                                </label>
+                                <div class="form-control-plaintext bg-light rounded px-3 py-2">${user.created_at}</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted fw-semibold" style="font-size: 0.75rem;">
+                                    <i class="fas fa-calendar me-1"></i>Account Created
+                                </label>
+                                <div class="form-control-plaintext bg-light rounded px-3 py-2">${user.created_at}</div>
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label text-muted fw-semibold" style="font-size: 0.75rem;">
+                                    <i class="fas fa-calendar-check me-1"></i>Last Updated
+                                </label>
+                                <div class="form-control-plaintext bg-light rounded px-3 py-2">${user.updated_at}</div>
+                            </div>
+                                                    </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Update modal footer
+        modalFooter.innerHTML = `
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    `;
+        
+        // Update modal body with user details
+        modalBody.innerHTML = userDetailsHTML;
+        
+        console.log('✅ Modal updated successfully with user data');
+    }, 200);
+}
+
+// Function to fetch user profile picture
+function fetchUserProfilePicture(userId) {
+    console.log(`Fetching profile picture for user ID: ${userId}`);
+    
+    fetch(`/leader/user/${userId}/profile-picture`)
+        .then(response => response.json())
+        .then(data => {
+            console.log('Profile picture response:', data);
+            if (data.success && data.profile_picture) {
+                // Update the profile picture in the modal
+                const profileContainer = document.getElementById('profilePictureContainer');
+                if (profileContainer) {
+                    profileContainer.innerHTML = `
+                        <img src="${data.profile_picture}" alt="Profile" class="rounded-circle shadow-sm border border-3 border-white" style="width: 100px; height: 100px; object-fit: cover;">
+                    `;
+                }
+            } else {
+                console.log('No profile picture found for user:', userId);
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching profile picture:', error);
+        });
+}
+
+function showUserError(message) {
+    // Wait a bit for the modal to be fully rendered
+    setTimeout(() => {
+        const modalElement = document.getElementById('viewUserModal');
+        
+        if (!modalElement) {
+            console.error('Error modal element not found');
+            // Fallback: show alert
+            alert('Error: ' + message);
+            return;
+        }
+        
+        const modalBody = modalElement.querySelector('.modal-body');
+        const modalTitle = modalElement.querySelector('.modal-title');
+        const modalHeader = modalElement.querySelector('.modal-header');
+        const modalFooter = modalElement.querySelector('.modal-footer');
+        
+        if (!modalBody || !modalTitle || !modalHeader) {
+            console.error('Error modal sub-elements not found');
+            // Fallback: show alert
+            alert('Error: ' + message);
+            return;
+        }
+        
+        // Update modal title and header
+        modalTitle.innerHTML = '<i class="fas fa-exclamation-triangle me-2"></i>Error';
+        modalHeader.className = 'modal-header bg-danger text-white';
+        
+        // Show error message
+        modalBody.innerHTML = `
+            <div class="d-flex align-items-center">
+                <div>
+                    <h6 class="text-danger mb-2">Unable to Load User Details</h6>
+                    <p class="text-muted">${message}</p>
+                    <button type="button" class="btn btn-outline-danger" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        `;
+        
+        // Update modal footer
+        if (modalFooter) {
+            modalFooter.innerHTML = '';
+        }
+        
+        console.log('❌ Error modal updated with message:', message);
+    }, 200);
+}
+
+function editUser(userId) {
+    // Find user data from the table
+    const userRow = document.querySelector(`tr:has(button[onclick="editUser(${userId})"])`);
+    if (userRow) {
+        const cells = userRow.getElementsByTagName('td');
+        const userName = cells[1].querySelector('.fw-bold').textContent;
+        const userEmail = cells[2].textContent.trim();
+        const userRole = cells[3].querySelector('.badge').textContent.trim().toLowerCase();
+        const userStatus = cells[4].querySelector('.badge').textContent.trim().toLowerCase();
+        
+        // Restriction: Leaders can ONLY edit members, not admins or other leaders
+        if (userRole !== 'member') {
+            alert('Leaders can only edit member accounts. You cannot edit administrators or other leaders.');
+            return;
+        }
+        
+        // Extract additional user data
+        const userPhone = cells[5] ? cells[5].textContent.trim() : '';
+        const userGender = cells[6] ? cells[6].textContent.trim() : '';
+        const userYear = cells[7] ? cells[7].textContent.trim() : '';
+        const userDiocese = cells[8] ? cells[8].textContent.trim() : '';
+        const userRegNumber = cells[9] ? cells[9].textContent.trim() : '';
+        const userAddress = cells[10] ? cells[10].textContent.trim() : '';
+        const userDob = cells[11] ? cells[11].textContent.trim() : '';
+        const userProfilePicture = cells[12] ? cells[12].textContent.trim() : '';
+        
+        // Create edit modal content
+        const modalContent = `
+            <div class="modal fade" id="editUserModal" tabindex="-1">
+                <div class="modal-dialog modal-dialog-centered modal-lg">
+                    <div class="modal-content border-0 shadow-lg">
+                        <div class="modal-header bg-gradient-info text-white border-0 py-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <h5 class="modal-title mb-0">
+                                    <i class="fas fa-user-edit me-2"></i>
+                                    <span class="fw-bold">Edit User Information</span>
+                                </h5>
+                                <button type="button" class="btn-close btn-close-white btn-lg" data-bs-dismiss="modal">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="modal-body bg-light p-4">
+                            <div class="row g-4">
+                                <!-- Left Column - Basic Info -->
+                                <div class="col-lg-6">
+                                    <div class="card border-0 shadow-sm mb-4">
+                                        <div class="card-header bg-white border-0 py-2">
+                                            <h6 class="text-primary mb-0">
+                                                <i class="fas fa-user me-2"></i>
+                                                Basic Information
+                                            </h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row g-3">
+                                                <div class="col-12">
+                                                    <label class="form-label fw-semibold text-muted mb-2">
+                                                        <i class="fas fa-id-badge me-1"></i>
+                                                        User ID
+                                                    </label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-white">
+                                                            <i class="fas fa-hashtag"></i>
+                                                        </span>
+                                                        <input type="text" class="form-control border-end-0" value="TMCS - ${String(userId).padStart(4, '0')}" readonly>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="form-label fw-semibold text-muted mb-2">
+                                                        <i class="fas fa-user me-1"></i>
+                                                        Full Name
+                                                    </label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-white">
+                                                            <i class="fas fa-signature"></i>
+                                                        </span>
+                                                        <input type="text" class="form-control border-end-0" id="editUserName" value="${userName}" required>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="form-label fw-semibold text-muted mb-2">
+                                                        <i class="fas fa-envelope me-1"></i>
+                                                        Email Address
+                                                    </label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-white">
+                                                            <i class="fas fa-at"></i>
+                                                        </span>
+                                                        <input type="email" class="form-control border-end-0" id="editUserEmail" value="${userEmail}" required>
+                                                    </div>
+                                                </div>
+                                                                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Right Column - Personal & Academic -->
+                                <div class="col-lg-6">
+                                    <!-- Personal Details Card -->
+                                    <div class="card border-0 shadow-sm mb-4">
+                                        <div class="card-header bg-white border-0 py-2">
+                                            <h6 class="text-info mb-0">
+                                                <i class="fas fa-user-tag me-2"></i>
+                                                Personal Details
+                                            </h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-semibold text-muted mb-2">
+                                                        <i class="fas fa-venus-mars me-1"></i>
+                                                        Gender
+                                                    </label>
+                                                    <select class="form-select border-0 shadow-sm" id="editUserGender">
+                                                        <option value="">Select Gender</option>
+                                                        <option value="Male" ${userGender === 'male' ? 'selected' : ''}>Male</option>
+                                                        <option value="Female" ${userGender === 'female' ? 'selected' : ''}>Female</option>
+                                                        <option value="Other" ${userGender === 'other' ? 'selected' : ''}>Other</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-semibold text-muted mb-2">
+                                                        <i class="fas fa-church me-1"></i>
+                                                        Home Diocese
+                                                    </label>
+                                                    <input type="text" class="form-control border-0 shadow-sm" id="editUserDiocese" value="${userDiocese}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!-- Bottom Row - Additional Info -->
+                            <div class="row g-4 mt-3">
+                                <!-- Contact & Registration Card -->
+                                <div class="col-lg-6">
+                                    <div class="card border-0 shadow-sm">
+                                        <div class="card-header bg-white border-0 py-2">
+                                            <h6 class="text-warning mb-0">
+                                                <i class="fas fa-address-card me-2"></i>
+                                                Contact & Registration
+                                            </h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row g-3">
+                                                <div class="col-12">
+                                                    <label class="form-label fw-semibold text-muted mb-2">
+                                                        <i class="fas fa-id-card me-1"></i>
+                                                        Registration Number
+                                                    </label>
+                                                    <div class="input-group">
+                                                        <span class="input-group-text bg-white">
+                                                            <i class="fas fa-hashtag"></i>
+                                                        </span>
+                                                        <input type="text" class="form-control border-end-0" id="editUserRegNumber" value="${userRegNumber}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <label class="form-label fw-semibold text-muted mb-2">
+                                                        <i class="fas fa-map-marker-alt me-1"></i>
+                                                        Address
+                                                    </label>
+                                                    <textarea class="form-control border-0 shadow-sm" id="editUserAddress" rows="3" placeholder="Enter complete address">${userAddress}</textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                
+                                <!-- Account & Profile Card -->
+                                <div class="col-lg-6">
+                                    <div class="card border-0 shadow-sm">
+                                        <div class="card-header bg-white border-0 py-2">
+                                            <h6 class="text-secondary mb-0">
+                                                <i class="fas fa-cog me-2"></i>
+                                                Account & Profile
+                                            </h6>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="row g-3">
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-semibold text-muted mb-2">
+                                                        <i class="fas fa-user-shield me-1"></i>
+                                                        Membership Status
+                                                    </label>
+                                                    <select class="form-select border-0 shadow-sm" id="editUserStatus">
+                                                        <option value="">Select Status</option>
+                                                        <option value="Active" ${userStatus.includes('active') ? 'selected' : ''}>Active</option>
+                                                        <option value="Pending" ${userStatus.includes('pending') ? 'selected' : ''}>Pending</option>
+                                                    </select>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label class="form-label fw-semibold text-muted mb-2">
+                                                        <i class="fas fa-user-tag me-1"></i>
+                                                        Role
+                                                    </label>
+                                                    <select class="form-select border-0 shadow-sm" id="editUserRole">
+                                                        <option value="">Select Role</option>
+                                                        <option value="member" ${userRole.includes('member') ? 'selected' : ''}>Member</option>
+                                                        <!-- Leaders cannot edit other leaders or admins - role locked to member -->
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer bg-white border-0 p-3">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <button type="button" class="btn btn-outline-secondary btn-lg" data-bs-dismiss="modal">
+                                    <i class="fas fa-times me-2"></i>
+                                    Cancel
+                                </button>
+                                <button type="button" class="btn btn-gradient-info btn-lg text-white" onclick="saveUserChanges(${userId})">
+                                    <i class="fas fa-save me-2"></i>
+                                    Save Changes
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        // Remove existing modal if any
+        const existingModal = document.getElementById('editUserModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+        
+        // Add modal to page and show it
+        document.body.insertAdjacentHTML('beforeend', modalContent);
+        const modal = new bootstrap.Modal(document.getElementById('editUserModal'));
+        modal.show();
+    } else {
+        alert('User not found in table. Please refresh the page and try again.');
+    }
+}
+
+function saveUserChanges(userId) {
+    // Get form values
+    const userName = document.getElementById('editUserName').value;
+    const userEmail = document.getElementById('editUserEmail').value;
+    const userRole = document.getElementById('editUserRole').value;
+    const userStatus = document.getElementById('editUserStatus').value;
+    
+    // Show loading state
+    const saveBtn = document.querySelector('#editUserModal .btn-warning');
+    const originalText = saveBtn.innerHTML;
+    saveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Saving...';
+    saveBtn.disabled = true;
+    
+    // Prepare data for API call
+    const userData = {
+        name: userName,
+        email: userEmail,
+        role: userRole,
+        membership_status: userStatus
+    };
+    
+    // Simulate API call (replace with actual API call)
+    setTimeout(() => {
+        // Update user row in the table
+        const userRow = document.querySelector(`tr:has(button[onclick="editUser(${userId})"])`);
+        if (userRow) {
+            const cells = userRow.getElementsByTagName('td');
+            
+            // Update name
+            if (cells[1] && cells[1].querySelector('.fw-bold')) {
+                cells[1].querySelector('.fw-bold').textContent = userName;
+            }
+            
+            cells[1].querySelector('.fw-bold').textContent = userName;
+            // Update email
+            cells[2].querySelector('span').textContent = userEmail;
+            // Update role badge
+            const roleBadge = cells[3].querySelector('.badge');
+            roleBadge.className = `badge bg-${userRole === 'admin' ? 'danger' : userRole === 'leader' ? 'primary' : 'secondary'}`;
+            roleBadge.innerHTML = `<i class="fas fa-${userRole === 'admin' ? 'crown' : userRole === 'leader' ? 'user-tie' : 'user'} me-1"></i>${userRole.charAt(0).toUpperCase() + userRole.slice(1)}`;
+            // Update status badge
+            const statusBadge = cells[4].querySelector('.badge');
+            statusBadge.className = `badge bg-${userStatus === 'Active' ? 'success' : 'warning'}`;
+            statusBadge.innerHTML = `<i class="fas fa-${userStatus === 'Active' ? 'check-circle' : 'clock'} me-1"></i>${userStatus}`;
+        }
+        
+        // Close modal
+        const modal = bootstrap.Modal.getInstance(document.getElementById('editUserModal'));
+        modal.hide();
+        
+        // Show success message
+        showNotification('User updated successfully!', 'success');
+        
+        // Reset button
+        saveBtn.innerHTML = originalText;
+        saveBtn.disabled = false;
+    }, 1000);
+}
+
+function showNotification(message, type = 'info') {
+    const alertClass = type === 'success' ? 'alert-success' : type === 'error' ? 'alert-danger' : 'alert-info';
+    const icon = type === 'success' ? 'fa-check-circle' : type === 'error' ? 'fa-exclamation-circle' : 'fa-info-circle';
+    
+    const notification = `
+        <div class="alert ${alertClass} alert-dismissible fade show position-fixed" style="top: 70px; right: 20px; z-index: 1050; min-width: 300px;">
+            <i class="fas ${icon} me-2"></i>${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', notification);
+    
+    // Auto-remove after 3 seconds
+    setTimeout(() => {
+        const alert = document.querySelector('.alert:last-of-type');
+        if (alert) {
+            alert.remove();
+        }
+    }, 3000);
+}
+
+// Pending Users Functions
+function viewPendingUser(userId) {
+    // Reuse the existing viewUser function
+    viewUser(userId);
+}
+
+function approveUser(userId) {
+    if (confirm('Are you sure you want to approve this user? This will activate their account.')) {
+        // Show loading state on the button
+        const approveBtn = event.target;
+        const originalText = approveBtn.innerHTML;
+        approveBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Approving...';
+        approveBtn.disabled = true;
+        
+        // Simulate API call (replace with actual API call)
+        setTimeout(() => {
+            // Update user status in the table
+            const userRow = document.querySelector(`tr:has(button[onclick="approveUser(${userId})"])`);
+            if (userRow) {
+                // Remove row from pending table
+                userRow.remove();
+                
+                // Update statistics
+                updatePendingCount();
+            }
+            
+            // Show success message
+            showNotification('User approved successfully!', 'success');
+            
+            // Reset button
+            approveBtn.innerHTML = originalText;
+            approveBtn.disabled = false;
+        }, 1000);
+    }
+}
+
+function rejectUser(userId) {
+    if (confirm('Are you sure you want to reject this user? This will remove their application.')) {
+        const reason = prompt('Please provide a reason for rejection (optional):');
+        
+        // Show loading state on the button
+        const rejectBtn = event.target;
+        const originalText = rejectBtn.innerHTML;
+        rejectBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Rejecting...';
+        rejectBtn.disabled = true;
+        
+        // Simulate API call (replace with actual API call)
+        setTimeout(() => {
+            // Update user status in the table
+            const userRow = document.querySelector(`tr:has(button[onclick="rejectUser(${userId})"])`);
+            if (userRow) {
+                // Remove row from pending table
+                userRow.remove();
+                
+                // Update statistics
+                updatePendingCount();
+            }
+            
+            // Show success message
+            showNotification('User rejected successfully! ' + (reason ? 'Reason: ' + reason : ''), 'warning');
+            
+            // Reset button
+            rejectBtn.innerHTML = originalText;
+            rejectBtn.disabled = false;
+        }, 1000);
+    }
+}
+
+function updatePendingCount() {
+    // Update pending count in the sidebar
+    const pendingCountElement = document.querySelector('[onclick="showPendingUsers()"] .badge');
+    if (pendingCountElement) {
+        const currentCount = parseInt(pendingCountElement.textContent);
+        pendingCountElement.textContent = (currentCount - 1).toString();
+    }
+    
+    // Update main dashboard statistics
+    const pendingStatElement = document.querySelector('.stat-card:nth-child(2) .stat-number');
+    if (pendingStatElement) {
+        const currentStat = parseInt(pendingStatElement.textContent);
+        pendingStatElement.textContent = (currentStat - 1).toString();
+    }
+}
+
+// Search and Filter Functions for Pending Users
+document.addEventListener('DOMContentLoaded', function() {
+    const pendingSearchInput = document.getElementById('pendingSearchInput');
+    const pendingGenderFilter = document.getElementById('pendingGenderFilter');
+    const pendingStudyFilter = document.getElementById('pendingStudyFilter');
+    
+    if (pendingSearchInput) {
+        pendingSearchInput.addEventListener('input', filterPendingUsers);
+    }
+    if (pendingGenderFilter) {
+        pendingGenderFilter.addEventListener('change', filterPendingUsers);
+    }
+    if (pendingStudyFilter) {
+        pendingStudyFilter.addEventListener('change', filterPendingUsers);
+    }
+});
+
+function filterPendingUsers() {
+    const searchInput = document.getElementById('pendingSearchInput').value.toLowerCase();
+    const genderFilter = document.getElementById('pendingGenderFilter').value.toLowerCase();
+    const studyFilter = document.getElementById('pendingStudyFilter').value.toLowerCase();
+    const pendingUserRows = document.querySelectorAll('.pending-user-row');
+    const pendingUserCards = document.querySelectorAll('.pending-user-card');
+    
+    // Filter desktop table rows
+    pendingUserRows.forEach(row => {
+        const name = (row.dataset.name || '').toLowerCase();
+        const email = (row.dataset.email || '').toLowerCase();
+        const gender = (row.dataset.gender || '').toLowerCase();
+        const year = (row.dataset.year || '').toLowerCase();
+        
+        const matchesSearch = !searchInput || name.includes(searchInput) || email.includes(searchInput);
+        const matchesGender = !genderFilter || gender.includes(genderFilter);
+        const matchesStudy = !studyFilter || year.includes(studyFilter);
+        
+        if (matchesSearch && matchesGender && matchesStudy) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+    
+    // Filter mobile cards
+    pendingUserCards.forEach(card => {
+        const name = (card.dataset.name || '').toLowerCase();
+        const email = (card.dataset.email || '').toLowerCase();
+        const gender = (card.dataset.gender || '').toLowerCase();
+        const year = (card.dataset.year || '').toLowerCase();
+        
+        const matchesSearch = !searchInput || name.includes(searchInput) || email.includes(searchInput);
+        const matchesGender = !genderFilter || gender.includes(genderFilter);
+        const matchesStudy = !studyFilter || year.includes(studyFilter);
+        
+        if (matchesSearch && matchesGender && matchesStudy) {
+            card.style.display = '';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+function showContent(contentId, title) {
+    // Hide all content sections
+    document.querySelectorAll('.content-section').forEach(section => {
+        section.style.display = 'none';
+    });
+    
+    // Show selected content
+    document.getElementById(contentId).style.display = 'block';
+    
+    // Update active menu
+    const menuItem = document.querySelector(`[onclick="show${title}()"]`);
+    if (menuItem) {
+        updateActiveMenu(menuItem);
+    }
+}
+
+function showDashboard() {
+    showContent('dashboardContent', 'Dashboard');
+}
+
+function showNewUpdates() {
+    showContent('newUpdatesContent', 'NewUpdates');
+}
+
+function clearNewUpdateForm() {
+    document.getElementById('newUpdateForm').reset();
+}
+
+function viewRecentUpdates() {
+    showContent('recentUpdatesContent', 'Recent Updates');
+    loadRecentUpdates();
+}
+
+function loadRecentUpdates() {
+    const recentUpdatesList = document.getElementById('recentUpdatesList');
+    
+    // Show loading state
+    recentUpdatesList.innerHTML = `
+        <div class="text-center py-4">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2 text-muted">Loading recent updates...</p>
+        </div>
+    `;
+    
+    // Fetch recent announcements
+    fetch('/leader/announcements', {
+        method: 'GET',
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+            'Accept': 'application/json'
+        }
+    })
+    .then(response => response.json())
+    .then(result => {
+        if (result.success && result.data && result.data.length > 0) {
+            displayRecentUpdates(result.data);
+        } else {
+            recentUpdatesList.innerHTML = `
+                <div class="text-center py-5">
+                    <i class="bi bi-inbox display-1 text-muted"></i>
+                    <p class="mt-3 text-muted">No recent updates found.</p>
+                    <button type="button" class="btn btn-primary" onclick="showNewUpdates()">
+                        <i class="bi bi-plus-circle me-1"></i>Create First Update
+                    </button>
+                </div>
+            `;
+        }
+    })
+    .catch(error => {
+        console.error('Error loading recent updates:', error);
+        recentUpdatesList.innerHTML = `
+            <div class="alert alert-danger" role="alert">
+                <i class="bi bi-exclamation-triangle me-2"></i>
+                Error loading recent updates. Please try again.
+            </div>
+        `;
+    });
+}
+
+function displayRecentUpdates(updates) {
+    const recentUpdatesList = document.getElementById('recentUpdatesList');
+    
+    if (!updates || updates.length === 0) {
+        recentUpdatesList.innerHTML = `
+            <div class="text-center py-3">
+                <i class="bi bi-megaphone text-muted" style="font-size: 2rem;"></i>
+                <p class="text-muted mt-2 mb-0">No recent updates available</p>
+                <small class="text-muted">Create your first announcement to get started</small>
+            </div>
+        `;
+        return;
+    }
+    
+    const updatesHtml = updates.map(update => {
+        const formattedDate = new Date(update.created_at).toLocaleDateString();
+        return `
+            <div class="col-12 col-md-6 col-lg-4 mb-2">
+                <div class="card shadow-sm h-100" style="border-radius: 8px; border: 1px solid #e9ecef;">
+                    <div class="card-body p-3">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h6 class="card-title fw-bold mb-0" style="font-size: 0.9rem; line-height: 1.3;">${update.title}</h6>
+                            <span class="badge bg-primary" style="font-size: 0.65rem;">${update.priority}</span>
+                        </div>
+                        
+                        <div class="mb-2">
+                            <small class="text-muted" style="font-size: 0.75rem;">
+                                <i class="bi bi-calendar3 me-1"></i>${new Date(update.created_at).toLocaleDateString()}
+                                <span class="ms-2"><i class="bi bi-person me-1"></i>${update.created_by}</span>
+                            </small>
+                        </div>
+                        
+                        <div class="message-content" style="font-size: 0.8rem; line-height: 1.4; max-height: 60px; overflow-y: auto;">
+                            ${update.message}
+                        </div>
+                        
+                        ${update.expiry_date ? `
+                            <div class="mb-2">
+                                <small class="text-muted" style="font-size: 0.7rem;">
+                                    <i class="bi bi-calendar-x me-1"></i>Expires: ${new Date(update.expiry_date).toLocaleDateString()}
+                                </small>
+                            </div>
+                        ` : ''}
+                        ${update.image ? `
+                            <div class="mt-2">
+                                <div class="d-flex flex-column flex-sm-row align-items-start align-items-sm-center gap-2 mb-2">
+                                    <small class="text-muted fw-bold" style="font-size: 0.75rem;">
+                                        <i class="bi bi-image me-1"></i>Attachment
+                                    </small>
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <button type="button" class="btn btn-outline-primary btn-sm" onclick="viewAnnouncementImage('${update.image}', '${update.title}')" title="View Image">
+                                            <i class="bi bi-eye me-1"></i>
+                                            <span class="d-none d-sm-inline">View</span>
+                                        </button>
+                                        <button type="button" class="btn btn-outline-success btn-sm" onclick="downloadAnnouncementImage('${update.image}', '${update.title}')" title="Download Image">
+                                            <i class="bi bi-download me-1"></i>
+                                            <span class="d-none d-sm-inline">Download</span>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="image-container" style="position: relative; width: 100%; height: 120px; overflow: hidden; border-radius: 8px; border: 1px solid #e9ecef;">
+                                    <img src="${update.image}" alt="Update image" class="cursor-pointer" style="width: 100%; height: 100%; object-fit: contain; background: #f8f9fa;" onclick="viewAnnouncementImage('${update.image}', '${update.title}')">
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+    }).join('');
+    
+    recentUpdatesList.innerHTML = updatesHtml;
+}
+
+function getPriorityBadge(priority) {
+    const badges = {
+        'normal': '<span class="badge bg-secondary">Normal</span>',
+        'important': '<span class="badge bg-warning text-dark">Important</span>',
+        'urgent': '<span class="badge bg-danger">Urgent</span>'
+    };
+    return badges[priority] || badges['normal'];
+}
+
+function getAudienceBadge(audience) {
+    const badges = {
+        'all': '<span class="badge bg-info">All Users</span>',
+        'members': '<span class="badge bg-primary">Members</span>',
+        'leaders': '<span class="badge bg-success">Leaders</span>',
+        'admins': '<span class="badge bg-dark">Admins</span>'
+    };
+    return badges[audience] || badges['all'];
+}
+
+function getPriorityColor(priority) {
+    const colors = {
+        'normal': 'secondary',
+        'important': 'warning',
+        'urgent': 'danger'
+    };
+    return colors[priority] || 'secondary';
+}
+
+function refreshRecentUpdates() {
+    loadRecentUpdates();
+}
+
+function viewAnnouncementImage(imageSrc, announcementTitle) {
+    // Create modal HTML
+    const modalHtml = `
+        <div class="modal fade" id="imageModal" tabindex="-1" aria-labelledby="imageModalLabel" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="imageModalLabel">
+                            <i class="bi bi-image me-2"></i>${announcementTitle} - Image Preview
+                        </h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img src="${imageSrc}" alt="${announcementTitle}" class="img-fluid rounded" style="max-height: 70vh; object-fit: contain;">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                            <i class="bi bi-x-circle me-1"></i>Close
+                        </button>
+                        <button type="button" class="btn btn-success" onclick="downloadAnnouncementImage('${imageSrc}', '${announcementTitle}')">
+                            <i class="bi bi-download me-1"></i>Download
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Remove existing modal if present
+    const existingModal = document.getElementById('imageModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    // Add modal to body and show it
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    const modal = new bootstrap.Modal(document.getElementById('imageModal'));
+    modal.show();
+    
+    // Clean up modal after it's hidden
+    document.getElementById('imageModal').addEventListener('hidden.bs.modal', function() {
+        this.remove();
+    });
+}
+
+function downloadAnnouncementImage(imageSrc, announcementTitle) {
+    try {
+        // Create a temporary link element
+        const link = document.createElement('a');
+        link.href = imageSrc;
+        
+        // Extract filename from imageSrc or create one from announcement title
+        let filename = 'announcement-image';
+        if (imageSrc.includes('/')) {
+            const parts = imageSrc.split('/');
+            filename = parts[parts.length - 1];
+        }
+        
+        // Sanitize announcement title and use it as filename if it's an image file
+        const sanitizedTitle = announcementTitle.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+        if (filename.includes('.') && (filename.endsWith('.jpg') || filename.endsWith('.jpeg') || filename.endsWith('.png') || filename.endsWith('.gif'))) {
+            const extension = filename.split('.').pop();
+            filename = `${sanitizedTitle}.${extension}`;
+        }
+        
+        link.download = filename;
+        link.style.display = 'none';
+        
+        // Trigger download
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Show success toast
+        showToast('Image downloaded successfully!', 'success');
+        
+    } catch (error) {
+        console.error('Error downloading image:', error);
+        showToast('Error downloading image. Please try again.', 'error');
+    }
+}
+
+function showUsers() {
+    showContent('usersContent', 'Users');
+    
+    // Add search functionality
+    const userSearchInput = document.getElementById('userSearchInput');
+    const statusFilter = document.getElementById('statusFilter');
+    const roleFilter = document.getElementById('roleFilter');
+    
+    if (userSearchInput) {
+        userSearchInput.addEventListener('input', filterUsers);
+    }
+    
+    if (statusFilter) {
+        statusFilter.addEventListener('change', filterUsers);
+    }
+    
+    if (roleFilter) {
+        roleFilter.addEventListener('change', filterUsers);
+    }
+}
+
+function showPendingUsers() {
+    showContent('pendingUsersContent', 'PendingUsers');
+    
+    // Initialize search functionality after a small delay to ensure elements are visible
+    setTimeout(() => {
+        const pendingSearchInput = document.getElementById('pendingSearchInput');
+        const pendingGenderFilter = document.getElementById('pendingGenderFilter');
+        const pendingStudyFilter = document.getElementById('pendingStudyFilter');
+        
+        // Remove existing event listeners to prevent duplicates
+        if (pendingSearchInput) {
+            pendingSearchInput.removeEventListener('input', filterPendingUsers);
+            pendingSearchInput.addEventListener('input', filterPendingUsers);
+        }
+        
+        if (pendingGenderFilter) {
+            pendingGenderFilter.removeEventListener('change', filterPendingUsers);
+            pendingGenderFilter.addEventListener('change', filterPendingUsers);
+        }
+        
+        if (pendingStudyFilter) {
+            pendingStudyFilter.removeEventListener('change', filterPendingUsers);
+            pendingStudyFilter.addEventListener('change', filterPendingUsers);
+        }
+    }, 100);
+}
+
+function showAnnouncements() {
+    showContent('announcementsContent', 'Announcements');
+}
+
+function showPaymentHistory() {
+    // Hide payment form card, show payment history card
+    const paymentFormCard = document.querySelector('#paymentContent > .card.shadow:first-child');
+    const paymentHistoryCard = document.getElementById('paymentHistoryCard');
+    
+    console.log('showPaymentHistory called');
+    console.log('Payment form card:', paymentFormCard);
+    console.log('Payment history card:', paymentHistoryCard);
+    
+    if (paymentFormCard) {
+        paymentFormCard.style.display = 'none';
+        console.log('Payment form card hidden');
+    }
+    if (paymentHistoryCard) {
+        paymentHistoryCard.style.display = 'block';
+        console.log('Payment history card shown');
+    }
+    
+    showContent('paymentContent', 'Payment');
+    loadPaymentHistory();
+    loadPaymentAccounts();
+    populateYearOptions();
+}
+
+function showPaymentForm() {
+    // Show payment form card, hide payment history card
+    const paymentFormCard = document.querySelector('#paymentContent > .card.shadow:first-child');
+    const paymentHistoryCard = document.getElementById('paymentHistoryCard');
+    
+    console.log('showPaymentForm called');
+    console.log('Payment form card:', paymentFormCard);
+    console.log('Payment history card:', paymentHistoryCard);
+    
+    if (paymentFormCard) {
+        paymentFormCard.style.display = 'block';
+        console.log('Payment form card shown');
+    }
+    if (paymentHistoryCard) {
+        paymentHistoryCard.style.display = 'none';
+        console.log('Payment history card hidden');
+    }
+    
+    showContent('paymentContent', 'Payment');
+    loadPaymentHistory();
+    loadPaymentAccounts();
+    populateYearOptions();
+    
+    // Test payment accounts after 2 seconds
+    setTimeout(() => {
+        console.log('Checking payment accounts dropdown...');
+        const methodSelect = document.getElementById('paymentMethod');
+        console.log('Payment Method Select:', methodSelect);
+        console.log('Options count:', methodSelect.options.length);
+        for (let i = 0; i < methodSelect.options.length; i++) {
+            console.log('Option', i, ':', methodSelect.options[i].text, methodSelect.options[i].value);
+        }
+    }, 2000);
+}
+
+// Payment Form Functions (Same as Member)
+function loadPaymentAccounts() {
+    console.log('Loading payment accounts...');
+    fetch('/leader/accounts')
+        .then(response => {
+            console.log('Response status:', response.status);
+            return response.json();
+        })
+        .then(data => {
+            console.log('Payment accounts data:', data);
+            if (data.success) {
+                displayPaymentAccounts(data.data);
+            } else {
+                console.error('Failed to load payment accounts:', data.message);
+                // Fallback to sample accounts if API fails
+                displaySampleAccounts();
+            }
+        })
+        .catch(error => {
+            console.error('Error loading payment accounts:', error);
+            // Fallback to sample accounts if network fails
+            displaySampleAccounts();
+        });
+}
+
+function displaySampleAccounts() {
+    console.log('Using sample payment accounts...');
+    const methodSelect = document.getElementById('paymentMethod');
+    
+    // Sample accounts for testing
+    const sampleAccounts = [
+        {
+            id: 'mobile1',
+            account_type: 'mobile',
+            account_name: 'M-Pesa',
+            account_number: '255123456789'
+        },
+        {
+            id: 'bank1',
+            account_type: 'bank',
+            account_name: 'NBC Bank',
+            account_number: '0123456789012'
+        },
+        {
+            id: 'mobile2',
+            account_type: 'mobile',
+            account_name: 'Tigo Pesa',
+            account_number: '255987654321'
+        }
+    ];
+    
+    displayPaymentAccounts(sampleAccounts);
+}
+
+function displayPaymentAccounts(accounts) {
+    const methodSelect = document.getElementById('paymentMethod');
+    
+    if (!accounts || accounts.length === 0) {
+        methodSelect.innerHTML = '<option value="">No payment accounts available</option>';
+        console.log('No accounts found:', accounts);
+        return;
+    }
+    
+    let html = '<option value="">Select Payment Method...</option>';
+    
+    accounts.forEach(account => {
+        const typeIcon = account.account_type === 'mobile' ? '📱' : '🏦';
+        html += `<option value="${account.id}">${typeIcon} ${account.account_name} - ${account.account_number}</option>`;
+        console.log('Account found:', account);
+    });
+    
+    methodSelect.innerHTML = html;
+    console.log('Payment accounts loaded:', accounts.length);
+}
+
+function populateYearOptions() {
+    const yearSelect = document.getElementById('paymentYear');
+    const currentYear = new Date().getFullYear();
+    
+    // Clear existing options except the first two
+    while (yearSelect.options.length > 2) {
+        yearSelect.remove(2);
+    }
+    
+    // Add current year and previous years
+    for (let year = currentYear; year >= currentYear - 5; year--) {
+        const option = document.createElement('option');
+        option.value = year;
+        option.textContent = year;
+        yearSelect.appendChild(option);
+    }
+}
+
+function handlePaymentTypeChange() {
+    const paymentType = document.getElementById('paymentType').value;
+    const amountInput = document.getElementById('amount');
+    const installmentOptions = document.getElementById('installmentOptions');
+    
+    // Auto-fill amount based on payment type
+    const amounts = {
+        'membership': 2000,
+        'zaka': 2000,
+        'certificate': 4000
+    };
+    
+    if (amounts[paymentType]) {
+        amountInput.value = amounts[paymentType];
+    }
+    
+    // Show installment options for certain payment types
+    if (paymentType === 'membership' || paymentType === 'certificate') {
+        installmentOptions.style.display = 'block';
+    } else {
+        installmentOptions.style.display = 'none';
+        document.getElementById('installmentInfo').style.display = 'none';
+    }
+}
+
+function handleYearChange() {
+    const yearSelect = document.getElementById('paymentYear').value;
+    const customYearDiv = document.getElementById('customYearDiv');
+    
+    if (yearSelect === 'new_year') {
+        customYearDiv.style.display = 'block';
+    } else {
+        customYearDiv.style.display = 'none';
+    }
+}
+
+function handleInstallmentChange() {
+    const installmentType = document.getElementById('installmentType').value;
+    const installmentInfo = document.getElementById('installmentInfo');
+    const installmentInfoText = document.getElementById('installmentInfoText');
+    
+    if (installmentType === 'full') {
+        installmentInfoText.textContent = 'You will pay the full amount at once.';
+        installmentInfo.style.display = 'block';
+    } else {
+        installmentInfo.style.display = 'none';
+    }
+}
+
+function showPaymentDetails() {
+    const paymentMethod = document.getElementById('paymentMethod').value;
+    const paymentDetailsSection = document.getElementById('paymentDetailsSection');
+    const paymentInstructions = document.getElementById('paymentInstructions');
+    
+    if (paymentMethod) {
+        // Fetch account details
+        fetch('/leader/accounts')
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    const account = data.data.find(acc => acc.id == paymentMethod);
+                    if (account) {
+                        const instructions = account.account_type === 'mobile' 
+                            ? `Please send money to: ${account.account_name} - ${account.account_number}`
+                            : `Please transfer to: ${account.account_name} - Account No: ${account.account_number}`;
+                        
+                        paymentInstructions.innerHTML = instructions;
+                        paymentDetailsSection.style.display = 'block';
+                    }
+                }
+            });
+    } else {
+        paymentDetailsSection.style.display = 'none';
+    }
+}
+
+function previewAttachment(input) {
+    const file = input.files[0];
+    const previewDiv = document.getElementById('attachmentPreview');
+    const previewContent = document.getElementById('attachmentPreviewContent');
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            if (file.type.startsWith('image/')) {
+                previewContent.innerHTML = `<img src="${e.target.result}" class="img-fluid" style="max-height: 200px;" alt="Receipt Preview">`;
+            } else if (file.type === 'application/pdf') {
+                previewContent.innerHTML = `<i class="bi bi-file-pdf display-1 text-danger"></i><p class="mt-2">${file.name}</p>`;
+            }
+            previewDiv.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+// View Admin Comments for Payment
+function viewAttachment(attachmentPath) {
+    // Remove existing modal if any
+    const existingModal = document.getElementById('adminCommentsModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    // Create modal container
+    const modalContainer = document.createElement('div');
+    modalContainer.id = 'adminCommentsModal';
+    modalContainer.className = 'modal fade';
+    modalContainer.tabIndex = '-1';
+    modalContainer.innerHTML = `
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-warning text-dark">
+                    <h5 class="modal-title">
+                        <i class="bi bi-chat-quote me-2"></i>Admin Comments
+                    </h5>
+                    <button type="button" class="btn-close btn-close-dark" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body text-center py-4">
+                    <div class="spinner-border text-warning" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                    <p class="mt-3 text-muted">Loading admin comments...</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Add modal to page
+    document.body.appendChild(modalContainer);
+    
+    // Show modal
+    const modal = new bootstrap.Modal(modalContainer);
+    modal.show();
+    
+    // Fetch real payment data from database
+    fetchPaymentDetails(attachmentPath);
+}
+
+// Fetch payment details from database
+function fetchPaymentDetails(attachmentPath) {
+    // Extract payment ID from attachment path or use a different approach
+    // For now, we'll fetch all payments and find the matching one
+    fetch('/leader/payments/history')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.payments) {
+                // Find the payment that matches the attachment
+                const payment = data.payments.find(p => p.attachment === attachmentPath);
+                if (payment) {
+                    updateAdminCommentsModal(payment);
+                } else {
+                    showAdminCommentsError('Payment not found');
+                }
+            } else {
+                showAdminCommentsError('Failed to load payment data');
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching payment details:', error);
+            showAdminCommentsError('Error loading admin comments');
+        });
+}
+
+// Show error in admin comments modal
+function showAdminCommentsError(message) {
+    const modalElement = document.getElementById('adminCommentsModal');
+    if (!modalElement) return;
+    
+    const modalBody = modalElement.querySelector('.modal-body');
+    if (!modalBody) return;
+    
+    modalBody.innerHTML = `
+        <div class="alert alert-danger" role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            ${message}
+        </div>
+    `;
+}
+
+// Update admin comments modal
+function updateAdminCommentsModal(payment) {
+    const modalElement = document.getElementById('adminCommentsModal');
+    if (!modalElement) return;
+    
+    const modalBody = modalElement.querySelector('.modal-body');
+    if (!modalBody) return;
+    
+    // Extract admin comments from description field
+    const description = payment.description || '';
+    let adminComments = '';
+    let rejectionReason = '';
+    let isRejected = false;
+    
+    // Parse the description field to extract admin comments or rejection reason
+    if (description.includes('Admin Approval Comments:')) {
+        adminComments = description.split('Admin Approval Comments:')[1]?.trim() || 'No comments provided';
+    } else if (description.includes('Rejection Reason:')) {
+        rejectionReason = description.split('Rejection Reason:')[1]?.trim() || 'No reason provided';
+        isRejected = true;
+    } else {
+        // Handle cases where there's no admin comments or rejection
+        adminComments = 'No admin comments available';
+    }
+    
+    const commentsHTML = `
+        <div class="admin-comments-modal">
+            ${isRejected ? `
+                <div class="alert alert-danger border-0" role="alert">
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-x-circle-fill me-3 mt-1" style="font-size: 1.5rem;"></i>
+                        <div class="flex-grow-1">
+                            <p class="mb-2 fw-semibold fs-5">Payment Rejected</p>
+                            <p class="mb-0 fs-6"><strong>Reason:</strong> ${rejectionReason}</p>
+                        </div>
+                    </div>
+                </div>
+            ` : `
+                <div class="alert alert-info border-0" role="alert">
+                    <div class="d-flex align-items-start">
+                        <i class="bi bi-check-circle-fill me-3 mt-1" style="font-size: 1.5rem;"></i>
+                        <div class="flex-grow-1">
+                            <p class="mb-2 fw-semibold fs-5">Admin Approval Comments:</p>
+                            <p class="mb-0 fs-6">${adminComments}</p>
+                        </div>
+                    </div>
+                </div>
+            `}
+            
+            <div class="text-muted text-center mt-3">
+                <small>
+                    <i class="bi bi-receipt me-1"></i>
+                    Payment Type: <strong>${payment.payment_type || 'N/A'}</strong>
+                </small>
+                <br>
+                <small>
+                    <i class="bi bi-cash-stack me-1"></i>
+                    Amount: <strong>${payment.amount || 'N/A'}</strong>
+                </small>
+                ${payment.created_at ? `
+                    <br>
+                    <small>
+                        <i class="bi bi-calendar-check me-1"></i>
+                        Payment Date: ${new Date(payment.created_at).toLocaleDateString()}
+                    </small>
+                ` : ''}
+            </div>
+        </div>
+    `;
+    
+    modalBody.innerHTML = commentsHTML;
+}
+
+function removeAttachment() {
+    document.getElementById('attachment').value = '';
+    document.getElementById('attachmentPreview').style.display = 'none';
+    document.getElementById('attachmentPreviewContent').innerHTML = '';
+}
+
+function hidePaymentForm() {
+    showContent('dashboardContent', 'Dashboard');
+}
+
+function loadPaymentHistory() {
+    fetch('/leader/payments/history')
+        .then(response => response.json())
+        .then(data => {
+            console.log('Payment history response:', data);
+            if (data.success) {
+                displayPaymentHistory(data.payments);
+            } else {
+                console.error('Failed to load payment history:', data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error loading payment history:', error);
+        });
+}
+
+function displayPaymentHistory(payments) {
+    const container = document.getElementById('paymentHistory');
+    
+    // Update statistics cards
+    updatePaymentStatistics(payments);
+    
+    if (!payments || payments.length === 0) {
+        container.innerHTML = `
+            <div class="text-center py-3 py-md-4">
+                <i class="bi bi-cash-stack fs-1 fs-md-1 text-muted mb-3"></i>
+                <h6 class="fs-6 fs-md-5">No Payment History</h6>
+                <p class="text-muted fs-7 fs-md-6">No payment records found. Submit your first payment above.</p>
+            </div>
+        `;
+        return;
+    }
+    
+    let html = `
+        <div class="payment-table-enhanced">
+            <div class="table-header-enhanced">
+                <div class="header-actions">
+                    <button class="btn-modern btn-primary-modern" onclick="exportPaymentHistory()">
+                        <i class="bi bi-download me-2"></i>Export CSV
+                    </button>
+                    <button class="btn-modern btn-secondary-modern" onclick="printPaymentHistory()">
+                        <i class="bi bi-printer me-2"></i>Print
+                    </button>
+                </div>
+            </div>
+            
+            <div class="table-responsive-enhanced">
+                <table class="table-enhanced">
+                    <thead>
+                        <tr class="table-header-row">
+                            <th class="table-header-cell">
+                                <div class="header-content">
+                                    <i class="bi bi-calendar3 me-2"></i>
+                                    <span>Date</span>
+                                </div>
+                            </th>
+                            <th class="table-header-cell">
+                                <div class="header-content">
+                                    <i class="bi bi-tag me-2"></i>
+                                    <span>Type</span>
+                                </div>
+                            </th>
+                            <th class="table-header-cell">
+                                <div class="header-content">
+                                    <i class="bi bi-cash-stack me-2"></i>
+                                    <span>Amount</span>
+                                </div>
+                            </th>
+                            <th class="table-header-cell">
+                                <div class="header-content">
+                                    <i class="bi bi-flag me-2"></i>
+                                    <span>Status</span>
+                                </div>
+                            </th>
+                            <th class="table-header-cell">
+                                <div class="header-content">
+                                    <i class="bi bi-gear me-2"></i>
+                                    <span>Actions</span>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+    `;
+    
+    payments.forEach(payment => {
+        const statusClass = payment.status === 'completed' ? 'success' : 
+                           payment.status === 'pending' ? 'warning' : 'danger';
+        const statusBadge = payment.status === 'completed' ? 'Completed' : 
+                           payment.status === 'pending' ? 'Pending' : 'Failed';
+        
+        html += `
+            <tr class="modern-table-row">
+                <td class="modern-table-cell">
+                    <div class="cell-content date-cell">
+                        <i class="bi bi-calendar-date text-primary"></i>
+                        <span>${new Date(payment.created_at).toLocaleDateString()}</span>
+                    </div>
+                </td>
+                <td class="modern-table-cell">
+                    <div class="cell-content type-cell">
+                        <span class="type-badge-modern type-${payment.payment_type?.toLowerCase() || 'default'}">${payment.payment_type || 'N/A'}</span>
+                    </div>
+                </td>
+                <td class="modern-table-cell">
+                    <div class="cell-content amount-cell">
+                        <div class="amount-wrapper">
+                            <span class="currency">TZS</span>
+                            <span class="amount">${parseFloat(payment.amount || 0).toLocaleString()}</span>
+                        </div>
+                    </div>
+                </td>
+                <td class="modern-table-cell">
+                    <div class="cell-content status-cell">
+                        <span class="status-badge-modern status-${statusClass}">
+                            <i class="bi bi-${statusClass === 'success' ? 'check-circle' : statusClass === 'warning' ? 'clock' : 'x-circle'}"></i>
+                            ${statusBadge}
+                        </span>
+                    </div>
+                </td>
+                <td class="modern-table-cell">
+                    <div class="cell-content actions-cell">
+                        <div class="action-buttons-modern">
+                            ${payment.attachment ? `
+                                <button class="action-btn-modern btn-view" onclick="viewAttachment('${payment.attachment}')" title="View Attachment">
+                                    <i class="bi bi-eye"></i>
+                                </button>
+                            ` : `
+                                <span class="no-file-modern">No file</span>
+                            `}
+                            <button class="action-btn-modern btn-details" onclick="viewPaymentDetails(${payment.id})" title="View Details">
+                                <i class="bi bi-info-circle"></i>
+                            </button>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        `;
+    });
+    
+    html += `
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    `;    
+    html += `
+        <style>
+        .payment-table-enhanced {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+        
+        .table-header-enhanced {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        
+        .table-header-enhanced th {
+            border: none;
+            padding: 15px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .table-header-enhanced th i {
+            font-size: 0.8rem;
+        }
+        
+        .payment-table-enhanced tbody tr {
+            border-bottom: 1px solid #e3e6f0;
+            transition: all 0.2s ease;
+        }
+        
+        .payment-table-enhanced tbody tr:hover {
+            background-color: #f8f9fc;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .date-display {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: 500;
+            color: #2c3e50;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 0.8rem;
+        }
+        
+        .date-display i {
+            color: #667eea;
+            font-size: 0.8rem;
+        }
+        
+        .type-badge-enhanced {
+            background: linear-gradient(135deg, #36b9cc 0%, #258391 100%);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: inline-block;
+            letter-spacing: 0.2px;
+        }
+        
+        .amount-display {
+            display: flex;
+            align-items: baseline;
+            gap: 3px;
+        }
+        
+        .currency-symbol {
+            color: #858796;
+            font-size: 0.7rem;
+            font-weight: 500;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .amount-value {
+            color: #2c3e50;
+            font-weight: 600;
+            font-size: 0.9rem;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .status-badge {
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: inline-block;
+        }
+        
+        .status-success {
+            background: linear-gradient(135deg, #1cc88a 0%, #13855c 100%);
+            color: white;
+        }
+        
+        .status-warning {
+            background: linear-gradient(135deg, #f6c23e 0%, #dda20a 100%);
+            color: white;
+        }
+        
+        .status-danger {
+            background: linear-gradient(135deg, #e74a3b 0%, #c0392b 100%);
+            color: white;
+        }
+        
+        .action-button {
+            background: linear-gradient(135deg, #4e73df 0%, #224abe 100%);
+            color: white;
+            border: none;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            transition: all 0.2s ease;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            letter-spacing: 0.2px;
+        }
+        
+        .action-button:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(78, 115, 223, 0.3);
+        }
+        
+        .no-file {
+            color: #b7b9cc;
+            font-size: 0.7rem;
+            font-style: italic;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .table-header-enhanced th {
+            border: none;
+            padding: 12px 10px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+        
+        .table-header-enhanced th i {
+            font-size: 0.7rem;
+        }
+        
+        .payment-table-enhanced tbody td {
+            padding: 10px 8px;
+            vertical-align: middle;
+        }
+        
+        @media (max-width: 768px) {
+            .table-header-enhanced th {
+                font-size: 0.8rem;
+                padding: 10px 8px;
+            }
+            
+            .payment-table-enhanced tbody td {
+                padding: 10px 8px;
+                font-size: 0.85rem;
+            }
+            
+            .type-badge-enhanced, .method-badge, .status-badge, .action-button {
+                padding: 4px 8px;
+                font-size: 0.75rem;
+            }
+        }
+        </style>
+    `;
+    
+    container.innerHTML = html;
+}
+
+function updatePaymentStatistics(payments) {
+    if (!payments || payments.length === 0) {
+        document.getElementById('completedPaymentsCount').textContent = '0';
+        document.getElementById('pendingPaymentsCount').textContent = '0';
+        document.getElementById('rejectedPaymentsCount').textContent = '0';
+        return;
+    }
+    
+    const completedCount = payments.filter(p => p.status === 'completed').length;
+    const pendingCount = payments.filter(p => p.status === 'pending').length;
+    const rejectedCount = payments.filter(p => p.status === 'rejected').length;
+    
+    document.getElementById('completedPaymentsCount').textContent = completedCount;
+    document.getElementById('pendingPaymentsCount').textContent = pendingCount;
+    document.getElementById('rejectedPaymentsCount').textContent = rejectedCount;
+    
+    console.log('Payment statistics updated:', {
+        completed: completedCount,
+        pending: pendingCount,
+        rejected: rejectedCount
+    });
+}
+
+function viewReceipt(receiptImage) {
+    // Create modal to view receipt
+    const modalHtml = `
+        <div class="modal fade" id="receiptModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header bg-info text-white">
+                        <h5 class="modal-title">
+                            <i class="bi bi-receipt me-2"></i>Payment Receipt
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body text-center">
+                        <img src="/storage/${receiptImage}" alt="Payment Receipt" class="img-fluid rounded" style="max-height: 400px;">
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Remove existing modal if present
+    const existingModal = document.getElementById('receiptModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    // Add modal to page
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('receiptModal'));
+    modal.show();
+    
+    // Remove modal from DOM when hidden
+    document.getElementById('receiptModal').addEventListener('hidden.bs.modal', function () {
+        this.remove();
+    });
+}
+
+function previewPaymentReceipt(event) {
+    const file = event.target.files[0];
+    const preview = document.getElementById('receiptPreview');
+    const placeholder = document.getElementById('receiptPlaceholder');
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.querySelector('img').src = e.target.result;
+            preview.style.display = 'block';
+            placeholder.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function clearPaymentReceipt() {
+    document.getElementById('paymentReceipt').value = '';
+    document.getElementById('receiptPreview').style.display = 'none';
+    document.getElementById('receiptPlaceholder').style.display = 'block';
+}
+
+function clearPaymentForm() {
+    document.getElementById('leaderPaymentForm').reset();
+    clearPaymentReceipt();
+}
+
+function showProfile() {
+    showContent('profileContent', 'Profile');
+}
+
+function updateActiveMenu(activeItem) {
+    // Remove active class from all nav links
+    document.querySelectorAll('.nav-link').forEach(link => {
+        link.classList.remove('active');
+    });
+    
+    // Add active class to clicked item
+    activeItem.classList.add('active');
+}
+
+// Session check
+setInterval(function() {
+    fetch('/leader/check-session')
+        .then(response => response.json())
+        .then(data => {
+            if (!data.authenticated) {
+                window.location.href = '/login';
+            }
+        })
+        .catch(error => {
+            console.error('Session check failed:', error);
+        });
+}, 30000); // Check every 30 seconds
+
+// Filter users function
+function filterUsers() {
+    const searchInput = document.getElementById('userSearchInput').value.toLowerCase();
+    const statusFilter = document.getElementById('statusFilter').value.toLowerCase();
+    const roleFilter = document.getElementById('roleFilter').value.toLowerCase();
+    const userRows = document.querySelectorAll('.user-row');
+    
+    userRows.forEach(row => {
+        const name = row.dataset.name.toLowerCase();
+        const email = row.dataset.email.toLowerCase();
+        const status = row.dataset.status.toLowerCase();
+        const role = row.dataset.role.toLowerCase();
+        
+        const matchesSearch = !searchInput || name.includes(searchInput) || email.includes(searchInput);
+        const matchesStatus = !statusFilter || status.includes(statusFilter);
+        const matchesRole = !roleFilter || role.includes(roleFilter);
+        
+        if (matchesSearch && matchesStatus && matchesRole) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+function rejectUser(userId) {
+    if (confirm('Are you sure you want to reject this user? This will remove their application.')) {
+        const reason = prompt('Please provide a reason for rejection (optional):');
+        
+        // Show loading state on the button
+        const rejectBtn = event.target;
+        const originalText = rejectBtn.innerHTML;
+        rejectBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i>Rejecting...';
+        rejectBtn.disabled = true;
+        
+        // Simulate API call (replace with actual API call)
+        setTimeout(() => {
+            // Update user status in the table
+            const userRow = document.querySelector(`tr:has(button[onclick="rejectUser(${userId})"])`);
+            if (userRow) {
+                // Remove row from pending table
+                userRow.remove();
+                
+                // Update statistics
+                updatePendingCount();
+            }
+            
+            // Show success message
+            showNotification('User rejected successfully! ' + (reason ? 'Reason: ' + reason : ''), 'warning');
+            
+            // Reset button
+            rejectBtn.innerHTML = originalText;
+            rejectBtn.disabled = false;
+        }, 1000);
+    }
+}
+
+function updatePendingCount() {
+    // Update pending count in the sidebar
+    const pendingCountElement = document.querySelector('[onclick="showPendingUsers()"] .badge');
+    if (pendingCountElement) {
+        const currentCount = parseInt(pendingCountElement.textContent);
+        pendingCountElement.textContent = (currentCount - 1).toString();
+    }
+    
+    // Update main dashboard statistics
+    const pendingStatElement = document.querySelector('.stat-card:nth-child(2) .stat-number');
+    if (pendingStatElement) {
+        const currentStat = parseInt(pendingStatElement.textContent);
+        pendingStatElement.textContent = (currentStat - 1).toString();
+    }
+}
+
+// Search and Filter Functions for Pending Users
+document.addEventListener('DOMContentLoaded', function() {
+    const pendingSearchInput = document.getElementById('pendingSearchInput');
+    const pendingGenderFilter = document.getElementById('pendingGenderFilter');
+    const pendingStudyFilter = document.getElementById('pendingStudyFilter');
+    
+    if (pendingSearchInput) {
+        pendingSearchInput.addEventListener('input', filterPendingUsers);
+    }
+    if (pendingGenderFilter) {
+        pendingGenderFilter.addEventListener('change', filterPendingUsers);
+    }
+    if (pendingStudyFilter) {
+        pendingStudyFilter.addEventListener('change', filterPendingUsers);
+    }
+});
+
+function filterPendingUsers() {
+    const searchInput = document.getElementById('pendingSearchInput').value.toLowerCase();
+    const genderFilter = document.getElementById('pendingGenderFilter').value.toLowerCase();
+    const studyFilter = document.getElementById('pendingStudyFilter').value.toLowerCase();
+    const pendingUserRows = document.querySelectorAll('.pending-user-row');
+    const pendingUserCards = document.querySelectorAll('.pending-user-card');
+    
+    // Filter desktop table rows
+    pendingUserRows.forEach(row => {
+        const name = (row.dataset.name || '').toLowerCase();
+        const email = (row.dataset.email || '').toLowerCase();
+        const gender = (row.dataset.gender || '').toLowerCase();
+        const year = (row.dataset.year || '').toLowerCase();
+        
+        const matchesSearch = !searchInput || name.includes(searchInput) || email.includes(searchInput);
+        const matchesGender = !genderFilter || gender.includes(genderFilter);
+        const matchesStudy = !studyFilter || year.includes(studyFilter);
+        
+        if (matchesSearch && matchesGender && matchesStudy) {
+            row.style.display = '';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+    
+    // Filter mobile cards
+    pendingUserCards.forEach(card => {
+        const name = (card.dataset.name || '').toLowerCase();
+        const email = (card.dataset.email || '').toLowerCase();
+        const gender = (card.dataset.gender || '').toLowerCase();
+        const year = (card.dataset.year || '').toLowerCase();
+        
+        const matchesSearch = !searchInput || name.includes(searchInput) || email.includes(searchInput);
+        const matchesGender = !genderFilter || gender.includes(genderFilter);
+        const matchesStudy = !studyFilter || year.includes(studyFilter);
+        
+        if (matchesSearch && matchesGender && matchesStudy) {
+            card.style.display = '';
+        } else {
+            card.style.display = 'none';
+        }
+    });
+}
+
+// View Recent Announcements Modal
+function viewRecentAnnouncements() {
+    // Show loading modal
+    const loadingModalHtml = `
+        <div class="modal fade" id="recentAnnouncementsModal" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-fullscreen-sm-down">
+                <div class="modal-content">
+                    <div class="modal-header bg-info text-white">
+                        <h5 class="modal-title d-flex align-items-center">
+                            <i class="bi bi-clock-history me-2"></i>
+                            <span>Recent Announcements</span>
+                        </h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-2 p-md-3">
+                        <div class="text-center py-4">
+                            <div class="spinner-border text-info" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-2 text-muted small">Loading announcements...</p>
+                        </div>
+                    </div>
+                    <div class="modal-footer bg-light">
+                        <button type="button" class="btn btn-secondary btn-sm" data-bs-dismiss="modal">
+                            <i class="bi bi-x-circle me-1"></i>Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Remove existing modal if present
+    const existingModal = document.getElementById('recentAnnouncementsModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    // Add loading modal to page
+    document.body.insertAdjacentHTML('beforeend', loadingModalHtml);
+    
+    // Show loading modal
+    const modal = new bootstrap.Modal(document.getElementById('recentAnnouncementsModal'));
+    modal.show();
+    
+    // Fetch real announcements from API
+    fetch('/leader/announcements')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.data.length > 0) {
+                // Update modal with real announcements
+                updateAnnouncementsModal(data.data);
+            } else {
+                // Show no announcements message
+                showNoAnnouncements();
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching announcements:', error);
+            showError();
+        });
+}
+
+// Update modal with real announcements
+function updateAnnouncementsModal(announcements) {
+    const modalBody = document.querySelector('#recentAnnouncementsModal .modal-body');
+    
+    let html = '<div class="row g-2 g-md-3">';
+    announcements.slice(0, 6).forEach((announcement, index) => {
+        const priorityClass = announcement.priority === 'urgent' ? 'danger' :
+                             announcement.priority === 'important' ? 'warning' : 'info';
+        const priorityBadge = announcement.priority === 'urgent' ? 'Urgent' :
+                             announcement.priority === 'important' ? 'Important' : 'Normal';
+
+        const createdDate = new Date(announcement.created_at).toLocaleDateString();
+
+        html += `
+            <div class="col-12 mb-2 mb-md-3">
+                <div class="card border-${priorityClass} announcement-card h-100">
+                    <div class="card-header bg-${priorityClass} text-white py-2 py-md-3">
+                        <div class="announcement-title-row d-flex justify-content-between align-items-center">
+                            <h6 class="mb-1 fs-6 fs-md-5 flex-grow-1 me-2 text-truncate">${announcement.title}</h6>
+                            <span class="badge bg-light text-${priorityClass} flex-shrink-0">${priorityBadge}</span>
+                        </div>
+                        <small class="d-block fs-7 fs-md-6 opacity-75">
+                            <i class="bi bi-person me-1"></i>${announcement.created_by} • 
+                            <i class="bi bi-calendar me-1"></i>${createdDate}
+                        </small>
+                    </div>
+                    <div class="card-body p-2 p-md-3">
+                        <p class="card-text small mb-2 mb-md-3 text-break">${announcement.message}</p>
+                        <div class="text-muted small mb-2 mb-md-3">
+                            <div class="d-flex flex-wrap gap-2">
+                                <span class="badge bg-light bg-opacity-25 text-dark">
+                                    <i class="bi bi-people me-1"></i>${announcement.audience}
+                                </span>
+                                ${announcement.expiry_date ? `
+                                    <span class="badge bg-light bg-opacity-25 text-dark">
+                                        <i class="bi bi-clock me-1"></i>Expires: ${new Date(announcement.expiry_date).toLocaleDateString()}
+                                    </span>
+                                ` : ''}
+                            </div>
+                        </div>
+                        ${announcement.image ? `
+                            <div class="text-center mt-2 mt-md-3 position-relative">
+                                <img src="${announcement.image}" alt="Announcement Image" class="img-fluid rounded" style="max-height: 120px; max-width: 100%; object-fit: cover;">
+                                <div class="position-absolute top-50 start-50 translate-middle">
+                                    <button type="button" class="btn btn-primary btn-sm rounded-circle shadow-lg" onclick="viewAnnouncementImage('${announcement.image}', '${announcement.title}')" style="opacity: 0.9;">
+                                        <i class="bi bi-zoom-in"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    html += '</div>';
+    
+    modalBody.innerHTML = html;
+}
+
+// Show no announcements message
+function showNoAnnouncements() {
+    const modalBody = document.querySelector('#recentAnnouncementsModal .modal-body');
+    modalBody.innerHTML = `
+        <div class="text-center py-5">
+            <i class="bi bi-megaphone text-muted" style="font-size: 3rem;"></i>
+            <h5 class="mt-3 text-muted">No Announcements</h5>
+            <p class="text-muted">There are no announcements to display at this time.</p>
+        </div>
+    `;
+}
+
+// Show error message
+function showError() {
+    const modalBody = document.querySelector('#recentAnnouncementsModal .modal-body');
+    modalBody.innerHTML = `
+        <div class="text-center py-5">
+            <i class="bi bi-exclamation-triangle text-danger" style="font-size: 3rem;"></i>
+            <h5 class="mt-3 text-danger">Error Loading Announcements</h5>
+            <p class="text-muted">Unable to load announcements. Please try again later.</p>
+        </div>
+    `;
+}
+
+// Announcement Management Functions
+function showCreateAnnouncementForm() {
+    document.getElementById('createAnnouncementForm').style.display = 'block';
+}
+
+function hideCreateAnnouncementForm() {
+    document.getElementById('createAnnouncementForm').style.display = 'none';
+}
+
+function previewLeaderAnnouncementImage(event) {
+    const file = event.target.files[0];
+    const preview = document.getElementById('leaderImagePreview');
+    const placeholder = document.getElementById('leaderUploadPlaceholder');
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.querySelector('img').src = e.target.result;
+            preview.style.display = 'block';
+            placeholder.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+    }
+}
+
+function clearLeaderAnnouncementImage() {
+    document.getElementById('leaderAnnouncementImage').value = '';
+    document.getElementById('leaderImagePreview').style.display = 'none';
+    document.getElementById('leaderUploadPlaceholder').style.display = 'block';
+}
+
+function editAnnouncement(id) {
+    // TODO: Implement edit functionality
+    alert('Edit functionality will be implemented soon.');
+}
+
+function deleteAnnouncement(id) {
+    if (confirm('Are you sure you want to delete this announcement?')) {
+        fetch(`/leader/announcements/${id}`, {
+            method: 'DELETE',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                loadAnnouncements();
+                alert('Announcement deleted successfully!');
+            } else {
+                alert('Error deleting announcement: ' + data.message);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('Error deleting announcement. Please try again.');
+        });
+    }
+}
+
+// Handle announcement form submission and image upload
+document.addEventListener('DOMContentLoaded', function() {
+    const announcementForm = document.getElementById('leaderAnnouncementForm');
+    if (announcementForm) {
+        announcementForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            // Show loading state
+            submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Publishing...';
+            submitBtn.disabled = true;
+            
+            fetch('/leader/announcements', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Clear form
+                    this.reset();
+                    clearLeaderAnnouncementImage();
+                    hideCreateAnnouncementForm();
+                    
+                    // Show success message
+                    alert('Announcement published successfully!');
+                } else {
+                    alert('Error publishing announcement: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error publishing announcement. Please try again.');
+            })
+            .finally(() => {
+                // Reset button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+    }
+    
+    // Payment form submission handler (Updated for new form structure)
+    const paymentForm = document.getElementById('leaderPaymentForm');
+    if (paymentForm) {
+        paymentForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            // Handle payment year - if custom year is selected, use that value
+            const paymentYear = document.getElementById('paymentYear').value;
+            const customYear = document.getElementById('customYear').value;
+            
+            // Validate custom year if selected
+            if (paymentYear === 'new_year' && (!customYear || customYear < 1900 || customYear > 2100)) {
+                alert('Please enter a valid custom year between 1900 and 2100.');
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+                return;
+            }
+            
+            if (paymentYear === 'new_year' && customYear) {
+                // Replace payment_year with custom_year
+                formData.delete('payment_year');
+                formData.append('custom_year', customYear);
+            }
+            
+            // Log form data for debugging
+            console.log('Submitting payment with data:', {
+                payment_year: paymentYear,
+                custom_year: customYear,
+                formData_entries: Array.from(formData.entries())
+            });
+            
+            // Show loading state
+            submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Processing...';
+            submitBtn.disabled = true;
+            
+            fetch('/leader/payments/store', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: formData
+            })
+            .then(response => {
+                console.log('Payment submission response status:', response.status);
+                return response.json();
+            })
+            .then(data => {
+                console.log('Payment submission response:', data);
+                if (data.success) {
+                    // Clear form
+                    paymentForm.reset();
+                    removeAttachment();
+                    
+                    // Reload payment history
+                    loadPaymentHistory();
+                    
+                    // Show success message
+                    alert('Payment submitted successfully!');
+                } else {
+                    alert('Error submitting payment: ' + data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Payment submission error:', error);
+                console.error('Error details:', error.message);
+                alert('Error submitting payment. Please try again.');
+            })
+            .finally(() => {
+                // Reset button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+    }
+    
+    // New Update form submission handler
+    const newUpdateForm = document.getElementById('newUpdateForm');
+    if (newUpdateForm) {
+        newUpdateForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const submitBtn = this.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            
+            // Show loading state
+            submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Publishing...';
+            submitBtn.disabled = true;
+            
+            // Prepare data for API call
+            const data = {
+                title: formData.get('title'),
+                message: formData.get('message'),
+                priority: formData.get('priority'),
+                audience: formData.get('audience'),
+                expiry_date: formData.get('expiry_date') || null
+            };
+            
+            // Handle image file if present
+            const imageFile = document.getElementById('updateImage').files[0];
+            if (imageFile) {
+                data.announcement_image = imageFile;
+            }
+            
+            // Create FormData for file upload
+            const apiFormData = new FormData();
+            Object.keys(data).forEach(key => {
+                if (data[key] !== null) {
+                    apiFormData.append(key, data[key]);
+                }
+            });
+            
+            // Make API call to create announcement
+            fetch('/leader/announcements', {
+                method: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                    'Accept': 'application/json'
+                },
+                body: apiFormData
+            })
+            .then(response => response.json())
+            .then(result => {
+                if (result.success) {
+                    alert('Update published successfully!');
+                    clearNewUpdateForm();
+                } else {
+                    alert('Error publishing update: ' + result.message);
+                }
+            })
+            .catch(error => {
+                console.error('Error publishing update:', error);
+                alert('Error publishing update. Please try again.');
+            })
+            .finally(() => {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+    }
+    
+    // Receipt upload area click handler (Removed - not needed for new form)
+    
+    // Image upload area click handler
+    const uploadArea = document.getElementById('leaderImageUploadArea');
+    if (uploadArea) {
+        uploadArea.addEventListener('click', function() {
+            document.getElementById('leaderAnnouncementImage').click();
+        });
+    }
+});
+
+function generateGeneralReport() {
+    showExportModal(
+        'Generating General Report',
+        'Creating your PDF report...',
+        'Compiling payment statistics and detailed analytics'
+    );
+    
+    fetch('/leader/reports/generate-general', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+            admin_id: document.querySelector('meta[name="user-id"]').getAttribute('content')
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideExportModal();
+        
+        if (data.success) {
+            // Create download link
+            downloadFile(data.report_url, data.filename);
+            showSuccessToast('General payment report generated successfully! PDF downloaded.');
+        } else {
+            showErrorToast('Error generating general report: ' + data.message);
+        }
+    })
+    .catch(error => {
+        hideExportModal();
+        console.error('Error:', error);
+        showErrorToast('Error generating general report. Please try again.');
+    });
+}
+
+// Export utility functions
+function showExportModal(title, message, subMessage) {
+    document.getElementById('exportTitle').textContent = title;
+    document.getElementById('exportMessage').textContent = message;
+    document.getElementById('exportSubMessage').textContent = subMessage;
+    document.getElementById('exportLoadingModal').style.display = 'block';
+    document.getElementById('exportLoadingModal').classList.add('show');
+    document.body.classList.add('modal-open');
+}
+
+function hideExportModal() {
+    document.getElementById('exportLoadingModal').style.display = 'none';
+    document.getElementById('exportLoadingModal').classList.remove('show');
+    document.body.classList.remove('modal-open');
+}
+
+function showSuccessToast(message) {
+    document.getElementById('successMessage').textContent = message;
+    const toast = document.getElementById('successToast');
+    toast.style.display = 'block';
+    toast.classList.add('show');
+    
+    setTimeout(() => {
+        toast.style.display = 'none';
+        toast.classList.remove('show');
+    }, 5000);
+}
+
+function showErrorToast(message) {
+    document.getElementById('errorMessage').textContent = message;
+    const toast = document.getElementById('errorToast');
+    toast.style.display = 'block';
+    toast.classList.add('show');
+    
+    setTimeout(() => {
+        toast.style.display = 'none';
+        toast.classList.remove('show');
+    }, 5000);
+}
+
+function downloadFile(url, filename) {
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.style.display = 'none';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function exportGeneralData() {
+    showExportModal(
+        'Exporting General Data',
+        'Processing your general data export...',
+        'Preparing comprehensive payment and user statistics'
+    );
+    
+    fetch('/leader/reports/export-general', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+            admin_id: document.querySelector('meta[name="user-id"]').getAttribute('content')
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideExportModal();
+        
+        if (data.success) {
+            // Create download link
+            const filename = 'TMCS_General_Payment_Report_' + new Date().toISOString().split('T')[0] + '.csv';
+            downloadFile(data.download_url, filename);
+            showSuccessToast('General payment data exported successfully! File downloaded.');
+        } else {
+            showErrorToast('Error exporting general data: ' + data.message);
+        }
+    })
+    .catch(error => {
+        hideExportModal();
+        console.error('Error:', error);
+        showErrorToast('Error exporting general data. Please try again.');
+    });
+}
+
+function generateMemberReport() {
+    showExportModal(
+        'Generating Member Report',
+        'Creating your PDF report...',
+        'Compiling member statistics and detailed analytics'
+    );
+    
+    fetch('/leader/reports/generate-member', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+            admin_id: document.querySelector('meta[name="user-id"]').getAttribute('content')
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideExportModal();
+        
+        if (data.success) {
+            // Create download link
+            downloadFile(data.report_url, data.filename);
+            showSuccessToast('Member analytics report generated successfully! PDF downloaded.');
+        } else {
+            showErrorToast('Error generating member report: ' + data.message);
+        }
+    })
+    .catch(error => {
+        hideExportModal();
+        console.error('Error:', error);
+        showErrorToast('Error generating member report. Please try again.');
+    });
+}
+
+function exportMemberData() {
+    showExportModal(
+        'Exporting Member Data',
+        'Processing your member data export...',
+        'Preparing comprehensive member analytics and statistics'
+    );
+    
+    fetch('/leader/reports/export-member', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+            admin_id: document.querySelector('meta[name="user-id"]').getAttribute('content')
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        hideExportModal();
+        
+        if (data.success) {
+            // Create download link
+            const filename = 'TMCS_Member_Analytics_Report_' + new Date().toISOString().split('T')[0] + '.csv';
+            downloadFile(data.download_url, filename);
+            showSuccessToast('Member analytics data exported successfully! File downloaded.');
+        } else {
+            showErrorToast('Error exporting member data: ' + data.message);
+        }
+    })
+    .catch(error => {
+        hideExportModal();
+        console.error('Error:', error);
+        showErrorToast('Error exporting member data. Please try again.');
+    });
+}
+
+function showReports() {
+    showContent('reportsContent', 'Reports');
+}
+
+// Mobile sidebar toggle
+function toggleMobileSidebar() {
+    const sidebar = document.getElementById('sidebarMenu');
+    const overlay = document.getElementById('sidebarOverlay');
+    
+    if (sidebar && overlay) {
+        sidebar.classList.toggle('show');
+        overlay.classList.toggle('show');
+        
+        // Prevent body scroll when sidebar is open
+        if (sidebar.classList.contains('show')) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+    }
+}
+
+// Close mobile sidebar
+function closeMobileSidebar() {
+    const sidebar = document.getElementById('sidebarMenu');
+    const overlay = document.getElementById('sidebarOverlay');
+    
+    if (sidebar && overlay) {
+        sidebar.classList.remove('show');
+        overlay.classList.remove('show');
+        document.body.style.overflow = '';
+    }
+}
+
+// Close sidebar when clicking outside on mobile
+function closeSidebarOnMobileClick(event) {
+    const sidebar = document.getElementById('sidebarMenu');
+    const navbarToggler = document.querySelector('.navbar-toggler');
+    
+    if (window.innerWidth < 768 && 
+        sidebar && 
+        sidebar.classList.contains('show') && 
+        !sidebar.contains(event.target) && 
+        !navbarToggler.contains(event.target)) {
+        sidebar.classList.remove('show');
+    }
+}
+
+// Handle window resize
+function handleWindowResize() {
+    const sidebar = document.getElementById('sidebarMenu');
+    if (window.innerWidth >= 768 && sidebar) {
+        sidebar.classList.remove('show');
+    }
+}
+
+// Initialize mobile sidebar
+document.addEventListener('DOMContentLoaded', function() {
+    // Add click event listener to close sidebar when clicking outside
+    document.addEventListener('click', closeSidebarOnMobileClick);
+    
+    // Add resize event listener
+    window.addEventListener('resize', handleWindowResize);
+    
+    // Handle navbar toggle
+    const navbarToggler = document.querySelector('.navbar-toggler');
+    if (navbarToggler) {
+        navbarToggler.addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleMobileSidebar();
+        });
+    }
+    
+    // Handle overlay click
+    const sidebarOverlay = document.getElementById('sidebarOverlay');
+    if (sidebarOverlay) {
+        sidebarOverlay.addEventListener('click', function(e) {
+            e.stopPropagation();
+            closeMobileSidebar();
+        });
+    }
+    
+    // Close sidebar when navigation links are clicked on mobile
+    const navLinks = document.querySelectorAll('.nav-link');
+    navLinks.forEach(link => {
+        link.addEventListener('click', function() {
+            if (window.innerWidth < 768) {
+                closeMobileSidebar();
+            }
+        });
+    });
+});
+
+// Profile Picture Preview Function
+function previewProfilePicture(event) {
+    const file = event.target.files[0];
+    const preview = document.getElementById('imagePreview');
+    
+    if (file) {
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            showNotification('Please select a valid image file', 'error');
+            return;
+        }
+        
+        // Validate file size (2MB)
+        if (file.size > 2 * 1024 * 1024) {
+            showNotification('Image size must be less than 2MB', 'error');
+            return;
+        }
+        
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            preview.innerHTML = `<img src="${e.target.result}" alt="Preview" class="rounded" style="max-width: 100%; max-height: 100%; object-fit: cover;">`;
+        }
+        reader.readAsDataURL(file);
+    } else {
+        preview.innerHTML = '<i class="bi bi-image text-muted" style="font-size: 2rem;"></i>';
+    }
+}
+
+// Update Profile Picture Only
+function updateProfilePicture() {
+    const fileInput = document.getElementById('profilePictureUpload');
+    const file = fileInput.files[0];
+    
+    if (!file) {
+        showNotification('Please select an image first', 'error');
+        return;
+    }
+    
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+        showNotification('Please select a valid image file', 'error');
+        return;
+    }
+    
+    // Validate file size (2MB)
+    if (file.size > 2 * 1024 * 1024) {
+        showNotification('Image size must be less than 2MB', 'error');
+        return;
+    }
+    
+    // Create FormData with all required fields to pass validation
+    const formData = new FormData();
+    formData.append('profilePictureUpload', file);
+    formData.append('name', document.getElementById('name').value);
+    formData.append('email', document.getElementById('email').value);
+    formData.append('_token', document.querySelector('meta[name="csrf-token"]').getAttribute('content'));
+    
+    // Show loading state
+    const button = event.target;
+    const originalText = button.innerHTML;
+    button.innerHTML = '<i class="bi bi-hourglass-split me-1"></i>Updating...';
+    button.disabled = true;
+    
+    fetch('/leader/profile/update', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification('Profile picture updated successfully!', 'success');
+            
+            // Update profile picture in header
+            if (data.user && data.user.profile_picture) {
+                const avatarImg = document.querySelector('#profileContent .profile-avatar img');
+                if (avatarImg) {
+                    avatarImg.src = `/uploads/profiles/${data.user.profile_picture}`;
+                }
+            }
+            
+            // Clear file input and preview
+            fileInput.value = '';
+            document.getElementById('imagePreview').innerHTML = '<i class="bi bi-image text-muted" style="font-size: 2rem;"></i>';
+            
+        } else {
+            showNotification('Error updating profile picture: ' + (data.message || 'Unknown error'), 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Error updating profile picture. Please try again.', 'error');
+    })
+    .finally(() => {
+        // Restore button state
+        button.innerHTML = originalText;
+        button.disabled = false;
+    });
+}
+
+function updateProfile(event) {
+    event.preventDefault();
+    
+    const formData = new FormData(document.getElementById('profileForm'));
+    
+    // Validate passwords if new password is provided
+    const newPassword = formData.get('newPassword');
+    const confirmPassword = formData.get('confirmPassword');
+    
+    if (newPassword && newPassword !== confirmPassword) {
+        showNotification('New password and confirm password do not match!', 'error');
+        return;
+    }
+    
+    // Show loading state
+    const submitBtn = event.target;
+    const originalText = submitBtn.innerHTML;
+    submitBtn.innerHTML = '<i class="bi bi-hourglass-split me-2"></i>Updating...';
+    submitBtn.disabled = true;
+    
+    fetch('/leader/profile/update', {
+        method: 'POST',
+        body: formData,
+        headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        }
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            showNotification('Profile updated successfully! Redirecting...', 'success');
+            
+            // Redirect to dashboard after 1.5 seconds to show notification
+            setTimeout(() => {
+                window.location.href = '/leader/dashboard';
+            }, 1500);
+            
+        } else {
+            showNotification('Error updating profile: ' + (data.message || 'Unknown error'), 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        showNotification('Error updating profile. Please try again.', 'error');
+    })
+    .finally(() => {
+        // Restore button state
+        submitBtn.innerHTML = originalText;
+        submitBtn.disabled = false;
+    });
+}
+
+function resetProfileForm() {
+    if (confirm('Are you sure you want to reset the form? All unsaved changes will be lost.')) {
+        document.getElementById('profileForm').reset();
+        // Restore original values
+        document.getElementById('name').value = '{{ auth()->user()->name ?? '' }}';
+        document.getElementById('email').value = '{{ auth()->user()->email ?? '' }}';
+        document.getElementById('phone_number').value = '{{ auth()->user()->phone_number ?? '' }}';
+        document.getElementById('role').value = '{{ auth()->user()->role ?? '' }}';
+        document.getElementById('registration_number').value = '{{ auth()->user()->registration_number ?? '' }}';
+        document.getElementById('home_diocese').value = '{{ auth()->user()->home_diocese ?? '' }}';
+        document.getElementById('gender').value = '{{ auth()->user()->gender ?? '' }}';
+        document.getElementById('year_of_study').value = '{{ auth()->user()->year_of_study ?? '' }}';
+        document.getElementById('registration_date').value = '{{ auth()->user()->created_at ? \Carbon\Carbon::parse(auth()->user()->created_at)->format('Y-m-d') : '' }}';
+        document.getElementById('currentPassword').value = '';
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmPassword').value = '';
+    }
+}
+
+function showSection(sectionId) {
+    // Hide all sections
+    const sections = ['manageUsers', 'paymentHistory', 'makePayment', 'announcements', 'profileContent'];
+    sections.forEach(id => {
+        const element = document.getElementById(id);
+        if (element) {
+            element.style.display = 'none';
+        }
+    });
+    
+    // Show selected section
+    const selectedSection = document.getElementById(sectionId);
+    if (selectedSection) {
+        selectedSection.style.display = 'block';
+    }
+}
+
+// Function to view announcement image in modal
+function viewAnnouncementImage(imageSrc, announcementTitle) {
+    // Create modal HTML
+    const modalHtml = `
+        <div class="modal fade" id="imageViewerModal" tabindex="-1" aria-hidden="true">
+            <div class="modal-dialog modal-xl modal-dialog-centered">
+                <div class="modal-content bg-dark">
+                    <div class="modal-header border-0">
+                        <h5 class="modal-title text-white">${announcementTitle} - Image Viewer</h5>
+                        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body p-0 text-center">
+                        <img src="${imageSrc}" alt="${announcementTitle}" class="img-fluid" style="max-height: 80vh; width: auto;">
+                    </div>
+                    <div class="modal-footer border-0">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <a href="${imageSrc}" download="announcement_${announcementTitle}.jpg" class="btn btn-primary">
+                            <i class="bi bi-download me-1"></i>Download Image
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Remove existing modal if present
+    const existingModal = document.getElementById('imageViewerModal');
+    if (existingModal) {
+        existingModal.remove();
+    }
+    
+    // Add modal to body
+    document.body.insertAdjacentHTML('beforeend', modalHtml);
+    
+    // Show modal
+    const modal = new bootstrap.Modal(document.getElementById('imageViewerModal'));
+    modal.show();
+    
+    // Remove modal from DOM when hidden
+    document.getElementById('imageViewerModal').addEventListener('hidden.bs.modal', function () {
+        this.remove();
+    });
+}
+
+// Payment History Export Functions
+function exportPaymentHistory() {
+    console.log('Exporting payment history to CSV...');
+    
+    // Show loading notification
+    showNotification('Generating CSV export...', 'info');
+    
+    // Get current payment data
+    const payments = getCurrentPaymentData();
+    
+    if (!payments || payments.length === 0) {
+        showNotification('No payment data available to export', 'error');
+        return;
+    }
+    
+    // Generate CSV
+    const csvContent = generatePaymentCSV(payments);
+    
+    // Download CSV file
+    downloadCSV(csvContent, 'payment_history_export.csv');
+    
+    showNotification('Payment history exported successfully!', 'success');
+}
+
+function printPaymentHistory() {
+    console.log('Generating PDF summary of payment history...');
+    
+    // Show loading notification
+    showNotification('Generating PDF summary...', 'info');
+    
+    // Get current payment data
+    const payments = getCurrentPaymentData();
+    
+    if (!payments || payments.length === 0) {
+        showNotification('No payment data available for PDF', 'error');
+        return;
+    }
+    
+    // Generate and download PDF
+    generatePaymentPDF(payments);
+}
+
+function getCurrentPaymentData() {
+    // Extract payment data from the current table
+    const paymentData = [];
+    const rows = document.querySelectorAll('.payment-table-enhanced tbody tr');
+    
+    rows.forEach((row, index) => {
+        try {
+            const cells = row.querySelectorAll('td');
+            if (cells.length >= 5) {
+                const dateCell = cells[0].textContent.trim();
+                const typeCell = cells[1].textContent.trim();
+                const amountCell = cells[2].textContent.trim();
+                const statusCell = cells[3].textContent.trim();
+                
+                paymentData.push({
+                    serial: index + 1,
+                    date: dateCell,
+                    type: typeCell,
+                    amount: amountCell,
+                    status: statusCell
+                });
+            }
+        } catch (error) {
+            console.error('Error parsing payment row:', error);
+        }
+    });
+    
+    return paymentData;
+}
+
+function generatePaymentCSV(payments) {
+    const headers = ['S/No', 'Date', 'Payment Type', 'Amount', 'Status'];
+    const csvRows = [headers.join(',')];
+    
+    payments.forEach(payment => {
+        const row = [
+            payment.serial,
+            `"${payment.date}"`,
+            `"${payment.type}"`,
+            `"${payment.amount}"`,
+            `"${payment.status}"`
+        ];
+        csvRows.push(row.join(','));
+    });
+    
+    return csvRows.join('\n');
+}
+
+function downloadCSV(csvContent, filename) {
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', filename);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+}
+
+function printPaymentHistory() {
+    // Load jsPDF library
+    if (typeof window.jspdf === 'undefined') {
+        showNotification('PDF library not loaded. Please wait a moment and try again.', 'error');
+        return;
+    }
+    
+    showNotification('Generating PDF...', 'info');
+    
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({
+        orientation: 'portrait',
+        unit: 'mm',
+        format: 'a4'
+    });
+    
+    // Page dimensions
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const pageHeight = doc.internal.pageSize.getHeight();
+    const margin = 15;
+    const contentWidth = pageWidth - (margin * 2);
+    
+    // Color palette - Modern gradient theme
+    const colors = {
+        primary: { r: 52, g: 73, b: 94 },          // Dark blue-gray
+        secondary: { r: 52, g: 152, b: 219 },      // Bright blue  
+        accent: { r: 46, g: 204, b: 113 },          // Green
+        warning: { r: 241, g: 196, b: 15 },         // Yellow
+        danger: { r: 231, g: 76, b: 60 },           // Red
+        light: { r: 245, g: 247, b: 250 },          // Light gray
+        dark: { r: 52, g: 58, b: 64 },              // Dark gray
+        gradient1: { r: 66, g: 135, b: 245 },       // Blue gradient start
+        gradient2: { r: 102, g: 126, b: 234 }       // Blue gradient end
+    };
+    
+    // Helper function to draw gradient rectangle
+    const drawGradientRect = (x, y, width, height, color1, color2) => {
+        // Simple gradient simulation with multiple rectangles
+        const steps = 10;
+        for (let i = 0; i < steps; i++) {
+            const ratio = i / steps;
+            const r = Math.round(color1.r + (color2.r - color1.r) * ratio);
+            const g = Math.round(color1.g + (color2.g - color1.g) * ratio);
+            const b = Math.round(color1.b + (color2.b - color1.b) * ratio);
+            doc.setFillColor(r, g, b);
+            doc.rect(x, y + (height * i / steps), width, height / steps, 'F');
+        }
+    };
+    
+    // Extract payment data from the table with multiple fallback methods
+    const payments = [];
+    
+    // Method 1: Try to get data from the main table
+    let tableRows = document.querySelectorAll('#paymentTableBody tr');
+    
+    // Method 2: If no rows, try alternative selectors
+    if (tableRows.length === 0) {
+        tableRows = document.querySelectorAll('.payment-table-enhanced tbody tr');
+    }
+    
+    // Method 3: Try to get from any table with payment data
+    if (tableRows.length === 0) {
+        tableRows = document.querySelectorAll('table tbody tr');
+    }
+    
+    // Method 4: If still no data, create sample data for demonstration
+    if (tableRows.length === 0) {
+        // Check if there are any payment elements on the page
+        const paymentElements = document.querySelectorAll('[data-payment-id], .payment-row, .transaction-row');
+        
+        if (paymentElements.length > 0) {
+            // Extract data from payment elements
+            paymentElements.forEach((element, index) => {
+                const cells = element.querySelectorAll('td, .cell, .data-cell');
+                if (cells.length >= 3) {
+                    payments.push({
+                        serial: index + 1,
+                        date: cells[0]?.textContent?.trim() || new Date().toLocaleDateString(),
+                        type: cells[1]?.textContent?.trim() || 'Payment',
+                        amount: cells[2]?.textContent?.trim() || 'TZS 0',
+                        status: cells[3]?.textContent?.trim() || 'Pending'
+                    });
+                }
+            });
+        } else {
+            // Create sample data for demonstration
+            const samplePayments = [
+                { date: '2024-03-31', type: 'Membership Fee', amount: 'TZS 50,000', status: 'Completed' },
+                { date: '2024-03-30', type: 'Donation', amount: 'TZS 10,000', status: 'Completed' },
+                { date: '2024-03-29', type: 'Event Payment', amount: 'TZS 25,000', status: 'Pending' },
+                { date: '2024-03-28', type: 'Membership Fee', amount: 'TZS 50,000', status: 'Completed' },
+                { date: '2024-03-27', type: 'Service Fee', amount: 'TZS 15,000', status: 'Failed' }
+            ];
+            
+            samplePayments.forEach((payment, index) => {
+                payments.push({
+                    serial: index + 1,
+                    ...payment
+                });
+            });
+        }
+    } else {
+        // Extract data from table rows
+        tableRows.forEach((row, index) => {
+            const cells = row.querySelectorAll('td');
+            if (cells.length >= 3) {
+                payments.push({
+                    serial: index + 1,
+                    date: cells[0]?.textContent?.trim() || new Date().toLocaleDateString(),
+                    type: cells[1]?.textContent?.trim() || 'Payment',
+                    amount: cells[2]?.textContent?.trim() || 'TZS 0',
+                    status: cells[3]?.textContent?.trim() || 'Pending'
+                });
+            }
+        });
+    }
+    
+    // Header Section with Gradient Background
+    drawGradientRect(0, 0, pageWidth, 35, colors.gradient1, colors.gradient2);
+    
+    // Company Logo Placeholder (text-based)
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(24);
+    doc.text('TMCS', margin, 20);
+    
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.text('Tanzania Movements of Catholic Students', margin, 26);
+    
+    // Report Title
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.text('PAYMENT HISTORY REPORT', pageWidth - margin, 20, { align: 'right' });
+    
+    // Report metadata
+    doc.setFontSize(8);
+    doc.text(`Generated: ${new Date().toLocaleDateString()}`, pageWidth - margin, 26, { align: 'right' });
+    doc.text(`By: ${getCurrentUserName()}`, pageWidth - margin, 30, { align: 'right' });
+    
+    // Report ID
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(8);
+    doc.text(`ID: TMCS-PH-${new Date().toISOString().slice(0, 19).replace(/[-:T]/g, '')}`, margin, 32);
+    
+    let yPosition = 45;
+    
+    // Summary Cards Section
+    const completedCount = payments.filter(p => p.status.toLowerCase().includes('completed')).length;
+    const pendingCount = payments.filter(p => p.status.toLowerCase().includes('pending')).length;
+    const failedCount = payments.filter(p => p.status.toLowerCase().includes('failed')).length;
+    const totalAmount = payments.reduce((sum, p) => {
+        const amount = parseFloat(p.amount.replace(/[^0-9.]/g, '')) || 0;
+        return sum + amount;
+    }, 0);
+    
+    // Summary Box with modern styling
+    doc.setFillColor(colors.light.r, colors.light.g, colors.light.b);
+    doc.roundedRect(margin, yPosition, contentWidth, 30, 3, 3, 'F');
+    
+    // Summary border
+    doc.setDrawColor(colors.primary.r, colors.primary.g, colors.primary.b);
+    doc.setLineWidth(0.5);
+    doc.roundedRect(margin, yPosition, contentWidth, 30, 3, 3, 'S');
+    
+    // Summary content
+    doc.setTextColor(colors.primary.r, colors.primary.g, colors.primary.b);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(12);
+    doc.text('PAYMENT SUMMARY', margin + 5, yPosition + 8);
+    
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(9);
+    doc.setTextColor(colors.dark.r, colors.dark.g, colors.dark.b);
+    
+    const summaryY = yPosition + 15;
+    doc.text(`Total Payments: ${payments.length}`, margin + 5, summaryY);
+    doc.text(`Completed: ${completedCount}`, margin + 5, summaryY + 5);
+    doc.text(`Pending: ${pendingCount}`, margin + 5, summaryY + 10);
+    
+    doc.text(`Failed: ${failedCount}`, margin + 80, summaryY);
+    doc.text(`Total Amount: TZS ${totalAmount.toLocaleString()}`, margin + 80, summaryY + 5);
+    doc.text(`Completion Rate: ${payments.length > 0 ? Math.round((completedCount / payments.length) * 100) : 0}%`, margin + 80, summaryY + 10);
+    
+    yPosition += 40;
+    
+    // Payment Details Section Header
+    drawGradientRect(margin, yPosition, contentWidth, 10, colors.secondary, colors.primary);
+    
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(11);
+    doc.text('PAYMENT DETAILS', margin + 5, yPosition + 7);
+    
+    yPosition += 15;
+    
+    // Table setup with modern styling
+    const tableStartY = yPosition;
+    const colWidths = [12, 28, 45, 50, 25]; // S/No, Date, Type, Amount, Status
+    const rowHeight = 7;
+    const maxRowsPerPage = Math.floor((pageHeight - margin - tableStartY - 20) / rowHeight) - 2;
+    
+    // Table header background
+    doc.setFillColor(colors.primary.r, colors.primary.g, colors.primary.b);
+    doc.rect(margin, yPosition, contentWidth, rowHeight, 'F');
+    
+    // Add table headers with white text
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(8);
+    doc.setFont('helvetica', 'bold');
+    const headers = ['S/No', 'Date', 'Type', 'Amount', 'Status'];
+    let xPos = margin;
+    
+    headers.forEach((header, index) => {
+        if (index === 3) { // Amount column - center align
+            doc.text(header, xPos + colWidths[index]/2, yPosition + 5, { align: 'center' });
+        } else if (index === 4) { // Status column - center align
+            doc.text(header, xPos + colWidths[index]/2, yPosition + 5, { align: 'center' });
+        } else {
+            doc.text(header, xPos + 2, yPosition + 5);
+        }
+        xPos += colWidths[index];
+    });
+    
+    yPosition += rowHeight;
+    
+    // Add alternating row colors
+    let rowColor = false;
+    
+    // Add table rows with modern styling
+    if (payments.length === 0) {
+        // Show "No data available" message
+        doc.setTextColor(colors.dark.r, colors.dark.g, colors.dark.b);
+        doc.setFont('helvetica', 'italic');
+        doc.setFontSize(10);
+        doc.text('No payment data available. This is a sample report for demonstration.', margin + 2, yPosition + 5);
+        yPosition += rowHeight;
+    } else {
+        payments.forEach((payment, index) => {
+            // Check if we need a new page
+            if (index > 0 && index % maxRowsPerPage === 0) {
+                // Add footer to current page
+                addFooter(doc, pageWidth, pageHeight, margin, colors);
+                
+                doc.addPage();
+                yPosition = margin;
+                
+                // Re-add header on new page
+                addHeader(doc, pageWidth, margin, colors, getCurrentUserName());
+                yPosition = 45;
+                
+                // Re-add summary section
+                doc.setFillColor(colors.light.r, colors.light.g, colors.light.b);
+                doc.roundedRect(margin, yPosition, contentWidth, 30, 3, 3, 'F');
+                doc.setDrawColor(colors.primary.r, colors.primary.g, colors.primary.b);
+                doc.setLineWidth(0.5);
+                doc.roundedRect(margin, yPosition, contentWidth, 30, 3, 3, 'S');
+                
+                doc.setTextColor(colors.primary.r, colors.primary.g, colors.primary.b);
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(12);
+                doc.text('PAYMENT SUMMARY', margin + 5, yPosition + 8);
+                
+                doc.setFont('helvetica', 'normal');
+                doc.setFontSize(9);
+                doc.setTextColor(colors.dark.r, colors.dark.g, colors.dark.b);
+                
+                const summaryY = yPosition + 15;
+                doc.text(`Total Payments: ${payments.length}`, margin + 5, summaryY);
+                doc.text(`Completed: ${completedCount}`, margin + 5, summaryY + 5);
+                doc.text(`Pending: ${pendingCount}`, margin + 5, summaryY + 10);
+                
+                doc.text(`Failed: ${failedCount}`, margin + 80, summaryY);
+                doc.text(`Total Amount: TZS ${totalAmount.toLocaleString()}`, margin + 80, summaryY + 5);
+                doc.text(`Completion Rate: ${payments.length > 0 ? Math.round((completedCount / payments.length) * 100) : 0}%`, margin + 80, summaryY + 10);
+                
+                yPosition += 40;
+                
+                // Re-add table header
+                drawGradientRect(margin, yPosition, contentWidth, 10, colors.secondary, colors.primary);
+                doc.setTextColor(255, 255, 255);
+                doc.setFont('helvetica', 'bold');
+                doc.setFontSize(11);
+                doc.text('PAYMENT DETAILS', margin + 5, yPosition + 7);
+                
+                yPosition += 15;
+                
+                // Table header background
+                doc.setFillColor(colors.primary.r, colors.primary.g, colors.primary.b);
+                doc.rect(margin, yPosition, contentWidth, rowHeight, 'F');
+                
+                doc.setTextColor(255, 255, 255);
+                doc.setFontSize(8);
+                doc.setFont('helvetica', 'bold');
+                xPos = margin;
+                headers.forEach((header, headerIndex) => {
+                    if (headerIndex === 3) {
+                        doc.text(header, xPos + colWidths[headerIndex]/2, yPosition + 5, { align: 'center' });
+                    } else if (headerIndex === 4) {
+                        doc.text(header, xPos + colWidths[headerIndex]/2, yPosition + 5, { align: 'center' });
+                    } else {
+                        doc.text(header, xPos + 2, yPosition + 5);
+                    }
+                    xPos += colWidths[headerIndex];
+                });
+                
+                yPosition += rowHeight;
+                rowColor = false;
+            }
+            
+            // Alternating row colors
+            if (rowColor) {
+                doc.setFillColor(colors.light.r, colors.light.g, colors.light.b);
+                doc.rect(margin, yPosition, contentWidth, rowHeight, 'F');
+            }
+            rowColor = !rowColor;
+            
+            // Add row data
+            xPos = margin;
+            const rowData = [
+                payment.serial.toString(),
+                payment.date,
+                payment.type,
+                payment.amount,
+                payment.status
+            ];
+            
+            // Row border
+            doc.setDrawColor(200, 200, 200);
+            doc.setLineWidth(0.1);
+            doc.rect(margin, yPosition, contentWidth, rowHeight, 'S');
+            
+            rowData.forEach((data, dataIndex) => {
+                let displayText = data;
+                
+                // Special formatting for amount column
+                if (dataIndex === 3) { // Amount column
+                    // Clean and format the amount
+                    let cleanAmount = data.replace(/[^0-9.]/g, '');
+                    let amountValue = parseFloat(cleanAmount) || 0;
+                    
+                    // Format as TZS with proper spacing
+                    displayText = `TZS ${amountValue.toLocaleString()}`;
+                    
+                    // Style for amount
+                    doc.setTextColor(colors.accent.r, colors.accent.g, colors.accent.b);
+                    doc.setFont('helvetica', 'bold');
+                    
+                    // Center align the amount
+                    doc.text(displayText, xPos + colWidths[dataIndex]/2, yPosition + 5, { align: 'center' });
+                } else if (dataIndex === 4) { // Status column
+                    // Style for status
+                    if (data.toLowerCase().includes('completed')) {
+                        doc.setTextColor(colors.accent.r, colors.accent.g, colors.accent.b);
+                    } else if (data.toLowerCase().includes('pending')) {
+                        doc.setTextColor(colors.warning.r, colors.warning.g, colors.warning.b);
+                    } else if (data.toLowerCase().includes('failed')) {
+                        doc.setTextColor(colors.danger.r, colors.danger.g, colors.danger.b);
+                    } else {
+                        doc.setTextColor(colors.dark.r, colors.dark.g, colors.dark.b);
+                    }
+                    
+                    doc.setFont('helvetica', 'bold');
+                    
+                    // Truncate text if too long
+                    if (displayText.length > 12) displayText = displayText.substring(0, 12) + '...';
+                    doc.text(displayText, xPos + colWidths[dataIndex]/2, yPosition + 5, { align: 'center' });
+                } else {
+                    // Normal text for other columns
+                    doc.setTextColor(colors.dark.r, colors.dark.g, colors.dark.b);
+                    doc.setFont('helvetica', 'normal');
+                    
+                    // Truncate text if too long for other columns (except Type)
+                    if (dataIndex === 1 && displayText.length > 10) displayText = displayText.substring(0, 10) + '...';
+                    
+                    // Left align for other columns
+                    doc.text(displayText, xPos + 2, yPosition + 5);
+                }
+                
+                xPos += colWidths[dataIndex];
+            });
+            
+            yPosition += rowHeight;
+        });
+    }
+    
+    // Add footer to all pages
+    addFooter(doc, pageWidth, pageHeight, margin, colors);
+    
+    // Save the PDF
+    const filename = `payment_history_report_${new Date().toISOString().split('T')[0]}.pdf`;
+    doc.save(filename);
+    
+    showNotification('Modern PDF report generated successfully!', 'success');
+}
+
+// Helper function to add header to new pages
+function addHeader(doc, pageWidth, margin, colors, userName) {
+    // Header Section with Gradient Background
+    drawGradientRect(0, 0, pageWidth, 35, colors.gradient1, colors.gradient2);
+    
+    // Company Logo Placeholder (text-based)
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(24);
+    doc.text('TMCS', margin, 20);
+    
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(10);
+    doc.text('Tanzania Movements of Catholic Students', margin, 26);
+    
+    // Report Title
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(16);
+    doc.text('PAYMENT HISTORY REPORT', pageWidth - margin, 20, { align: 'right' });
+    
+    // Report metadata
+    doc.setFontSize(8);
+    doc.text(`Generated: ${new Date().toLocaleDateString()}`, pageWidth - margin, 26, { align: 'right' });
+    doc.text(`By: ${userName}`, pageWidth - margin, 30, { align: 'right' });
+    
+    // Report ID
+    doc.setTextColor(255, 255, 255);
+    doc.setFontSize(8);
+    doc.text(`ID: TMCS-PH-${new Date().toISOString().slice(0, 19).replace(/[-:T]/g, '')}`, margin, 32);
+}
+
+// Helper function to add footer to pages
+function addFooter(doc, pageWidth, pageHeight, margin, colors) {
+    const footerY = pageHeight - 15;
+    
+    // Footer line
+    doc.setDrawColor(colors.primary.r, colors.primary.g, colors.primary.b);
+    doc.setLineWidth(0.5);
+    doc.line(margin, footerY, pageWidth - margin, footerY);
+    
+    // Footer text
+    doc.setTextColor(colors.dark.r, colors.dark.g, colors.dark.b);
+    doc.setFont('helvetica', 'italic');
+    doc.setFontSize(7);
+    
+    const totalPages = doc.internal.getNumberOfPages();
+    const currentPage = doc.internal.getCurrentPageInfo().pageNumber;
+    
+    doc.text(`Page ${currentPage} of ${totalPages}`, margin, footerY + 5);
+    doc.text(' 2024 TMCS System - Confidential Document', pageWidth - margin, footerY + 5, { align: 'right' });
+    doc.text('Generated on ' + new Date().toLocaleString(), pageWidth/2, footerY + 5, { align: 'center' });
+}
+
+function getCurrentUserName() {
+    // First try the hidden input (most reliable)
+    const hiddenUserInput = document.getElementById('currentUserName');
+    if (hiddenUserInput && hiddenUserInput.value) {
+        return hiddenUserInput.value.trim();
+    }
+    
+    // Try data-user-name attributes (very reliable)
+    const dataUserElements = document.querySelectorAll('[data-user-name]');
+    for (let element of dataUserElements) {
+        const userName = element.getAttribute('data-user-name') || element.textContent.trim();
+        if (userName && userName.length > 2) {
+            return userName;
+        }
+    }
+    
+    // Try to get user name from various page elements
+    const userNameElement = document.querySelector('.user-name') || 
+                           document.querySelector('[data-user-name]') ||
+                           document.querySelector('.navbar-brand .text-white') ||
+                           document.querySelector('.dropdown-item .text-dark') ||
+                           document.querySelector('.nav-link .text-white') ||
+                           document.querySelector('span[data-bs-toggle="dropdown"]');
+    
+    if (userNameElement) {
+        let userName = userNameElement.textContent.trim();
+        // Remove any icons or extra text
+        userName = userName.replace(/[^\w\s]/gi, '').trim();
+        if (userName && userName.length > 2) {
+            return userName;
+        }
+    }
+    
+    // Try to get from user info cards
+    const userInfoElements = document.querySelectorAll('.card-body .text-primary, .card-body .fw-bold');
+    for (let element of userInfoElements) {
+        const text = element.textContent.trim();
+        if (text && text.length > 3 && !text.includes('ID') && !text.includes('TMCS')) {
+            return text;
+        }
+    }
+    
+    // Try to get from page title or header
+    const pageTitle = document.querySelector('h1, h2, h3, h4, h5, h6');
+    if (pageTitle) {
+        const titleText = pageTitle.textContent.trim();
+        if (titleText && titleText.includes('Dashboard')) {
+            // Look for user name in nearby elements
+            const parent = pageTitle.parentElement;
+            const nearbyText = parent.textContent.trim();
+            const nameMatch = nearbyText.match(/([A-Z][a-z]+\s[A-Z][a-z]+)/);
+            if (nameMatch) {
+                return nameMatch[1];
+            }
+        }
+    }
+    
+    // Try to get from localStorage or sessionStorage
+    const storedUser = localStorage.getItem('userName') || sessionStorage.getItem('userName');
+    if (storedUser) {
+        return storedUser;
+    }
+    
+    // Final fallback - try to extract from URL or page context
+    const urlPath = window.location.pathname;
+    if (urlPath.includes('/leader/')) {
+        // This is a leader dashboard, try to find leader name
+        const leaderElements = document.querySelectorAll('[class*="leader"], [id*="leader"]');
+        for (let element of leaderElements) {
+            const text = element.textContent.trim();
+            if (text && text.length > 3 && text !== 'Leader') {
+                return text;
+            }
+        }
+    }
+    
+    // Ultimate fallback
+    return 'Current User';
+}
+
+// Load jsPDF library for PDF generation
+(function() {
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+    script.onload = function() {
+        console.log('jsPDF library loaded successfully');
+    };
+    script.onerror = function() {
+        console.error('Failed to load jsPDF library');
+        showNotification('PDF generation library not available', 'error');
+    };
+    document.head.appendChild(script);
+})();
+</script>
+
+<!-- Hidden user data for PDF generation -->
+<input type="hidden" id="currentUserName" value="{{ auth()->user()->name }}">
+<input type="hidden" id="currentUserEmail" value="{{ auth()->user()->email }}">
+
+<!-- Export Loading Modal -->
+<div id="exportLoadingModal" class="modal fade" tabindex="-1" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">
+                    <i class="fas fa-download me-2"></i>
+                    <span id="exportTitle">Exporting Data</span>
+                </h5>
+            </div>
+            <div class="modal-body text-center py-4">
+                <div class="mb-3">
+                    <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                </div>
+                <h6 class="mb-2" id="exportMessage">Processing your export request...</h6>
+                <p class="text-muted mb-0" id="exportSubMessage">Please wait while we prepare your data</p>
+                <div class="progress mt-3" style="height: 6px;">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary" 
+                         role="progressbar" 
+                         style="width: 100%" 
+                         aria-valuenow="100" 
+                         aria-valuemin="0" 
+                         aria-valuemax="100">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Success Toast -->
+<div id="successToast" class="toast position-fixed bottom-0 end-0 m-3" style="z-index: 1055;" role="alert">
+    <div class="toast-header bg-success text-white">
+        <i class="fas fa-check-circle me-2"></i>
+        <strong class="me-auto">Export Successful</strong>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+    </div>
+    <div class="toast-body" id="successMessage">
+        Your data has been exported successfully!
+    </div>
+</div>
+
+<!-- Error Toast -->
+<div id="errorToast" class="toast position-fixed bottom-0 end-0 m-3" style="z-index: 1055;" role="alert">
+    <div class="toast-header bg-danger text-white">
+        <i class="fas fa-exclamation-triangle me-2"></i>
+        <strong class="me-auto">Export Error</strong>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+    </div>
+    <div class="toast-body" id="errorMessage">
+        An error occurred while exporting data.
+    </div>
+</div>
+
+@endsection
+<!-- Custom CSS for Mobile Responsiveness -->
+@push('styles')
+<style>
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    /* Navbar adjustments for mobile */
+    .navbar {
+        padding: 0.5rem 1rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1rem;
+        margin-right: auto;
+    }
+    
+    /* Navbar toggler styles */
+    .navbar-toggler {
+        display: block !important;
+        border: none;
+        padding: 0.25rem 0.5rem;
+        background: transparent;
+        order: -1; /* Move to the left */
+        margin-right: 1rem;
+    }
+    
+    .navbar-toggler-icon {
+        display: inline-block;
+        width: 24px;
+        height: 24px;
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 1%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: center;
+        background-size: 100%;
+    }
+    
+    /* Sidebar adjustments */
+    .sidebar {
+        position: fixed;
+        top: 56px;
+        bottom: 0;
+        left: 0;
+        z-index: 1000;
+        width: 280px;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        background: #343a40; /* Ensure background color */
+    }
+    
+    .sidebar.show {
+        transform: translateX(0);
+    }
+    
+    /* Overlay for mobile sidebar */
+    .sidebar-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: rgba(0,0,0,0.5);
+        z-index: 999;
+        display: none;
+    }
+    
+    .sidebar-overlay.show {
+        display: block;
+    }
+    
+    /* Main content adjustments - CRITICAL */
+    main {
+        margin-left: 0 !important;
+        padding: 1rem !important;
+        width: 100% !important;
+        position: relative !important;
+        z-index: 1 !important;
+        min-height: calc(100vh - 56px);
+        transition: none !important; /* Prevent any shifting */
+    }
+    
+    /* Content sections - ensure they stay in main */
+    .content-section {
+        position: relative !important;
+        z-index: 1 !important;
+        width: 100% !important;
+        min-height: 100vh !important;
+        padding-top: 1rem;
+        transition: none !important; /* Prevent any shifting */
+    }
+    
+    /* Override Bootstrap column classes for sidebar on mobile */
+    #sidebarMenu {
+        position: fixed !important;
+        top: 56px !important;
+        left: 0 !important;
+        width: 280px !important;
+        height: calc(100vh - 56px) !important;
+        z-index: 1000 !important;
+        transform: translateX(-100%) !important;
+        transition: transform 0.3s ease-in-out !important;
+        background: #343a40 !important;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1) !important;
+    }
+    
+    #sidebarMenu.show {
+        transform: translateX(0) !important;
+    }
+    
+    /* Ensure sidebar doesn't affect grid layout on mobile */
+    #sidebarMenu.col-md-3,
+    #sidebarMenu.col-lg-2 {
+        flex: 0 0 auto !important;
+        max-width: none !important;
+        width: 280px !important;
+        position: fixed !important;
+    }
+    
+    /* Fix sidebar content visibility */
+    #sidebarMenu .nav-link {
+        color: rgba(255, 255, 255, 0.8) !important;
+        padding: 0.75rem 1rem !important;
+        transition: all 0.3s ease !important;
+    }
+    
+    #sidebarMenu .nav-link:hover,
+    #sidebarMenu .nav-link.active {
+        color: #fff !important;
+        background: rgba(255, 255, 255, 0.1) !important;
+        border-radius: 0.25rem !important;
+    }
+    
+    #sidebarMenu .nav-link i {
+        color: rgba(255, 255, 255, 0.8) !important;
+        margin-right: 0.5rem !important;
+    }
+    
+    #sidebarMenu .nav-link:hover i,
+    #sidebarMenu .nav-link.active i {
+        color: #fff !important;
+    }
+    
+    #sidebarMenu .nav-header {
+        color: rgba(255, 255, 255, 0.6) !important;
+        font-size: 0.75rem !important;
+        text-transform: uppercase !important;
+        font-weight: 600 !important;
+        padding: 1rem 1rem 0.5rem !important;
+    }
+    
+    /* Fix any content that might be positioned incorrectly */
+    #dashboardContent,
+    #profileContent,
+    #usersContent,
+    #pendingUsersContent,
+    #announcementsContent,
+    #paymentsContent,
+    #reportsContent {
+        position: relative !important;
+        z-index: 1 !important;
+        width: 100% !important;
+        min-height: 400px !important;
+    }
+    
+    /* Fix member report table column widths */
+    .table th:nth-child(2), /* Name/Details column */
+    .table td:nth-child(2) {
+        width: 20% !important;
+        max-width: 20% !important;
+        min-width: 120px !important;
+    }
+    
+    .table th:nth-child(3), /* Email column */
+    .table td:nth-child(3) {
+        width: 35% !important;
+        max-width: 35% !important;
+        min-width: 250px !important;
+    }
+    
+    .table th:nth-child(4), /* Phone column */
+    .table td:nth-child(4) {
+        width: 25% !important;
+        max-width: 25% !important;
+        min-width: 150px !important;
+    }
+    
+    .table th:nth-child(5), /* Gender column */
+    .table td:nth-child(5) {
+        width: 8% !important;
+        max-width: 8% !important;
+        min-width: 60px !important;
+    }
+    
+    .table th:nth-child(6), /* Year column */
+    .table td:nth-child(6) {
+        width: 7% !important;
+        max-width: 7% !important;
+        min-width: 50px !important;
+    }
+    
+    .table th:nth-child(7), /* Applied column */
+    .table td:nth-child(7) {
+        width: 10% !important;
+        max-width: 10% !important;
+        min-width: 80px !important;
+    }
+    
+    .table th:nth-child(8), /* Actions column */
+    .table td:nth-child(8) {
+        width: 15% !important;
+        max-width: 15% !important;
+        min-width: 100px !important;
+    }
+    
+    /* Ensure text wraps properly in Email and Phone columns */
+    .table td:nth-child(3), /* Email column */
+    .table td:nth-child(4) { /* Phone column */
+        white-space: normal !important;
+        word-wrap: break-word !important;
+        word-break: break-all !important;
+        max-width: none !important;
+        overflow: visible !important;
+        text-overflow: clip !important;
+    }
+    
+    /* Allow text wrapping for Name column if needed */
+    .table td:nth-child(2) {
+        white-space: normal !important;
+        word-wrap: break-word !important;
+    }
+    
+    /* Ensure table doesn't overflow */
+    .table-responsive {
+        overflow-x: auto !important;
+        width: 100% !important;
+    }
+    
+    /* Card adjustments */
+    .card {
+        margin-bottom: 1rem;
+        border-radius: 0.5rem;
+    }
+    
+    .card-header {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    /* Form adjustments */
+    .form-control, .form-select {
+        font-size: 16px; /* Prevents zoom on iOS */
+        padding: 0.75rem;
+        border-radius: 0.375rem;
+    }
+    
+    /* Button adjustments */
+    .btn {
+        font-size: 0.875rem;
+        padding: 0.5rem 1rem;
+        margin-bottom: 0.5rem;
+        min-height: 44px; /* Better touch targets */
+        border-radius: 0.375rem;
+        white-space: nowrap; /* Prevent text wrapping */
+    }
+    
+    /* Action buttons in tables */
+    .btn-sm {
+        font-size: 0.75rem !important;
+        padding: 0.375rem 0.75rem !important;
+        min-height: 36px !important;
+        white-space: nowrap !important;
+        line-height: 1.2 !important;
+    }
+    
+    /* Ensure button text is visible */
+    .btn-primary,
+    .btn-success,
+    .btn-warning,
+    .btn-danger,
+    .btn-info {
+        color: #fff !important;
+        font-weight: 500 !important;
+    }
+    
+    /* Fix button text overflow */
+    .btn .btn-text {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+    
+    /* Table adjustments */
+    .table {
+        font-size: 0.875rem;
+    }
+    
+    .table th, .table td {
+        padding: 0.5rem;
+        vertical-align: middle;
+    }
+    
+    /* Horizontal scroll for tables on mobile */
+    .table-responsive {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        width: 100% !important;
+    }
+    
+    /* Ensure table maintains desktop layout on mobile */
+    .table-responsive table {
+        min-width: 800px !important; /* Force minimum width for desktop-like view */
+        width: 100% !important;
+    }
+    
+    /* Show all table columns on mobile with horizontal scroll */
+    .table .d-none.d-lg-table-cell {
+        display: table-cell !important;
+    }
+    
+    /* Navigation adjustments */
+    .nav-link {
+        padding: 0.75rem 1rem;
+        font-size: 0.9rem;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+    }
+    
+    /* Statistics cards */
+    .dashboard-stats-mobile .card {
+        margin-bottom: 0.75rem;
+    }
+    
+    .dashboard-stats-mobile .card-body {
+        padding: 0.75rem;
+    }
+    
+    /* Profile section */
+    .profile-mobile .card {
+        margin-bottom: 0.75rem;
+    }
+    
+    .profile-mobile .card-body {
+        padding: 0.75rem;
+    }
+    
+    .profile-mobile .profile-avatar img,
+    .profile-mobile .profile-avatar div {
+        width: 50px;
+        height: 50px;
+    }
+    
+    /* Users management */
+    .users-management-mobile .table {
+        font-size: 0.8rem;
+    }
+    
+    .users-management-mobile .btn-sm {
+        min-height: 40px;
+        padding: 0.5rem 0.75rem;
+    }
+    
+    /* Payment forms */
+    .payment-form-mobile .card {
+        margin-bottom: 0.75rem;
+    }
+    
+    .payment-form-mobile .form-control,
+    .payment-form-mobile .form-select {
+        font-size: 16px;
+        padding: 0.75rem;
+    }
+    
+    /* Payment History Mobile Styles - HORIZONTAL SCROLLING FOR table-responsive-enhanced */
+    .payment-history-mobile .card-header {
+        padding: 0.75rem 1rem;
+    }
+
+    .payment-history-mobile .card-body {
+        padding: 0 !important; /* Remove padding to allow full width */
+        overflow-x: auto !important;
+        overflow-y: visible !important;
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    /* Force horizontal scrolling for table-responsive-enhanced */
+    .table-responsive-enhanced {
+        overflow-x: scroll !important;
+        overflow-y: visible !important;
+        -webkit-overflow-scrolling: touch !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 100% !important;
+        border: 1px solid #dee2e6;
+        border-radius: 0.375rem;
+        position: relative !important;
+        display: block !important;
+    }
+
+    /* Make table-enhanced wider to force scrolling */
+    .table-enhanced {
+        min-width: 1000px !important;
+        width: 1000px !important;
+        max-width: none !important;
+        margin-bottom: 0 !important;
+        table-layout: fixed !important;
+        display: table !important;
+    }
+
+    /* Custom scrollbar for table-responsive-enhanced */
+    .table-responsive-enhanced::-webkit-scrollbar {
+        height: 12px !important;
+        width: 12px !important;
+        background: #f1f1f1;
+        border-radius: 6px;
+    }
+
+    .table-responsive-enhanced::-webkit-scrollbar-track {
+        background: #f1f1f1 !important;
+        border-radius: 6px;
+        border: 1px solid #ddd;
+    }
+
+    .table-responsive-enhanced::-webkit-scrollbar-thumb {
+        background: linear-gradient(to right, #888, #666) !important;
+        border-radius: 6px;
+        border: 1px solid #555;
+    }
+
+    .table-responsive-enhanced::-webkit-scrollbar-thumb:hover {
+        background: linear-gradient(to right, #666, #444) !important;
+    }
+
+    /* Force all table-enhanced columns to be visible on mobile */
+    .table-enhanced .table-header-cell,
+    .table-enhanced .modern-header-cell,
+    .table-enhanced .modern-table-cell {
+        display: table-cell !important;
+        white-space: nowrap !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        overflow: visible !important;
+        min-width: 150px !important;
+    }
+
+    /* Table-enhanced column widths for horizontal scrolling */
+    .table-enhanced .table-header-cell:nth-child(1),
+    .table-enhanced .modern-header-cell:nth-child(1),
+    .table-enhanced .modern-table-cell:nth-child(1) { /* Date column */
+        min-width: 180px !important;
+        width: 180px !important;
+        max-width: 180px !important;
+    }
+
+    .table-enhanced .table-header-cell:nth-child(2),
+    .table-enhanced .modern-header-cell:nth-child(2),
+    .table-enhanced .modern-table-cell:nth-child(2) { /* Type column */
+        min-width: 200px !important;
+        width: 200px !important;
+        max-width: 200px !important;
+    }
+
+    .table-enhanced .table-header-cell:nth-child(3),
+    .table-enhanced .modern-header-cell:nth-child(3),
+    .table-enhanced .modern-table-cell:nth-child(3) { /* Amount column */
+        min-width: 220px !important;
+        width: 220px !important;
+        max-width: 220px !important;
+        text-align: center !important;
+    }
+
+    .table-enhanced .table-header-cell:nth-child(4),
+    .table-enhanced .modern-header-cell:nth-child(4),
+    .table-enhanced .modern-table-cell:nth-child(4) { /* Status column */
+        min-width: 180px !important;
+        width: 180px !important;
+        max-width: 180px !important;
+        text-align: center !important;
+    }
+
+    .table-enhanced .table-header-cell:nth-child(5),
+    .table-enhanced .modern-header-cell:nth-child(5),
+    .table-enhanced .modern-table-cell:nth-child(5) { /* Actions column */
+        min-width: 320px !important;
+        width: 320px !important;
+        max-width: 320px !important;
+        text-align: center !important;
+    }
+
+    /* Ensure payment history card doesn't break layout */
+    .payment-history-mobile .card {
+        overflow: visible !important;
+        border-radius: 0.5rem;
+    }
+
+    /* Force scrolling indicator for table-responsive-enhanced */
+    .table-responsive-enhanced::after {
+        content: "→ Swipe to see more →";
+        position: absolute;
+        bottom: 10px;
+        right: 10px;
+        background: rgba(0,0,0,0.7);
+        color: white;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 0.7rem;
+        z-index: 10;
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0% { opacity: 0.7; }
+        50% { opacity: 1; }
+        100% { opacity: 0.7; }
+    }
+    
+    /* Announcements */
+    .announcement-card .card-header {
+        padding: 0.5rem 0.75rem !important;
+        font-size: 0.9rem;
+    }
+    
+    .announcement-card .card-body {
+        padding: 0.75rem !important;
+        font-size: 0.875rem;
+    }
+    
+    /* Modal adjustments */
+    .modal-dialog {
+        margin: 1rem;
+        max-width: calc(100% - 2rem);
+    }
+    
+    .modal-body {
+        padding: 1rem;
+    }
+    
+    /* Pagination */
+    .pagination {
+        justify-content: center;
+        margin-bottom: 0;
+    }
+    
+    .pagination .page-link {
+        font-size: 0.8rem;
+        padding: 0.5rem 0.75rem;
+        min-height: 38px;
+        min-width: 38px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .btn-group .btn {
+        margin-bottom: 0;
+    }
+    
+    /* Table adjustments */
+    .table {
+        font-size: 0.875rem;
+    }
+    
+    .table-responsive {
+        border-radius: 0.375rem;
+    }
+    
+    /* Navigation adjustments */
+    .navbar-brand {
+        font-size: 1rem;
+    }
+    
+    .nav-link {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+    
+    /* Statistics cards */
+    .statistics-card {
+        margin-bottom: 1rem;
+    }
+    
+    /* Modal adjustments */
+    .modal-dialog {
+        margin: 1rem;
+    }
+    
+    .modal-content {
+        border-radius: 0.5rem;
+    }
+    
+    /* Toast adjustments */
+    .toast {
+        margin: 0.5rem;
+    }
+    
+    /* Form row adjustments */
+    .form-row .col {
+        margin-bottom: 1rem;
+    }
+    
+    /* Pagination adjustments */
+    .pagination {
+        flex-wrap: wrap;
+    }
+    
+    .page-link {
+        padding: 0.5rem 0.75rem;
+        font-size: 0.875rem;
+    }
+}
+
+@media (max-width: 576px) {
+    /* Extra small screen adjustments */
+    .container-fluid {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+    }
+    
+    main {
+        padding: 0.5rem !important;
+    }
+    
+    .card-header {
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .card-body {
+        padding: 0.75rem;
+    }
+    
+    .btn {
+        font-size: 0.8rem;
+        padding: 0.375rem 0.75rem;
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .btn-group {
+        display: flex;
+        flex-direction: column;
+    }
+    
+    .btn-group .btn {
+        width: 100%;
+        border-radius: 0.375rem !important;
+        margin-bottom: 0.25rem;
+    }
+    
+    .table {
+        font-size: 0.8rem;
+    }
+    
+    h1, h2, h3, h4, h5, h6 {
+        font-size: 1rem;
+    }
+    
+    .form-label {
+        font-size: 0.875rem;
+        margin-bottom: 0.25rem;
+    }
+    
+    .form-control, .form-select {
+        padding: 0.5rem;
+        font-size: 16px;
+    }
+}
+
+/* Sidebar collapse animation */
+.sidebar.collapse {
+    display: none;
+}
+
+.sidebar.collapse.show {
+    display: block;
+}
+
+@media (min-width: 768px) {
+    .sidebar.collapse {
+        display: block;
+    }
+}
+
+/* Touch-friendly targets */
+@media (pointer: coarse) {
+    .btn, .nav-link, .form-control, .form-select {
+        min-height: 44px;
+    }
+    
+    .form-check-input {
+        min-width: 44px;
+        min-height: 44px;
+    }
+}
+
+/* Improve readability on small screens */
+@media (max-width: 768px) {
+    .text-small {
+        font-size: 0.75rem;
+    }
+    
+    .badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+    }
+}
+
+/* Mobile Responsive Announcements */
+@media (max-width: 576px) {
+    .announcement-card .card-header {
+        padding: 0.5rem 0.75rem !important;
+    }
+    
+    .announcement-card .card-body {
+        padding: 0.75rem !important;
+    }
+    
+    .announcement-card .fs-7 {
+        font-size: 0.7rem !important;
+    }
+    
+    .announcement-card .small {
+        font-size: 0.8rem !important;
+    }
+    
+    .announcement-card .badge {
+        font-size: 0.65rem !important;
+        padding: 0.25rem 0.5rem !important;
+    }
+    
+    .announcement-card img {
+        max-height: 100px !important;
+    }
+    
+    .modal-fullscreen-sm-down .modal-body {
+        max-height: calc(100vh - 140px);
+        overflow-y: auto;
+    }
+}
+
+@media (min-width: 577px) and (max-width: 768px) {
+    .announcement-card .fs-6 {
+        font-size: 0.9rem !important;
+    }
+    
+    .announcement-card img {
+        max-height: 110px !important;
+    }
+}
+
+/* Ensure text doesn't overflow on mobile */
+.announcement-card .text-truncate {
+    max-width: 200px;
+}
+
+@media (max-width: 400px) {
+    .announcement-card .text-truncate {
+        max-width: 150px;
+    }
+}
+
+/* Better touch targets for mobile */
+@media (max-width: 768px) {
+    .announcement-card .btn-sm {
+        min-height: 32px;
+        min-width: 32px;
+    }
+}
+</style>
+@endpush
+
+<!-- Payment Form Mobile Styles -->
+@push('styles')
+<style>
+/* Payment Form Specific Mobile Styles */
+@media (max-width: 768px) {
+    .payment-form-mobile {
+        padding: 0.5rem;
+    }
+    
+    .payment-form-mobile .form-control,
+    .payment-form-mobile .form-select {
+        font-size: 16px; /* Prevents zoom on iOS */
+        min-height: 44px; /* Touch-friendly */
+    }
+    
+    .payment-form-mobile .form-label {
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+        font-weight: 500;
+    }
+    
+    .payment-form-mobile .btn {
+        min-height: 44px;
+        font-size: 0.875rem;
+        font-weight: 500;
+    }
+    
+    .payment-form-mobile .card-header {
+        padding: 0.75rem 1rem;
+    }
+    
+    .payment-form-mobile .card-body {
+        padding: 1rem;
+    }
+    
+    .payment-form-mobile .alert {
+        margin-bottom: 1rem;
+        padding: 0.75rem;
+    }
+    
+    .payment-form-mobile .attachment-preview {
+        max-width: 100%;
+        overflow: hidden;
+    }
+    
+    .payment-form-mobile .attachment-preview img {
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+@media (max-width: 576px) {
+    .payment-form-mobile .form-control,
+    .payment-form-mobile .form-select {
+        font-size: 16px;
+        padding: 0.75rem;
+    }
+    
+    .payment-form-mobile .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+    }
+    
+    .payment-form-mobile .d-flex.flex-column.flex-md-row {
+        flex-direction: column !important;
+    }
+    
+    .payment-form-mobile .d-flex.flex-column.flex-md-row .btn {
+        width: 100% !important;
+    }
+}
+
+/* Payment History Mobile Styles */
+@media (max-width: 768px) {
+    .payment-history-mobile .card-header {
+        padding: 0.75rem 1rem;
+    }
+    
+    .payment-history-mobile .card-body {
+        padding: 1rem;
+    }
+    
+    .payment-table-enhanced .table {
+        font-size: 0.8rem;
+    }
+    
+    /* Ensure payment history table is horizontally scrollable */
+    .payment-table-enhanced .table-responsive {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        width: 100% !important;
+        max-width: 100% !important;
+        border: 1px solid #dee2e6;
+        border-radius: 0.375rem;
+    }
+    
+    .payment-table-enhanced table {
+        min-width: 650px !important;
+        width: 100% !important;
+        margin-bottom: 0 !important;
+    }
+    
+    /* Custom scrollbar for payment history */
+    .payment-table-enhanced .table-responsive::-webkit-scrollbar {
+        height: 8px;
+        width: 8px;
+    }
+    
+    .payment-table-enhanced .table-responsive::-webkit-scrollbar-track {
+        background: #f1f1f1;
+        border-radius: 4px;
+    }
+    
+    .payment-table-enhanced .table-responsive::-webkit-scrollbar-thumb {
+        background: #888;
+        border-radius: 4px;
+    }
+    
+    .payment-table-enhanced .table-responsive::-webkit-scrollbar-thumb:hover {
+        background: #555;
+    }
+    
+    .payment-table-enhanced .table th {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    .payment-table-enhanced .table td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.8rem;
+        vertical-align: middle;
+    }
+    
+    .mobile-payment-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .mobile-date {
+        font-size: 0.75rem;
+        color: #6c757d;
+    }
+    
+    .mobile-type {
+        margin-top: 0.25rem;
+    }
+    
+    .type-badge-mobile {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .action-buttons {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        align-items: flex-start;
+    }
+    
+    .action-buttons .btn {
+        font-size: 0.75rem;
+        padding: 0.25rem 0.5rem;
+        min-height: auto;
+    }
+    
+    .action-buttons .status-badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+        align-self: flex-start;
+    }
+}
+
+@media (max-width: 576px) {
+    .payment-table-enhanced .table {
+        font-size: 0.75rem;
+    }
+    
+    .payment-table-enhanced .table th {
+        padding: 0.5rem 0.25rem;
+        font-size: 0.75rem;
+    }
+    
+    .payment-table-enhanced .table td {
+        padding: 0.5rem 0.25rem;
+        font-size: 0.75rem;
+    }
+    
+    .mobile-payment-info {
+        gap: 0.2rem;
+    }
+    
+    .mobile-date {
+        font-size: 0.7rem;
+    }
+    
+    .type-badge-mobile {
+    }
+}
+
+/* Modern Payment History Styles */
+.payment-table-modern {
+    background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+    border-radius: 16px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    margin-top: 20px;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+.modern-payment-header {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 25px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.header-stats {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border-radius: 12px;
+    padding: 15px 20px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    transition: all 0.3s ease;
+    min-width: 140px;
+}
+
+.stat-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.modern-gradient-1 {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.modern-gradient-2 {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+}
+
+.modern-gradient-3 {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+.stat-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    color: white;
+}
+
+.stat-info {
+    color: white;
+}
+
+.stat-number {
+    font-size: 24px;
+    font-weight: bold;
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 12px;
+    opacity: 0.9;
+    margin-top: 2px;
+}
+
+.header-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.btn-modern {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.btn-primary-modern {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.btn-primary-modern:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-1px);
+}
+
+.btn-secondary-modern {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.btn-secondary-modern:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+.modern-payment-table-container {
+    padding: 0;
+}
+
+.table-responsive-modern {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    background: white;
+}
+
+.table-modern {
+    width: 100%;
+    min-width: 800px;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin: 0;
+}
+
+.modern-header-row {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
+
+.modern-header-cell {
+    padding: 20px 15px;
+    font-weight: 600;
+    color: #495057;
+    border-bottom: 2px solid #dee2e6;
+    text-align: left;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.header-content {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.modern-table-row {
+    transition: all 0.2s ease;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+.modern-table-row:hover {
+    background: linear-gradient(135deg, #f8f9ff 0%, #f0f4ff 100%);
+    transform: scale(1.01);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.modern-table-cell {
+    padding: 18px 15px;
+    vertical-align: middle;
+}
+
+.cell-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.date-cell i {
+    font-size: 16px;
+}
+
+.type-badge-modern {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.type-fee {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.type-donation {
+    background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    color: white;
+}
+
+.type-subscription {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    color: white;
+}
+
+.type-default {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    color: white;
+}
+
+.amount-wrapper {
+    display: flex;
+    align-items: baseline;
+    gap: 4px;
+}
+
+.currency {
+    font-size: 12px;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.amount {
+    font-size: 16px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.status-badge-modern {
+    padding: 6px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.status-success {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+    color: white;
+}
+
+.status-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+    color: white;
+}
+
+.status-danger {
+    background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
+    color: white;
+}
+
+.action-buttons-modern {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+.action-btn-modern {
+    width: 32px;
+    height: 32px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    font-size: 14px;
+}
+
+.btn-view {
+    background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+    color: white;
+}
+
+.btn-view:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+}
+
+.btn-details {
+    background: linear-gradient(135deg, #6c757d 0%, #495057 100%);
+    color: white;
+}
+
+.btn-details:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+}
+
+.no-file-modern {
+    font-size: 11px;
+    color: #6c757d;
+    font-style: italic;
+}
+
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    .modern-payment-header {
+        padding: 20px;
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .header-stats {
+        justify-content: center;
+    }
+    
+    .stat-card {
+        min-width: 120px;
+        padding: 12px 15px;
+    }
+    
+    .stat-number {
+        font-size: 20px;
+    }
+    
+    .header-actions {
+        justify-content: center;
+    }
+    
+    .btn-modern {
+        padding: 8px 16px;
+        font-size: 13px;
+    }
+    
+    .modern-header-cell {
+        padding: 15px 10px;
+        font-size: 12px;
+    }
+    
+    .modern-table-cell {
+        padding: 15px 10px;
+    }
+    
+    .amount {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 576px) {
+    .header-stats {
+        flex-direction: column;
+        width: 100%;
+    }
+    
+    .stat-card {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .table-modern {
+        min-width: 600px;
+    }
+}
+
+/* Payment history table horizontal scrolling for all screen sizes */
+.payment-table-enhanced .table-responsive {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+}
+
+.payment-table-enhanced table {
+    min-width: 800px !important;
+    width: 100% !important;
+    margin-bottom: 0 !important;
+}
+
+/* Ensure table cells don't wrap */
+.payment-table-enhanced table th,
+.payment-table-enhanced table td {
+    white-space: nowrap !important;
+    vertical-align: middle !important;
+}
+
+/* Desktop specific adjustments */
+@media (min-width: 769px) {
+    .payment-table-enhanced table {
+        min-width: 900px !important;
+    }
+}
+
+.admin-comments-modal .alert i {
+        font-size: 1rem;
+    }
+    
+    .admin-comments-modal .fs-5 {
+        font-size: 0.9rem;
+    }
+    
+    .admin-comments-modal .fs-6 {
+        font-size: 0.8rem;
+    }
+    
+    .admin-comments-modal .text-muted small {
+        font-size: 0.7rem;
+        font-size: 0.65rem;
+        padding: 0.2rem 0.4rem;
+    }
+}
+
+/* Reports Section Mobile Styles */
+@media (max-width: 768px) {
+    .reports-mobile .card-header {
+        padding: 0.75rem 1rem;
+    }
+    
+    .reports-mobile .card-body {
+        padding: 1rem;
+    }
+    
+    .reports-mobile .row {
+        gap: 1rem;
+    }
+    
+    .reports-mobile .col-lg-6 {
+        margin-bottom: 1rem;
+    }
+    
+    .reports-mobile .card.border-left {
+        margin-bottom: 0.5rem;
+    }
+    
+    .reports-mobile .card.border-left .card-body {
+        padding: 1rem;
+    }
+    
+    .reports-mobile .fa-lg {
+        font-size: 1.25rem;
+    }
+    
+    .reports-mobile .btn-sm {
+        font-size: 0.875rem;
+        padding: 0.5rem 1rem;
+        min-height: 44px;
+    }
+}
+
+@media (max-width: 576px) {
+    .reports-mobile .card-header {
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .reports-mobile .card-body {
+        padding: 0.75rem;
+    }
+    
+    .reports-mobile .col-6 {
+        padding: 0.25rem;
+    }
+    
+    .reports-mobile .card.border-left .card-body {
+        padding: 0.75rem;
+    }
+    
+    .reports-mobile .fa-lg {
+        font-size: 1rem;
+    }
+    
+    .reports-mobile .btn-sm {
+        font-size: 0.8rem;
+        padding: 0.375rem 0.75rem;
+        min-height: 40px;
+    }
+    
+    .reports-mobile .d-grid {
+        gap: 0.5rem;
+    }
+}
+
+/* Profile Section Mobile Styles */
+@media (max-width: 768px) {
+    .profile-mobile .card-header {
+        padding: 0.75rem 1rem;
+    }
+    
+    .profile-mobile .card-body {
+        padding: 1rem;
+    }
+    
+    .profile-mobile .profile-avatar img,
+    .profile-mobile .profile-avatar div {
+        width: 60px !important;
+        height: 60px !important;
+    }
+    
+    .profile-mobile .btn-camera {
+        width: 24px !important;
+        height: 24px !important;
+        font-size: 0.6rem !important;
+    }
+    
+    .profile-mobile .form-control,
+    .profile-mobile .form-select {
+        font-size: 16px; /* Prevents zoom on iOS */
+        min-height: 44px; /* Touch-friendly */
+    }
+    
+    .profile-mobile .form-label {
+        font-size: 0.875rem;
+        margin-bottom: 0.5rem;
+    }
+    
+    .profile-mobile .btn-sm {
+        min-height: 44px;
+        font-size: 0.875rem;
+    }
+    
+    .profile-mobile .btn-group .btn-sm {
+        min-height: 44px;
+        padding: 0.5rem 1rem;
+    }
+    
+    /* Ensure profile content stays within main container */
+    #profileContent {
+        max-width: 100%;
+        overflow-x: hidden;
+        position: relative;
+        z-index: 1;
+    }
+    
+    #profileContent .card {
+        margin-bottom: 1rem;
+        box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075) !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .profile-mobile .card-header {
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .profile-mobile .card-body {
+        padding: 0.75rem;
+    }
+    
+    .profile-mobile .profile-avatar img,
+    .profile-mobile .profile-avatar div {
+        width: 50px !important;
+        height: 50px !important;
+    }
+    
+    .profile-mobile .btn-camera {
+        width: 20px !important;
+        height: 20px !important;
+        font-size: 0.5rem !important;
+    }
+    
+    .profile-mobile .form-control,
+    .profile-mobile .form-select {
+        font-size: 16px;
+        padding: 0.75rem;
+    }
+    
+    .profile-mobile .form-label {
+        font-size: 0.8rem;
+    }
+    
+    .profile-mobile .btn-sm {
+        font-size: 0.8rem;
+        padding: 0.375rem 0.75rem;
+        min-height: 40px;
+    }
+    
+    .profile-mobile .btn-group .btn-sm {
+        min-height: 40px;
+        padding: 0.375rem 0.75rem;
+    }
+    
+    .profile-mobile .d-flex.flex-column.flex-md-row {
+        flex-direction: column !important;
+    }
+    
+    .profile-mobile .d-flex.flex-column.flex-md-row .btn {
+        width: 100% !important;
+        margin-bottom: 0.5rem;
+    }
+    
+    /* Extra containment for mobile */
+    #profileContent {
+        padding: 0.5rem !important;
+    }
+    
+    #profileContent .card {
+        margin-bottom: 0.75rem !important;
+    }
+}
+
+/* Dashboard Statistics Mobile Styles */
+@media (max-width: 768px) {
+    .dashboard-stats-mobile .card {
+        margin-bottom: 1rem;
+    }
+    
+    .dashboard-stats-mobile .card-header {
+        padding: 0.75rem 1rem;
+    }
+    
+    .dashboard-stats-mobile .card-body {
+        padding: 1rem;
+    }
+    
+    .dashboard-stats-mobile .card-footer {
+        padding: 0.75rem 1rem;
+    }
+    
+    .dashboard-stats-mobile .fs-4 {
+        font-size: 1.5rem;
+    }
+    
+    .dashboard-stats-mobile .fs-6 {
+        font-size: 0.875rem;
+    }
+    
+    .dashboard-stats-mobile .fs-7 {
+        font-size: 0.75rem;
+    }
+    
+    .dashboard-stats-mobile .progress {
+        height: 8px;
+    }
+    
+    .dashboard-stats-mobile .badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .dashboard-stats-mobile .bg-white.bg-opacity-25 {
+        width: 35px !important;
+        height: 35px !important;
+    }
+    
+    .dashboard-stats-mobile .bg-white.bg-opacity-25 i {
+        font-size: 14px !important;
+    }
+}
+
+@media (max-width: 576px) {
+    .dashboard-stats-mobile .card {
+        margin-bottom: 0.75rem;
+    }
+    
+    .dashboard-stats-mobile .card-header {
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .dashboard-stats-mobile .card-body {
+        padding: 0.75rem;
+    }
+    
+    .dashboard-stats-mobile .card-footer {
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .dashboard-stats-mobile .fs-4 {
+        font-size: 1.25rem;
+    }
+    
+    .dashboard-stats-mobile .fs-6 {
+        font-size: 0.8rem;
+    }
+    
+    .dashboard-stats-mobile .fs-7 {
+        font-size: 0.7rem;
+    }
+    
+    .dashboard-stats-mobile .progress {
+        height: 6px;
+    }
+    
+    .dashboard-stats-mobile .badge {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.4rem;
+    }
+    
+    .dashboard-stats-mobile .bg-white.bg-opacity-25 {
+        width: 30px !important;
+        height: 30px !important;
+    }
+    
+    .dashboard-stats-mobile .bg-white.bg-opacity-25 i {
+        font-size: 12px !important;
+    }
+    
+    .dashboard-stats-mobile .d-flex.justify-content-between {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.5rem;
+    }
+    
+    .dashboard-stats-mobile .d-flex.justify-content-between .badge {
+        align-self: flex-end;
+    }
+}
+
+/* Users Management Mobile Styles */
+@media (max-width: 768px) {
+    .users-management-mobile .card-header {
+        padding: 0.75rem 1rem;
+    }
+    
+    .users-management-mobile .card-body {
+        padding: 1rem;
+    }
+    
+    .users-management-mobile .table {
+        font-size: 0.8rem;
+    }
+    
+    .users-management-mobile .table th {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.8rem;
+    }
+    
+    .users-management-mobile .table td {
+        padding: 0.75rem 0.5rem;
+        font-size: 0.8rem;
+        vertical-align: middle;
+    }
+    
+    .users-management-mobile .form-control,
+    .users-management-mobile .form-select {
+        font-size: 16px; /* Prevents zoom on iOS */
+        min-height: 44px; /* Touch-friendly */
+    }
+    
+    .users-management-mobile .btn-sm {
+        min-height: 44px;
+        font-size: 0.875rem;
+    }
+    
+    .users-management-mobile .badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+    }
+    
+    .users-management-mobile .input-group-text {
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+@media (max-width: 576px) {
+    .users-management-mobile .table {
+        font-size: 0.75rem;
+    }
+    
+    .users-management-mobile .table th {
+        padding: 0.5rem 0.25rem;
+        font-size: 0.75rem;
+    }
+    
+    .users-management-mobile .table td {
+        padding: 0.5rem 0.25rem;
+        font-size: 0.75rem;
+    }
+    
+    .users-management-mobile .form-control,
+    .users-management-mobile .form-select {
+        font-size: 16px;
+        padding: 0.75rem;
+    }
+    
+    .users-management-mobile .btn-sm {
+        font-size: 0.8rem;
+        padding: 0.375rem 0.75rem;
+        min-height: 40px;
+    }
+    
+    .users-management-mobile .badge {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.4rem;
+    }
+    
+    .users-management-mobile .pagination {
+        margin-bottom: 0;
+    }
+    
+    .users-management-mobile .page-link {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+        min-height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+/* Pending Approval Modal Mobile Styles */
+@media (max-width: 768px) {
+    .modal-dialog {
+        margin: 1rem;
+        max-width: calc(100% - 2rem);
+    }
+    
+    .modal-body {
+        padding: 1rem;
+    }
+    
+    .modal-header {
+        padding: 1rem;
+    }
+    
+    .modal-footer {
+        padding: 1rem;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .modal-footer .btn {
+        width: 100%;
+        min-height: 44px;
+    }
+    
+    .user-details-modal .row {
+        gap: 1rem;
+    }
+    
+    .user-details-modal .col-md-6 {
+        margin-bottom: 1rem;
+    }
+    
+    .user-details-modal .card {
+        margin-bottom: 1rem;
+    }
+    
+    .user-details-modal .form-control-plaintext {
+        font-size: 0.9rem;
+        padding: 0.75rem;
+    }
+    
+    .user-details-modal .badge {
+        font-size: 0.7rem;
+        padding: 0.25rem 0.5rem;
+    }
+}
+
+@media (max-width: 576px) {
+    .modal-dialog {
+        margin: 0.25rem;
+        max-width: calc(100% - 0.5rem);
+    }
+    
+    .modal-body {
+        padding: 0.4rem;
+    }
+    
+    /* Enhanced responsive announcement form styles for small phones */
+    .announcement-image-upload .image-upload-area {
+        min-height: 80px !important;
+        padding: 10px !important;
+    }
+    
+    .announcement-image-upload .image-upload-area i {
+        font-size: 1.25rem !important;
+    }
+    
+    .announcement-image-upload .image-upload-area h6 {
+        font-size: 0.8rem !important;
+        margin-bottom: 0.25rem !important;
+    }
+    
+    .announcement-image-upload .image-upload-area p {
+        font-size: 0.7rem !important;
+        margin-bottom: 0 !important;
+    }
+    
+    /* Enhanced form improvements for small phones */
+    .form-control-lg, .form-select-lg {
+        font-size: 0.8rem !important;
+        padding: 0.4rem 0.5rem !important;
+        border-radius: 0.25rem !important;
+        min-height: 36px !important; /* Smaller touch target */
+    }
+    
+    .form-label {
+        font-size: 0.7rem !important;
+        margin-bottom: 0.3rem !important;
+        font-weight: 600 !important;
+    }
+    
+    /* Enhanced button improvements for small phones */
+    .btn-lg {
+        font-size: 0.8rem !important;
+        padding: 0.4rem 0.6rem !important;
+        min-height: 36px !important; /* Smaller touch target */
+        border-radius: 0.25rem !important;
+    }
+    
+    /* Enhanced card improvements for small phones */
+    .card {
+        margin: 0;
+        border-radius: 0.375rem;
+        border: 1px solid #dee2e6;
+    }
+    
+    .card-body {
+        padding: 0.5rem;
+    }
+    
+    .card-header {
+        padding: 0.5rem;
+    }
+    
+    .card-header h6 {
+        font-size: 0.9rem !important;
+    }
+    
+    /* Enhanced modal improvements for small phones */
+    .modal-content {
+        border-radius: 0.5rem;
+        margin: 0.25rem;
+    }
+    
+    .modal-header {
+        padding: 0.75rem;
+    }
+    
+    .modal-header .modal-title {
+        font-size: 1rem !important;
+    }
+    
+    .modal-footer {
+        padding: 0.5rem 0.75rem;
+    }
+    
+    /* Enhanced textarea for small phones */
+    textarea.form-control {
+        min-height: 80px !important;
+        font-size: 0.8rem !important;
+        padding: 0.4rem 0.5rem !important;
+        line-height: 1.2 !important;
+    }
+    
+    /* Enhanced spacing for small phones */
+    .row.g-3 > * {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0.5rem !important;
+    }
+    
+    /* Enhanced button container for small phones */
+    .d-flex.flex-column.flex-sm-row {
+        gap: 0.75rem !important;
+    }
+    
+    /* Enhanced image preview for small phones */
+    #leaderImagePreview img {
+        max-height: 150px !important;
+    }
+    
+    /* Enhanced remove image button for small phones */
+    #leaderImagePreview button {
+        font-size: 0.8rem !important;
+        padding: 0.4rem 0.8rem !important;
+        min-height: 36px !important;
+    }
+    
+    /* Enhanced announcements modal for small phones */
+    #recentAnnouncementsModal .modal-dialog {
+        margin: 0.25rem !important;
+        max-width: calc(100% - 0.5rem) !important;
+    }
+    
+    #recentAnnouncementsModal .modal-body {
+        padding: 0.5rem !important;
+    }
+    
+    #recentAnnouncementsModal .modal-header {
+        padding: 0.75rem !important;
+    }
+    
+    #recentAnnouncementsModal .modal-header h5 {
+        font-size: 1rem !important;
+    }
+    
+    #recentAnnouncementsModal .modal-footer {
+        padding: 0.5rem 0.75rem !important;
+    }
+    
+    /* Enhanced announcement cards for small phones */
+    #recentAnnouncementsModal .card {
+        margin-bottom: 0.75rem !important;
+    }
+    
+    #recentAnnouncementsModal .card-header {
+        padding: 0.5rem 0.75rem !important;
+    }
+    
+    #recentAnnouncementsModal .card-header h6 {
+        font-size: 0.85rem !important;
+        margin-bottom: 0.25rem !important;
+    }
+    
+    #recentAnnouncementsModal .card-header small {
+        font-size: 0.7rem !important;
+    }
+    
+    #recentAnnouncementsModal .card-body {
+        padding: 0.75rem !important;
+    }
+    
+    #recentAnnouncementsModal .card-text {
+        font-size: 0.8rem !important;
+        line-height: 1.3 !important;
+    }
+    
+    #recentAnnouncementsModal .badge {
+        font-size: 0.7rem !important;
+        padding: 0.2rem 0.4rem !important;
+    }
+    
+    #recentAnnouncementsModal img {
+        max-height: 100px !important;
+    }
+    
+    #recentAnnouncementsModal .text-muted.small {
+        font-size: 0.7rem !important;
+        line-height: 1.2 !important;
+    }
+    
+    /* Enhanced row spacing for announcements modal */
+    #recentAnnouncementsModal .row.g-3 > * {
+        padding-top: 0.75rem !important;
+        padding-bottom: 0 !important;
+    }
+    
+    /* Enhanced announcement title row for single row display */
+    #recentAnnouncementsModal .announcement-title-row {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        margin-bottom: 0.25rem !important;
+        flex-wrap: nowrap !important;
+        gap: 0.5rem !important;
+    }
+    
+    #recentAnnouncementsModal .announcement-title-row h6 {
+        flex: 1 !important;
+        min-width: 0 !important;
+        margin-bottom: 0 !important;
+        font-size: 0.9rem !important;
+        font-weight: 600 !important;
+        line-height: 1.2 !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+    }
+    
+    #recentAnnouncementsModal .announcement-title-row .badge {
+        flex-shrink: 0 !important;
+        font-size: 0.7rem !important;
+        padding: 0.2rem 0.4rem !important;
+        border-radius: 0.25rem !important;
+    }
+    
+    /* Enhanced create announcement form for compact size */
+    #createAnnouncementForm {
+        font-size: 0.85rem !important;
+    }
+    
+    #createAnnouncementForm .card-header {
+        padding: 0.75rem !important;
+    }
+    
+    #createAnnouncementForm .card-header h6 {
+        font-size: 0.9rem !important;
+        margin-bottom: 0 !important;
+    }
+    
+    #createAnnouncementForm .card-body {
+        padding: 0.75rem !important;
+    }
+    
+    #createAnnouncementForm .form-label {
+        font-size: 0.75rem !important;
+        font-weight: 600 !important;
+        margin-bottom: 0.3rem !important;
+    }
+    
+    #createAnnouncementForm .form-control,
+    #createAnnouncementForm .form-select {
+        font-size: 0.8rem !important;
+        padding: 0.4rem 0.5rem !important;
+        min-height: 32px !important;
+        border-radius: 0.375rem !important;
+    }
+    
+    #createAnnouncementForm .form-control-lg,
+    #createAnnouncementForm .form-select-lg {
+        font-size: 0.8rem !important;
+        padding: 0.4rem 0.5rem !important;
+        min-height: 32px !important;
+        border-radius: 0.375rem !important;
+    }
+    
+    #createAnnouncementForm .form-control::placeholder,
+    #createAnnouncementForm .form-select::placeholder {
+        font-size: 0.75rem !important;
+    }
+    
+    #createAnnouncementForm textarea.form-control {
+        min-height: 70px !important;
+        font-size: 0.8rem !important;
+        padding: 0.4rem 0.5rem !important;
+        line-height: 1.2 !important;
+    }
+    
+    #createAnnouncementForm .btn {
+        font-size: 0.75rem !important;
+        padding: 0.4rem 0.6rem !important;
+        min-height: 32px !important;
+        border-radius: 0.375rem !important;
+    }
+    
+    #createAnnouncementForm .btn-lg {
+        font-size: 0.8rem !important;
+        padding: 0.5rem 0.8rem !important;
+        min-height: 36px !important;
+        border-radius: 0.375rem !important;
+    }
+    
+    #createAnnouncementForm .image-upload-area {
+        min-height: 80px !important;
+        padding: 1rem !important;
+        font-size: 0.75rem !important;
+    }
+    
+    #createAnnouncementForm .image-upload-area i {
+        font-size: 1.5rem !important;
+    }
+    
+    #createAnnouncementForm .image-preview {
+        max-height: 80px !important;
+    }
+    
+    #createAnnouncementForm .row.g-3 > * {
+        padding-top: 0.5rem !important;
+        padding-bottom: 0 !important;
+    }
+    
+    #createAnnouncementForm .mt-2 {
+        margin-top: 0.5rem !important;
+    }
+}
+    
+    .user-details-modal .form-control-plaintext {
+        font-size: 0.8rem;
+        padding: 0.5rem;
+    }
+    
+    .user-details-modal .badge {
+        font-size: 0.65rem;
+        padding: 0.2rem 0.4rem;
+    }
+    
+    .user-details-modal .card-header {
+        padding: 0.5rem 0.75rem;
+    }
+    
+    .user-details-modal .card-body {
+        padding: 0.75rem;
+    }
+}
+</style>
+@endpush

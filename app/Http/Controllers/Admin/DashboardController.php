@@ -240,9 +240,9 @@ class DashboardController extends Controller
             'membership' => 'Membership Fee',
             'certificate' => 'Certificate Fee',
             'zaka' => 'Zaka',
-            'donation' => 'Donation',
-            'event' => 'Event Registration',
-            'other' => 'Other'
+            // 'donation' => 'Donation',
+            // 'event' => 'Event Registration',
+            // 'other' => 'Other'
         ];
         
         return $labels[$type] ?? $type;
