@@ -137,8 +137,13 @@ class ReportController extends Controller
                 ]);
             }
 
+<<<<<<< HEAD
             // Build query with complete member data (excluding user ID 16)
             $query = User::where('id', '!=', 16);
+=======
+            // Build query with complete member data
+            $query = User::query();
+>>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
             
             // Apply filters
             if ($role) {

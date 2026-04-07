@@ -388,8 +388,13 @@
 
 <div class="container-fluid py-4" style="padding-top: 56px;">
     @php
+<<<<<<< HEAD
     // Fetch all users once at the top (excluding user ID 16) - ordered from first to last
     $allUsers = DB::table('users')->where('id', '!=', 16)->orderBy('id', 'asc')->get();
+=======
+    // Fetch all users once at the top - ordered from first to last
+    $allUsers = DB::table('users')->orderBy('id', 'asc')->get();
+>>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
     @endphp
     
     <div class="row">

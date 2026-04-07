@@ -1350,7 +1350,11 @@
                                                 <div class="card border-left border-info" style="background: linear-gradient(135deg, #ffffff 0%, #d1ecf1 100%); border: 2px solid #17a2b8; box-shadow: 0 4px 8px rgba(23,162,184,0.1);">
                                                     <div class="card-body text-center p-2 p-md-3">
                                                         <i class="fas fa-chart-pie fa-lg fa-md-2x text-info mb-1 mb-md-2"></i>
+<<<<<<< HEAD
                                                         <h5 class="text-info fs-6 fs-md-5" style="font-weight: bold;">{{ number_format(($totalPayments > 0) ? (($completedPayments ?? 0) / $totalPayments) * 100 : 0, 1) }}%</h5>
+=======
+                                                        <h5 class="text-info fs-6 fs-md-5" style="font-weight: bold;">{{ number_format(($completedPayments ?? 0) / ($totalPayments ?? 1) * 100, 1) }}%</h5>
+>>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
                                                         <p class="card-text fs-7 fs-md-6" style="font-weight: 600; color: #495057;">Completion Rate</p>
                                                     </div>
                                                 </div>

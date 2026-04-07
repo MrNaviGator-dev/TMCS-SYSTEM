@@ -2,7 +2,11 @@
 -- PostgreSQL database dump
 --
 
+<<<<<<< HEAD
 \restrict qMLeROoPjDVwxaOoC5hFBfGLXHehuqEmcsj5tv7122HklUZWzAa0gK4aMHd1Ock
+=======
+\restrict SyaOPf3Ku3XLOOq0c2klEJWWE7P7Ltgb5ATgloVD2kRsaS6CJcDtNU8B2dxSwG4
+>>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
 
 -- Dumped from database version 18.1
 -- Dumped by pg_dump version 18.1
@@ -34,20 +38,50 @@ CREATE TABLE public.accounts (
     account_name character varying(100) NOT NULL,
     status character varying(20) DEFAULT 'active'::character varying,
     created_at timestamp without time zone DEFAULT CURRENT_TIMESTAMP,
+<<<<<<< HEAD
     CONSTRAINT accounts_account_type_check CHECK (((account_type)::text = ANY (ARRAY[('mobile'::character varying)::text, ('bank'::character varying)::text]))),
     CONSTRAINT accounts_status_check CHECK (((status)::text = ANY (ARRAY[('active'::character varying)::text, ('inactive'::character varying)::text])))
+=======
+    CONSTRAINT accounts_account_type_check CHECK (((account_type)::text = ANY ((ARRAY['mobile'::character varying, 'bank'::character varying])::text[]))),
+    CONSTRAINT accounts_status_check CHECK (((status)::text = ANY ((ARRAY['active'::character varying, 'inactive'::character varying])::text[])))
+>>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
 );
 
 
 ALTER TABLE public.accounts OWNER TO postgres;
 
 --
+<<<<<<< HEAD
+=======
+-- Name: accounts_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.accounts_id_seq
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.accounts_id_seq OWNER TO postgres;
+
+--
+-- Name: accounts_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.accounts_id_seq OWNED BY public.accounts.id;
+
+
+--
+>>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
 -- Name: announcements; Type: TABLE; Schema: public; Owner: postgres
 --
 
 CREATE TABLE public.announcements (
     id bigint NOT NULL,
     title character varying(255) NOT NULL,
+<<<<<<< HEAD
     content text NOT NULL,
     type character varying(255) DEFAULT 'general'::character varying NOT NULL,
     priority character varying(255) DEFAULT 'medium'::character varying NOT NULL,
@@ -58,6 +92,21 @@ CREATE TABLE public.announcements (
     target_audience character varying(255) DEFAULT 'all'::character varying NOT NULL,
     created_at timestamp(0) without time zone,
     updated_at timestamp(0) without time zone
+=======
+    message text NOT NULL,
+    priority character varying(255) DEFAULT 'normal'::character varying NOT NULL,
+    audience character varying(255) DEFAULT 'all'::character varying NOT NULL,
+    expiry_date date,
+    image character varying(255),
+    status character varying(255) DEFAULT 'active'::character varying NOT NULL,
+    created_by bigint NOT NULL,
+    updated_by bigint,
+    created_at timestamp(0) without time zone,
+    updated_at timestamp(0) without time zone,
+    CONSTRAINT announcements_audience_check CHECK (((audience)::text = ANY ((ARRAY['all'::character varying, 'members'::character varying, 'leaders'::character varying, 'admins'::character varying])::text[]))),
+    CONSTRAINT announcements_priority_check CHECK (((priority)::text = ANY ((ARRAY['normal'::character varying, 'important'::character varying, 'urgent'::character varying])::text[]))),
+    CONSTRAINT announcements_status_check CHECK (((status)::text = ANY ((ARRAY['active'::character varying, 'inactive'::character varying])::text[])))
+>>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
 );
 
 
@@ -327,6 +376,7 @@ CREATE TABLE public.users (
     remember_token character varying(100),
     created_at timestamp(0) without time zone,
     updated_at timestamp(0) without time zone,
+<<<<<<< HEAD
     phone_number character varying(255),
     gender character varying(255),
     home_diocese character varying(255),
@@ -336,6 +386,20 @@ CREATE TABLE public.users (
     profile_picture character varying(255),
     membership_status character varying(255) DEFAULT 'Active'::character varying NOT NULL,
     registration_date date
+=======
+    role character varying(255) DEFAULT 'member'::character varying NOT NULL,
+    registration_number character varying(255),
+    home_diocese character varying(255),
+    phone_number character varying(255),
+    profile_picture character varying(255),
+    registration_date timestamp(0) without time zone,
+    gender character varying(255),
+    year_of_study character varying(255),
+    address text,
+    date_of_birth date,
+    membership_status character varying(255) DEFAULT 'pending'::character varying NOT NULL,
+    avatar character varying(255)
+>>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
 );
 
 
@@ -363,6 +427,16 @@ ALTER SEQUENCE public.users_id_seq OWNED BY public.users.id;
 
 
 --
+<<<<<<< HEAD
+=======
+-- Name: accounts id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.accounts ALTER COLUMN id SET DEFAULT nextval('public.accounts_id_seq'::regclass);
+
+
+--
+>>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
 -- Name: announcements id; Type: DEFAULT; Schema: public; Owner: postgres
 --
 
@@ -409,6 +483,11 @@ ALTER TABLE ONLY public.users ALTER COLUMN id SET DEFAULT nextval('public.users_
 --
 
 COPY public.accounts (id, account_type, account_number, account_name, status, created_at) FROM stdin;
+<<<<<<< HEAD
+=======
+4	bank	051223456670	CRDB - TMCS Membership	active	2026-02-07 12:59:50
+5	mobile	37143390	M-Pesa - Watson Boniface	active	2026-02-07 13:00:00
+>>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
 \.
 
 
@@ -416,7 +495,13 @@ COPY public.accounts (id, account_type, account_number, account_name, status, cr
 -- Data for Name: announcements; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+<<<<<<< HEAD
 COPY public.announcements (id, title, content, type, priority, status, starts_at, ends_at, created_by, target_audience, created_at, updated_at) FROM stdin;
+=======
+COPY public.announcements (id, title, message, priority, audience, expiry_date, image, status, created_by, updated_by, created_at, updated_at) FROM stdin;
+17	Mkesha mkesha	Mkesha mkesha wa mwaka 1212	normal	all	2026-02-13	announcements/1770733069_698b3e0d119e1.jpg	active	1	1	2026-02-10 14:17:50	2026-02-10 14:34:03
+20	NEW NEW NEW NEW	NEW NEW NEW	normal	all	\N	\N	active	1	1	2026-02-10 14:46:55	2026-02-10 14:46:55
+>>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
 \.
 
 
@@ -465,10 +550,13 @@ COPY public.jobs (id, queue, payload, attempts, reserved_at, available_at, creat
 --
 
 COPY public.migrations (id, migration, batch) FROM stdin;
+<<<<<<< HEAD
 1	0001_01_01_000000_create_users_table	1
 2	0001_01_01_000001_create_cache_table	1
 3	0001_01_01_000002_create_jobs_table	1
 4	2024_03_15_000000_add_profile_fields_to_users_table	1
+=======
+>>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
 14	0001_01_01_000000_create_users_table	1
 15	0001_01_01_000001_create_cache_table	1
 16	0001_01_01_000002_create_jobs_table	1
@@ -480,7 +568,13 @@ COPY public.migrations (id, migration, batch) FROM stdin;
 22	2026_02_02_073833_add_missing_user_fields	2
 24	2026_02_02_081453_add_missing_columns_to_payment_accounts	3
 25	2026_02_03_082352_create_payments_table	4
+<<<<<<< HEAD
 26	2026_02_04_211102_create_announcements_table	5
+=======
+28	2026_02_04_211102_create_announcements_table	5
+29	2026_02_08_154413_add_payment_reference_columns_to_accounts_table	5
+30	2026_02_10_182456_add_avatar_column_to_users_table	6
+>>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
 \.
 
 
@@ -497,6 +591,10 @@ COPY public.password_reset_tokens (email, token, created_at) FROM stdin;
 --
 
 COPY public.payments (id, user_id, payment_type, amount, description, payment_method, sender_name, installment_type, payment_year, attachment, status, created_at, updated_at) FROM stdin;
+<<<<<<< HEAD
+=======
+8	2	membership	2000.00	2000\n\nAdmin Approval Comments: Full Paid	mobile_9	Mr Watson	full	2026	payments/payment_1770582709_11 copy.jpg	completed	2026-02-08 20:31:49	2026-02-08 20:37:18
+>>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
 \.
 
 
@@ -505,7 +603,11 @@ COPY public.payments (id, user_id, payment_type, amount, description, payment_me
 --
 
 COPY public.sessions (id, user_id, ip_address, user_agent, payload, last_activity) FROM stdin;
+<<<<<<< HEAD
 vYWq9hwX2m8LdGdLRB3ULgNDgN75NQ5nyv3o7tZe	1	127.0.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36	YTo0OntzOjY6Il90b2tlbiI7czo0MDoiSjRldXNSdEc5Z0xWM0pmMzBORG4wdlkwd2tkVERhalpBSGNmSXVPeiI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6NDQ6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9hZG1pbi9wYXltZW50LWFjY291bnRzIjtzOjU6InJvdXRlIjtzOjI4OiJhZG1pbi5wYXltZW50LWFjY291bnRzLmluZGV4Ijt9czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6MTt9	1770459341
+=======
+iCyhtc8zYZ5laMsQTkoAj5vvb5mcLwNmJfsbYuLh	\N	127.0.0.1	Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/144.0.0.0 Safari/537.36	YTozOntzOjY6Il90b2tlbiI7czo0MDoibXJmeGNRUG4xNmxVeXJHb2xTRDcxQjJLOTJ5VElNMWRkS2Nzb2xwUSI7czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo5OiJfcHJldmlvdXMiO2E6Mjp7czozOiJ1cmwiO3M6MzA6Imh0dHA6Ly9sb2NhbGhvc3Q6ODAwMC9yZWdpc3RlciI7czo1OiJyb3V0ZSI7Tjt9fQ==	1770748664
+>>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
 \.
 
 
@@ -513,19 +615,40 @@ vYWq9hwX2m8LdGdLRB3ULgNDgN75NQ5nyv3o7tZe	1	127.0.0.1	Mozilla/5.0 (Windows NT 10.
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: postgres
 --
 
+<<<<<<< HEAD
 COPY public.users (id, name, email, email_verified_at, password, remember_token, created_at, updated_at, phone_number, gender, home_diocese, year_of_study, role, registration_number, profile_picture, membership_status, registration_date) FROM stdin;
 16	Watson Boniface	watsonboniface90@yahoo.com	\N	$2y$12$vpYqBrSyp0c1aBzWqhMZnun2UhQSmLyIkEhLYWNRJnqVifvubsWRO	\N	2026-04-07 17:10:44	2026-04-07 17:10:44	255716294829	Male	Roman Catholic	Graduate	admin	20211015021	1775581844_12345.jpg	Active	\N
 17	Subira Kalinga	subirakalinga@gmail.com	\N	$2y$12$zXeExzizGVrrdzCcN02CXOo1YwkHuOiBxbKAM4L9antohEJ.KA14u	\N	2026-04-07 17:32:07	2026-04-07 17:32:07	255716294801	Female	Roman Catholic	Year 2	member	TMCS/0008/2026	1775583127_421.jpg	Active	2026-04-07
 18	John Silvester	johnmariseli7@gmail.com	\N	$2y$12$aw/UOlPlPzHQSF7DLpVEwuWxILOT.vpJR/cdZeDGye9dMVrw5Zgby	\N	2026-04-07 17:34:47	2026-04-07 17:35:51	255718772801	Male	Roman Catholic	Year 1	admin	TMCS/2019/2023	1775583287_JOHN.jpg	Active	\N
 19	Manase Mitingi	manasemitingi@gmail.com	\N	$2y$12$KaWbOFp9DEkZyD8H6l7YmuGIG83EIgFISuDdTjPutJs42NDpuhpXK	\N	2026-04-07 17:54:53	2026-04-07 17:54:53	255716294802	Male	Roman Catholic	Graduate	leader	TMCS/0001/2019	1775584493_1c547e70-b6ef-4eaa-918d-18a65016e5fd.jpg	Active	2026-04-07
+=======
+COPY public.users (id, name, email, email_verified_at, password, remember_token, created_at, updated_at, role, registration_number, home_diocese, phone_number, profile_picture, registration_date, gender, year_of_study, address, date_of_birth, membership_status, avatar) FROM stdin;
+1	John Silvester	johnmariseli7@gmail.com	\N	$2y$12$uGI85KpvP.7XH7Bw6xw20ujaN.wOsE1SCkEQxZ5CutaLH.ti3xOAq	\N	2026-02-02 07:40:18	2026-02-10 18:25:45	admin	TMCS/2019/2024	Roman Catholic	255718772801	1770018018_JOHN.jpg	\N	Male	Year 1	\N	\N	Active	john_silvester.jpg
+2	Watson Boniface	watsonboniface90@yahoo.com	\N	$2y$12$tfctBzdXDNJQJse3R3p4F.J8zXt6gdIjmA2CGarIQ6hFSyDpl1R36	\N	2026-02-02 07:51:42	2026-02-10 18:25:45	leader	TMCS/0001/2019	Moravian	255716294829	1770018702_a712790d-e112-4bbe-a525-091b804f8c14.jpg	\N	Male	Graduate	\N	\N	Active	watson_boniface.jpg
+21	Subira John	subirajohn@gmail.com	\N	$2y$12$uN1lZHK3PVZs.f9sB0hfbeGGBG7ko1yw.oeuyEYNoULGyX9KsDk/q	\N	2026-02-10 17:37:15	2026-02-10 18:25:45	member	TMCS/2019/2023	Roman Catholic	255716294801	1770745035_421.jpg	\N	Female	Year 2	\N	\N	Active	subira_john.jpg
+>>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
 \.
+
+
+--
+<<<<<<< HEAD
+-- Name: announcements_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.announcements_id_seq', 1, false);
+=======
+-- Name: accounts_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
+--
+
+SELECT pg_catalog.setval('public.accounts_id_seq', 9, true);
 
 
 --
 -- Name: announcements_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.announcements_id_seq', 1, false);
+SELECT pg_catalog.setval('public.announcements_id_seq', 22, true);
+>>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
 
 
 --
@@ -546,21 +669,49 @@ SELECT pg_catalog.setval('public.jobs_id_seq', 1, false);
 -- Name: migrations_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
+<<<<<<< HEAD
 SELECT pg_catalog.setval('public.migrations_id_seq', 26, true);
+=======
+SELECT pg_catalog.setval('public.migrations_id_seq', 30, true);
+>>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
 
 
 --
 -- Name: payments_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
+<<<<<<< HEAD
 SELECT pg_catalog.setval('public.payments_id_seq', 1, false);
+=======
+SELECT pg_catalog.setval('public.payments_id_seq', 16, true);
+>>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
 
 
 --
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
+<<<<<<< HEAD
 SELECT pg_catalog.setval('public.users_id_seq', 19, true);
+=======
+SELECT pg_catalog.setval('public.users_id_seq', 26, true);
+
+
+--
+-- Name: accounts accounts_account_number_key; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.accounts
+    ADD CONSTRAINT accounts_account_number_key UNIQUE (account_number);
+
+
+--
+-- Name: accounts accounts_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.accounts
+    ADD CONSTRAINT accounts_pkey PRIMARY KEY (id);
+>>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
 
 
 --
@@ -676,6 +827,7 @@ ALTER TABLE ONLY public.users
 
 
 --
+<<<<<<< HEAD
 -- Name: announcements_priority_index; Type: INDEX; Schema: public; Owner: postgres
 --
 
@@ -694,6 +846,26 @@ CREATE INDEX announcements_status_starts_at_ends_at_index ON public.announcement
 --
 
 CREATE INDEX announcements_target_audience_index ON public.announcements USING btree (target_audience);
+=======
+-- Name: announcements_audience_status_index; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX announcements_audience_status_index ON public.announcements USING btree (audience, status);
+
+
+--
+-- Name: announcements_priority_status_index; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX announcements_priority_status_index ON public.announcements USING btree (priority, status);
+
+
+--
+-- Name: announcements_status_created_at_index; Type: INDEX; Schema: public; Owner: postgres
+--
+
+CREATE INDEX announcements_status_created_at_index ON public.announcements USING btree (status, created_at);
+>>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
 
 
 --
@@ -775,8 +947,31 @@ ALTER TABLE ONLY public.announcements
 
 
 --
+<<<<<<< HEAD
 -- PostgreSQL database dump complete
 --
 
 \unrestrict qMLeROoPjDVwxaOoC5hFBfGLXHehuqEmcsj5tv7122HklUZWzAa0gK4aMHd1Ock
+=======
+-- Name: announcements announcements_updated_by_foreign; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.announcements
+    ADD CONSTRAINT announcements_updated_by_foreign FOREIGN KEY (updated_by) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: payments payments_user_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.payments
+    ADD CONSTRAINT payments_user_id_foreign FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- PostgreSQL database dump complete
+--
+
+\unrestrict SyaOPf3Ku3XLOOq0c2klEJWWE7P7Ltgb5ATgloVD2kRsaS6CJcDtNU8B2dxSwG4
+>>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
 

@@ -8,6 +8,7 @@
     },
     "devDependencies": {
         "@tailwindcss/vite": "^4.0.0",
+<<<<<<< HEAD
         "@vitejs/plugin-vue": "^6.0.5",
         "autoprefixer": "^10.4.23",
         "axios": "^1.11.0",
@@ -16,5 +17,14 @@
         "postcss": "^8.5.6",
         "tailwindcss": "^4.1.18",
         "vite": "^7.3.2"
+=======
+        "autoprefixer": "^10.4.23",
+        "axios": "^1.11.0",
+        "concurrently": "^9.0.1",
+        "laravel-vite-plugin": "^2.0.0",
+        "postcss": "^8.5.6",
+        "tailwindcss": "^4.1.18",
+        "vite": "^7.0.7"
+>>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
     }
 }
