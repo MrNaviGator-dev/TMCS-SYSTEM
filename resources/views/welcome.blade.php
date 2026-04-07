@@ -309,7 +309,20 @@
 
     <!-- Footer -->
     <footer class="footer">
-        <p class="footer-text">@ 2026 MrNaviGator DigitalHub@2026 | For Better Services</p>
+        <p class="footer-text">TMCS-SYSTEM @ 2026 MrNaviGator DigitalHub | 
+            <a href="https://web.facebook.com/watson.boniface.593507" target="_blank" class="social-icon" title="Facebook">
+                <i class="bi bi-facebook"></i>
+            </a>
+            <a href="https://www.instagram.com/01mr_nsembo/" target="_blank" class="social-icon" title="Instagram">
+                <i class="bi bi-instagram"></i>
+            </a>
+            <a href="https://twitter.com" target="_blank" class="social-icon" title="Twitter">
+                <i class="bi bi-twitter"></i>
+            </a>
+            <a href="https://wa.me/255716294829" target="_blank" class="social-icon" title="WhatsApp">
+                <i class="bi bi-whatsapp"></i>
+            </a>
+        </p>
     </footer>
 
     <style>
@@ -334,6 +347,25 @@
         /* font-style: italic; */
         letter-spacing: 0.5px;
     }
+
+    .social-icon {
+        color: #0066cc;
+        text-decoration: none;
+        font-size: 1.1rem;
+        margin: 0 0.3rem;
+        transition: all 0.3s ease;
+        display: inline-block;
+    }
+
+    .social-icon:hover {
+        color: #0056b3;
+        transform: scale(1.2);
+    }
+
+    .social-icon:nth-child(1):hover { color: #1877f2; } /* Facebook */
+    .social-icon:nth-child(2):hover { color: #e4405f; } /* Instagram */
+    .social-icon:nth-child(3):hover { color: #1da1f2; } /* Twitter */
+    .social-icon:nth-child(4):hover { color: #25d366; } /* WhatsApp */
     </style>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
