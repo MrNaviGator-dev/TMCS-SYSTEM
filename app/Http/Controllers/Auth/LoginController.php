@@ -43,6 +43,7 @@ class LoginController extends Controller
                 return back()->with('error', 'Invalid Username or password')->withInput();
             }
 
+            
             // Check password
             if (!Hash::check($password, $user->password)) {
                 \Log::warning("Login failed: Invalid password for Username: {$phoneNumber}");

@@ -16,13 +16,8 @@ class ReportController extends Controller
     try {
         \Log::info('Generating general report...');
         
-<<<<<<< HEAD
-        // Get statistics (excluding user ID 16)
+// Get statistics (excluding user ID 16)
         $totalUsers = User::where('id', '!=', 16)->count();
-=======
-        // Get statistics
-        $totalUsers = User::count();
->>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
         $totalPayments = Payment::where('status', 'completed')->sum('amount');
         $pendingPayments = Payment::where('status', 'pending')->count();
         $completedPayments = Payment::where('status', 'completed')->count();
@@ -310,8 +305,7 @@ class ReportController extends Controller
     public function generateMemberReport(Request $request)
     {
         try {
-<<<<<<< HEAD
-            // Get member statistics (excluding user ID 16)
+// Get member statistics (excluding user ID 16)
             $activeMembers = User::where('membership_status', 'Active')->where('id', '!=', 16)->count();
             $newMembers = User::where('created_at', '>=', now()->subDays(30))->where('id', '!=', 16)->count();
             $pendingMembers = User::where('membership_status', 'Pending')->where('id', '!=', 16)->count();
@@ -319,16 +313,6 @@ class ReportController extends Controller
             
             // Get member details (excluding user ID 16)
             $members = User::where('id', '!=', 16)->orderBy('created_at', 'desc')->get();
-=======
-            // Get member statistics
-            $activeMembers = User::where('membership_status', 'Active')->count();
-            $newMembers = User::where('created_at', '>=', now()->subDays(30))->count();
-            $pendingMembers = User::where('membership_status', 'Pending')->count();
-            $premiumMembers = User::where('membership_status', 'Premium')->count();
-            
-            // Get member details
-            $members = User::orderBy('created_at', 'desc')->get();
->>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
             
             // Create PDF using FPDF
             require_once base_path('fpdf186/fpdf.php');

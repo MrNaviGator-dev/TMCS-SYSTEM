@@ -7,6 +7,17 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\ForgotPasswordController;
 use App\Http\Controllers\AnnouncementController;
 
+// Debug route for checking logs
+Route::get('/debug/logs', function() {
+    $logFile = storage_path('logs/laravel.log');
+    if (file_exists($logFile)) {
+        $lines = file($logFile);
+        $lastLines = array_slice($lines, -50);
+        return implode('', $lastLines);
+    }
+    return 'Log file not found.';
+});
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -144,6 +155,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/users/update', [\App\Http\Controllers\Admin\UserManagementController::class, 'updateUser'])->name('admin.users.update');
         Route::post('/payments/top-up', [\App\Http\Controllers\Admin\UserManagementController::class, 'processTopUp'])->name('admin.payments.top-up');
         Route::get('/payments/all', [\App\Http\Controllers\Admin\PaymentController::class, 'getAllPayments'])->name('admin.payments.all');
+        Route::get('/users/all', [\App\Http\Controllers\Admin\UserManagementController::class, 'getAllUsers'])->name('admin.users.all');
         Route::post('/payments/{paymentId}/approve', [\App\Http\Controllers\Admin\PaymentController::class, 'approvePayment'])->name('admin.payments.approve');
         Route::post('/payments/{paymentId}/reject', [\App\Http\Controllers\Admin\PaymentController::class, 'rejectPayment'])->name('admin.payments.reject');
         Route::post('/payments/store-personal', [\App\Http\Controllers\Admin\PaymentController::class, 'storePersonalPayment'])->name('admin.payments.store-personal');

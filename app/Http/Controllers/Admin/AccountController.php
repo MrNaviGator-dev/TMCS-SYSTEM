@@ -50,14 +50,25 @@ class AccountController extends Controller
     public function store(Request $request)
     {
         try {
+            // Debug: Log all incoming data
+            \Log::info('=== ACCOUNT STORE DEBUG ===');
+            \Log::info('All request data: ' . json_encode($request->all()));
+            \Log::info('network_bank specifically: ' . $request->input('network_bank'));
+            \Log::info('==========================');
+            
             $validated = $request->validate([
                 'account_type' => 'required|in:mobile,bank',
                 'account_number' => 'required|string|max:30',
                 'account_name' => 'required|string|max:100',
+                'network_bank' => 'required_if:account_type,mobile|required_if:account_type,bank|string|max:100',
                 'status' => 'required|in:active,inactive'
             ]);
 
+            \Log::info('Validated data: ' . json_encode($validated));
+
             $account = Account::create($validated);
+
+            \Log::info('Created account: ' . json_encode($account->toArray()));
 
             return response()->json([
                 'success' => true,
@@ -66,10 +77,11 @@ class AccountController extends Controller
             ]);
 
         } catch (\Exception $e) {
-            Log::error("Failed to create account: " . $e->getMessage());
+            \Log::error("Failed to create account: " . $e->getMessage());
+            \Log::error("Stack trace: " . $e->getTraceAsString());
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to create account'
+                'message' => 'Failed to create account: ' . $e->getMessage()
             ], 500);
         }
     }
@@ -87,6 +99,7 @@ class AccountController extends Controller
                 // 'sender_name' => 'required|string|max:50',
                 'account_number' => 'required|string|max:30',
                 'account_name' => 'required|string|max:100',
+                'network_bank' => 'required_if:account_type,mobile|required_if:account_type,bank|string|max:100',
                 // 'branch_name' => 'nullable|string|max:100',
                 'status' => 'required|in:active,inactive'
             ]);
@@ -103,7 +116,7 @@ class AccountController extends Controller
             Log::error("Failed to update account: " . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'message' => 'Failed to update account'
+                'message' => 'Failed to update account: ' . $e->getMessage()
             ], 500);
         }
     }

@@ -30,39 +30,23 @@ class DashboardController extends Controller
         \Log::info('User registration_number: ' . ($user->registration_number ?? 'NULL'));
         \Log::info('User membership_status: ' . ($user->membership_status ?? 'NULL'));
         
-<<<<<<< HEAD
-        // Get user data (excluding user ID 16)
+// Get user data (excluding user ID 16)
         $activeUsers = User::where('membership_status', 'Active')->where('id', '!=', 16)->count();
         $pendingApprovalUsers = User::where('id', '!=', 16)->orderBy('created_at', 'desc')->get(); // Fetch all users for display
         $pendingUsers = User::where('membership_status', 'Pending')->where('id', '!=', 16)->count(); // Real pending users count
-=======
-        // Get user statistics
-        $totalUsers = User::count();
-        $activeUsers = User::where('membership_status', 'Active')->count();
-        $pendingApprovalUsers = User::orderBy('created_at', 'desc')->get(); // Fetch all users for display
-        $pendingUsers = User::where('membership_status', 'Pending')->count(); // Real pending users count
->>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
         
         // Get payment statistics
         $totalPayments = Payment::where('status', 'completed')->sum('amount');
         $pendingPayments = Payment::where('status', 'pending')->count();
         $completedPayments = Payment::where('status', 'completed')->count();
         
-<<<<<<< HEAD
-        // Get member statistics (excluding user ID 16)
+// Get member statistics (excluding user ID 16)
         $totalUsers = User::where('id', '!=', 16)->count();
         $activeUsers = User::where('membership_status', 'Active')->where('id', '!=', 16)->count();
         $activeMembers = User::where('membership_status', 'Active')->where('id', '!=', 16)->count();
         $newMembers = User::where('created_at', '>=', now()->subDays(30))->where('id', '!=', 16)->count();
         $pendingMembers = User::where('membership_status', 'Pending')->where('id', '!=', 16)->count();
         $premiumMembers = User::where('membership_status', 'Premium')->where('id', '!=', 16)->count();
-=======
-        // Get member statistics
-        $activeMembers = User::where('membership_status', 'Active')->count();
-        $newMembers = User::where('created_at', '>=', now()->subDays(30))->count();
-        $pendingMembers = User::where('membership_status', 'Pending')->count();
-        $premiumMembers = User::where('membership_status', 'Premium')->count();
->>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
         
         // Debug: Check all possible membership statuses
         $allStatuses = User::pluck('membership_status')->unique();
@@ -70,13 +54,8 @@ class DashboardController extends Controller
         \Log::info('Pending members count: ' . $pendingMembers);
         \Log::info('Active members count: ' . $activeMembers);
         
-<<<<<<< HEAD
-        // Get all users for manage users section (excluding user ID 16)
+// Get all users for manage users section (excluding user ID 16)
         $allUsers = User::where('id', '!=', 16)->orderBy('created_at', 'desc')->get();
-=======
-        // Get all users for manage users section
-        $allUsers = User::orderBy('created_at', 'desc')->get();
->>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
         
         // Debug: Check if we have pending users
         if ($pendingApprovalUsers->isEmpty()) {
@@ -179,13 +158,17 @@ class DashboardController extends Controller
     
     public function checkSession(Request $request)
     {
-        if (Auth::check()) {
+        if (Auth::check() && Auth::user()->id != 16) {
             return response()->json([
                 'authenticated' => true,
                 'status' => 'session_valid',
                 'user' => Auth::user()
             ]);
         } else {
+            // If user ID 16 or not authenticated, force logout
+            if (Auth::check()) {
+                Auth::logout();
+            }
             return response()->json([
                 'authenticated' => false,
                 'status' => 'session_expired',

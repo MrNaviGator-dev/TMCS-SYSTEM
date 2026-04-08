@@ -276,6 +276,7 @@
             box-shadow: 0 5px 15px rgba(108, 92, 231, 0.3);
         }
 
+        
         .payment-form-section {
             display: none;
         }
@@ -1918,6 +1919,9 @@
                         <a href="#" class="list-group-item list-group-item-action" onclick="showMyProfile()">
                             <i class="bi bi-person me-2"></i>Personal Informations
                         </a>
+                        <a href="/member/profile" class="list-group-item list-group-item-action">
+                            <i class="bi bi-pencil me-2"></i>Edit Profile
+                        </a>
                         <a href="#" class="list-group-item list-group-item-action" onclick="showPaymentForm()">
                             <i class="bi bi-plus-circle me-2"></i>Make Payment
                         </a>
@@ -1925,7 +1929,7 @@
                             <i class="bi bi-clock-history me-2"></i>Payment History
                         </a>
                         <a href="#" class="list-group-item list-group-item-action" onclick="showPdfReports()">
-                            <i class="bi bi-file-pdf me-2"></i>PDF Reports
+                            <i class="bi bi-file-pdf me-2"></i>My Reports
                         </a>
                         <a href="#" class="list-group-item list-group-item-action" onclick="showAnnouncements()">
                             <i class="bi bi-megaphone me-2"></i>Announcements
@@ -2884,9 +2888,19 @@
             
             switch(installmentType) {
                 case 'full':
-                    amount = 2000;
-                    infoText = '<strong>Full Payment:</strong> Paying the complete membership fee of TZS 2,000. No further payments required.';
-                    description = 'Full membership fee payment - TZS 2,000';
+                    // Get the current amount from the input field (already set correctly above)
+                    amount = parseInt(amountInput.value);
+                    const paymentType = document.getElementById('paymentType').value;
+                    if (paymentType === 'membership') {
+                        infoText = '<strong>Full Payment:</strong> Paying the complete membership fee of TZS 2,000. No further payments required.';
+                        description = 'Full membership fee payment - TZS 2,000';
+                    } else if (paymentType === 'certificate') {
+                        infoText = '<strong>Full Payment:</strong> Paying the complete certificate fee of TZS 4,000. No further payments required.';
+                        description = 'Full certificate fee payment - TZS 4,000';
+                    } else if (paymentType === 'zaka') {
+                        infoText = '<strong>Full Payment:</strong> Paying the complete zaka of TZS 2,000. No further payments required.';
+                        description = 'Full zaka payment - TZS 2,000';
+                    }
                     break;
                 case 'installment1':
                     amount = 1000;

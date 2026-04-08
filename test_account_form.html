@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Account Form</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        .form-group { margin: 10px 0; }
+        label { display: block; margin-bottom: 5px; }
+        select, input { width: 300px; padding: 5px; }
+        button { padding: 10px 20px; background: #007bff; color: white; border: none; cursor: pointer; }
+        #debug { margin-top: 20px; padding: 10px; background: #f8f9fa; border: 1px solid #ddd; }
+    </style>
+</head>
+<body>
+    <h1>Test Account Form</h1>
+    
+    <form id="testForm">
+        <div class="form-group">
+            <label>Account Type:</label>
+            <select id="accountType" name="account_type" onchange="handleAccountTypeChange()">
+                <option value="">Select Type...</option>
+                <option value="mobile">Mobile Money</option>
+                <option value="bank">Bank Account</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Account Number:</label>
+            <input type="text" id="accountNumber" name="account_number" required>
+        </div>
+        
+        <div class="form-group">
+            <label>Account Name:</label>
+            <input type="text" id="accountName" name="account_name" required>
+        </div>
+        
+        <div class="form-group" id="networkBankField" style="display: none;">
+            <label id="networkBankLabel">Network/Bank:</label>
+            <select id="networkBank" name="network_bank">
+                <option value="">Select...</option>
+            </select>
+        </div>
+        
+        <div class="form-group">
+            <label>Status:</label>
+            <select id="status" name="status" required>
+                <option value="active">Active</option>
+                <option value="inactive">Inactive</option>
+            </select>
+        </div>
+        
+        <button type="submit">Test Form Submission</button>
+    </form>
+    
+    <div id="debug"></div>
+    
+    <script>
+        function handleAccountTypeChange() {
+            const accountType = document.getElementById('accountType').value;
+            const networkBankField = document.getElementById('networkBankField');
+            const networkBankLabel = document.getElementById('networkBankLabel');
+            const networkBankSelect = document.getElementById('networkBank');
+            
+            if (accountType === 'mobile') {
+                networkBankField.style.display = 'block';
+                networkBankLabel.textContent = 'Mobile Network';
+                networkBankSelect.innerHTML = `
+                    <option value="">Select Network...</option>
+                    <option value="M-Pesa">M-Pesa</option>
+                    <option value="Tigo Pesa">Tigo Pesa</option>
+                    <option value="Airtel Money">Airtel Money</option>
+                    <option value="Halopesa">Halopesa</option>
+                `;
+            } else if (accountType === 'bank') {
+                networkBankField.style.display = 'block';
+                networkBankLabel.textContent = 'Bank Name';
+                networkBankSelect.innerHTML = `
+                    <option value="">Select Bank...</option>
+                    <option value="NMB">NMB Bank</option>
+                    <option value="CRDB">CRDB Bank</option>
+                    <option value="NBC">National Bank of Commerce</option>
+                `;
+            } else {
+                networkBankField.style.display = 'none';
+                networkBankSelect.innerHTML = '<option value="">Select...</option>';
+            }
+        }
+        
+        document.getElementById('testForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            
+            // Ensure network_bank field is always included
+            if (!formData.has('network_bank')) {
+                const networkBankValue = document.getElementById('networkBank').value || '';
+                formData.append('network_bank', networkBankValue);
+            }
+            
+            const debugDiv = document.getElementById('debug');
+            debugDiv.innerHTML = '<h3>Form Data Submitted:</h3>';
+            
+            for (let [key, value] of formData.entries()) {
+                debugDiv.innerHTML += `<p><strong>${key}:</strong> ${value}</p>`;
+            }
+        });
+    </script>
+</body>
+</html>

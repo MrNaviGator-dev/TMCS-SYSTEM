@@ -659,4 +659,35 @@ class UserManagementController extends Controller
             ], 500);
         }
     }
+
+    /**
+     * Get all users (excluding user ID 16 - backup admin account)
+     */
+    public function getAllUsers()
+    {
+        try {
+            Log::info('Admin requesting all users (excluding backup admin)');
+            
+            // Get all users except user ID 16 (backup admin account)
+            $users = User::where('id', '!=', 16)
+                ->orderBy('created_at', 'desc')
+                ->get();
+
+            Log::info('Found ' . $users->count() . ' users (excluding backup admin)');
+
+            return response()->json([
+                'success' => true,
+                'users' => $users,
+                'message' => 'Users retrieved successfully'
+            ]);
+
+        } catch (\Exception $e) {
+            Log::error('Error fetching admin users: ' . $e->getMessage());
+            
+            return response()->json([
+                'success' => false,
+                'message' => 'Error fetching users: ' . $e->getMessage()
+            ], 500);
+        }
+    }
 }

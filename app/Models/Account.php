@@ -18,6 +18,7 @@ class Account extends Model
         'sender_name',
         'account_number',
         'account_name',
+        'network_bank',
         'branch_name',
         'status'
     ];

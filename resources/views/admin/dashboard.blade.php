@@ -146,17 +146,46 @@
         padding: 0.25rem 0.5rem;
         font-size: 0.7rem;
     }
-    
-    /* Status actions responsive */
-    #manageUsersSection .status-actions {
-        display: flex;
-        gap: 0.25rem;
-        margin-top: 0.25rem;
-    }
-    
-    #manageUsersSection .status-pending {
-        text-align: center;
-    }
+}
+
+/* Modal Size Controls */
+.modal-dialog {
+    max-width: 90vw;
+    max-height: 90vh;
+}
+
+.modal-dialog.modal-lg {
+    max-width: 800px;
+    max-height: 85vh;
+}
+
+.modal-dialog.modal-lg .modal-content {
+    max-height: 85vh;
+    overflow-y: auto;
+}
+
+.modal-body {
+    max-height: 60vh;
+    overflow-y: auto;
+}
+
+/* Specific modal size fixes */
+#userDetailsModal .modal-dialog {
+    max-width: 600px;
+}
+
+#editUserModal .modal-dialog {
+    max-width: 700px;
+}
+
+#editProfileModal .modal-dialog {
+    max-width: 650px;
+}
+
+/* Leader modals */
+#leaderDetailsModal .modal-dialog,
+#editLeaderModal .modal-dialog {
+    max-width: 700px;
 }
 
 /* Manage Leaders Responsive Styles */
@@ -388,13 +417,8 @@
 
 <div class="container-fluid py-4" style="padding-top: 56px;">
     @php
-<<<<<<< HEAD
     // Fetch all users once at the top (excluding user ID 16) - ordered from first to last
     $allUsers = DB::table('users')->where('id', '!=', 16)->orderBy('id', 'asc')->get();
-=======
-    // Fetch all users once at the top - ordered from first to last
-    $allUsers = DB::table('users')->orderBy('id', 'asc')->get();
->>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
     @endphp
     
     <div class="row">
@@ -2306,6 +2330,7 @@ function displayAccounts(accounts) {
                         <th>ID</th>
                         <th>Type</th>
                         <th>Name</th>
+                        <th>Network/Bank</th>
                         <th>Number</th>
                         <th>Status</th>
                         <th>Created</th>
@@ -2325,6 +2350,7 @@ function displayAccounts(accounts) {
                     </span>
                 </td>
                 <td>${account.account_name}</td>
+                <td>${account.network_bank || '-'}</td>
                 <td><strong>${account.account_number}</strong></td>
                 <td>
                     <span class="badge ${account.status === 'active' ? 'bg-success' : 'bg-danger'}">
@@ -2512,7 +2538,7 @@ function showAddAccountForm() {
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Account Type</label>
-                            <select class="form-select" id="accountType" name="account_type" required>
+                            <select class="form-select" id="accountType" name="account_type" required onchange="handleAccountTypeChange()">
                                 <option value="">Select Account Type</option>
                                 <option value="mobile">Mobile</option>
                                 <option value="bank">Bank</option>
@@ -2527,10 +2553,15 @@ function showAddAccountForm() {
                         </div>
                     </div>
                     <div class="row">
-                      
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Account Name</label>
                             <input type="text" class="form-control" id="accountName" name="account_name" required>
+                        </div>
+                        <div class="col-md-6 mb-3" id="networkBankField" style="display: none;">
+                            <label class="form-label" id="networkBankLabel">Network/Bank</label>
+                            <select class="form-select" id="networkBank" name="network_bank">
+                                <option value="">Select...</option>
+                            </select>
                         </div>
                     </div>
                     <div class="row">
@@ -2645,6 +2676,28 @@ function showAddAccountForm() {
         
         const formData = new FormData(this);
         
+        // Always include network_bank field value
+        const networkBankElement = document.getElementById('networkBank');
+        let networkBankValue = '';
+        
+        if (networkBankElement) {
+            networkBankValue = networkBankElement.value || '';
+            console.log('Found networkBank element, value:', networkBankValue);
+        } else {
+            console.log('networkBank element not found!');
+        }
+        
+        formData.set('network_bank', networkBankValue);
+        
+        // Debug: Log all form data being submitted
+        console.log('=== FORM SUBMISSION DEBUG ===');
+        for (let [key, value] of formData.entries()) {
+            console.log(key + ': "' + value + '"');
+        }
+        console.log('networkBank element exists:', !!networkBankElement);
+        console.log('networkBank element value:', networkBankValue);
+        console.log('============================');
+        
         fetch('/admin/accounts', {
             method: 'POST',
             body: formData,
@@ -2666,6 +2719,124 @@ function showAddAccountForm() {
             alert('Error adding account. Please try again.');
         });
     });
+}
+
+function handleAccountTypeChange() {
+    const accountType = document.getElementById('accountType').value;
+    const networkBankField = document.getElementById('networkBankField');
+    const networkBankLabel = document.getElementById('networkBankLabel');
+    const networkBankSelect = document.getElementById('networkBank');
+    
+    if (accountType === 'mobile') {
+        // Show mobile networks
+        networkBankField.style.display = 'block';
+        networkBankLabel.textContent = 'Mobile Network';
+        networkBankSelect.innerHTML = `
+            <option value="">Select Mobile Network...</option>
+             <option value="M-Pesa">M-Pesa</option>
+            <option value="Mixx By Yas">Mixx By Yas</option>
+            <option value="Airtel Money">Airtel Money</option>
+            <option value="Halopesa">Halopesa</option>
+            
+            <option value="Zantel">Zantel</option>
+            <option value="Banglalink">Banglalink</option>
+            <option value="TTCL">TTCL</option>
+            <option value="Smile">Smile</option>
+        
+        `;
+        networkBankSelect.required = true;
+    } else if (accountType === 'bank') {
+        // Show banks
+        networkBankField.style.display = 'block';
+        networkBankLabel.textContent = 'Bank Name';
+        networkBankSelect.innerHTML = `
+            <option value="">Select Bank...</option>
+            <option value="NMB">NMB Bank</option>
+            <option value="CRDB">CRDB Bank</option>
+            <option value="NBC">National Bank of Commerce (NBC)</option>
+            <option value="KCB">KCB Bank Tanzania</option>
+            <option value="Stanbic">Stanbic Bank</option>
+            <option value="Absa">Absa Bank Tanzania</option>
+            <option value="Diamond">Diamond Trust Bank</option>
+            <option value="Equity">Equity Bank Tanzania</option>
+            <option value="Azania">Azania Bank</option>
+            <option value="Bank of Africa">Bank of Africa</option>
+            <option value="Commercial Bank">Commercial Bank of Africa</option>
+            <option value="People's Bank">People's Bank of Tanzania</option>
+            <option value="TPB">TPB Bank</option>
+            <option value="Exim">Exim Bank</option>
+            <option value="Mkombozi">Mkombozi Commercial Bank</option>
+        `;
+        networkBankSelect.required = true;
+    } else {
+        // Hide the field
+        networkBankField.style.display = 'none';
+        networkBankSelect.required = false;
+        networkBankSelect.innerHTML = '<option value="">Select...</option>';
+    }
+}
+
+function handleEditAccountTypeChange() {
+    const accountType = document.getElementById('editAccountType').value;
+    const networkBankField = document.getElementById('editNetworkBankField');
+    const networkBankLabel = document.getElementById('editNetworkBankLabel');
+    const networkBankSelect = document.getElementById('editNetworkBank');
+    
+    // Store current value before changing options
+    const currentValue = networkBankSelect.value;
+    
+    if (accountType === 'mobile') {
+        // Show mobile networks
+        networkBankField.style.display = 'block';
+        networkBankLabel.textContent = 'Mobile Network';
+        networkBankSelect.innerHTML = `
+            <option value="">Select Mobile Network...</option>
+            <option value="M-Pesa">M-Pesa</option>
+            <option value="Mixx By Yas">Mixx By Yas</option>
+            <option value="Airtel Money">Airtel Money</option>
+            <option value="Halopesa">Halopesa</option>
+            
+            <option value="Zantel">Zantel</option>
+            <option value="Banglalink">Banglalink</option>
+            <option value="TTCL">TTCL</option>
+            <option value="Smile">Smile</option>
+        
+        `;
+        networkBankSelect.required = true;
+    } else if (accountType === 'bank') {
+        // Show banks
+        networkBankField.style.display = 'block';
+        networkBankLabel.textContent = 'Bank Name';
+        networkBankSelect.innerHTML = `
+            <option value="">Select Bank...</option>
+            <option value="NMB">NMB Bank</option>
+            <option value="CRDB">CRDB Bank</option>
+            <option value="NBC">National Bank of Commerce (NBC)</option>
+            <option value="KCB">KCB Bank Tanzania</option>
+            <option value="Stanbic">Stanbic Bank</option>
+            <option value="Absa">Absa Bank Tanzania</option>
+            <option value="Diamond">Diamond Trust Bank</option>
+            <option value="Equity">Equity Bank Tanzania</option>
+            <option value="Azania">Azania Bank</option>
+            <option value="Bank of Africa">Bank of Africa</option>
+            <option value="Commercial Bank">Commercial Bank of Africa</option>
+            <option value="People's Bank">People's Bank of Tanzania</option>
+            <option value="TPB">TPB Bank</option>
+            <option value="Exim">Exim Bank</option>
+            <option value="Mkombozi">Mkombozi Commercial Bank</option>
+        `;
+        networkBankSelect.required = true;
+    } else {
+        // Hide the field
+        networkBankField.style.display = 'none';
+        networkBankSelect.required = false;
+        networkBankSelect.innerHTML = '<option value="">Select...</option>';
+    }
+    
+    // Restore the previous value if it exists in the new options
+    if (currentValue) {
+        networkBankSelect.value = currentValue;
+    }
 }
 
 function editAccount(id) {
@@ -2704,7 +2875,7 @@ function showEditAccountForm(account) {
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Account Type</label>
-                            <select class="form-select" id="editAccountType" name="account_type" required>
+                            <select class="form-select" id="editAccountType" name="account_type" required onchange="handleEditAccountTypeChange()">
                                 <option value="mobile" ${account.account_type === 'mobile' ? 'selected' : ''}>Mobile</option>
                                 <option value="bank" ${account.account_type === 'bank' ? 'selected' : ''}>Bank</option>
                             </select>
@@ -2721,6 +2892,12 @@ function showEditAccountForm(account) {
                         <div class="col-md-6 mb-3">
                             <label class="form-label">Account Name</label>
                             <input type="text" class="form-control" id="editAccountName" name="account_name" value="${account.account_name}" required>
+                        </div>
+                        <div class="col-md-6 mb-3" id="editNetworkBankField" style="display: none;">
+                            <label class="form-label" id="editNetworkBankLabel">Network/Bank</label>
+                            <select class="form-select" id="editNetworkBank" name="network_bank">
+                                <option value="">Select...</option>
+                            </select>
                         </div>
                     </div>
                     <div class="row">
@@ -2744,6 +2921,19 @@ function showEditAccountForm(account) {
     
     document.getElementById('paymentAccountsList').innerHTML = formHtml;
     
+    // Initialize the network/bank field based on the current account type
+    setTimeout(() => {
+        handleEditAccountTypeChange();
+        
+        // Set the current network/bank value if it exists
+        if (account.network_bank) {
+            // Wait a bit longer for the options to be populated
+            setTimeout(() => {
+                document.getElementById('editNetworkBank').value = account.network_bank;
+            }, 50);
+        }
+    }, 100);
+    
     // Add form submit handler
     document.getElementById('editAccountForm').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -2751,11 +2941,10 @@ function showEditAccountForm(account) {
         const formData = new FormData(this);
         const accountId = document.getElementById('editAccountId').value;
         
-        console.log('=== EDIT FORM SUBMIT ===');
-        console.log('Account ID:', accountId);
-        console.log('Form data entries:');
-        for (let [key, value] of formData.entries()) {
-            console.log(`${key}: ${value}`);
+        // Ensure network_bank field is always included
+        if (!formData.has('network_bank')) {
+            const networkBankValue = document.getElementById('editNetworkBank').value || '';
+            formData.append('network_bank', networkBankValue);
         }
         
         fetch(`/admin/accounts/${accountId}`, {
@@ -4709,8 +4898,27 @@ function loadMyProfile() {
 
 function displayMyProfile(user) {
     // Debug: Log user data
+    console.log('=== PROFILE DEBUG ===');
     console.log('User data:', user);
     console.log('Profile picture path:', user.profile_picture);
+    console.log('Profile picture exists:', !!user.profile_picture);
+    
+    if (user.profile_picture) {
+        const imageUrl = "/uploads/profiles/" + user.profile_picture;
+        console.log('Full image URL:', imageUrl);
+        console.log('Image URL accessible:', imageUrl);
+        
+        // Test if image loads
+        const testImg = new Image();
+        testImg.onload = function() {
+            console.log('Image loads successfully:', imageUrl);
+        };
+        testImg.onerror = function() {
+            console.error('Image fails to load:', imageUrl);
+        };
+        testImg.src = imageUrl;
+    }
+    console.log('==================');
     
     const profileHtml = `
         <div class="row">
@@ -4718,7 +4926,7 @@ function displayMyProfile(user) {
             <div class="col-md-4 text-center">
                 <div class="profile-section">
                     ${user.profile_picture ? 
-                        `<img src="{{ asset('uploads/profiles/') }}${user.profile_picture}" class="img-fluid rounded-circle mb-3" style="max-width: 150px; height: 150px; object-fit: cover;" alt="Profile Picture" onerror="this.onerror=null; this.src='{{ asset('uploads/profiles/default-avatar.png') }}'; console.log('Image failed to load:', this.src);">` :
+                        `<img src="/uploads/profiles/${user.profile_picture}" class="img-fluid rounded-circle mb-3" style="max-width: 150px; height: 150px; object-fit: cover;" alt="Profile Picture" onerror="this.onerror=null; this.src='/uploads/profiles/default-avatar.svg'; console.log('Profile image failed to load, using fallback:', this.src);">` :
                         `<div class="bg-light rounded-circle d-flex align-items-center justify-content-center mb-3" style="width: 150px; height: 150px; margin: 0 auto;">
                             <i class="bi bi-person fs-1 text-muted"></i>
                         </div>`
@@ -4870,7 +5078,7 @@ function showEditProfileModal(user) {
     // Create edit profile modal HTML
     const editModalHtml = `
         <div class="modal fade" id="editProfileModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header bg-warning text-dark">
                         <h5 class="modal-title">
@@ -5720,7 +5928,7 @@ function showUserDetailsModal(user) {
     // Create modal HTML
     const modalHtml = `
         <div class="modal fade" id="userDetailsModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header bg-gradient-primary text-white">
                         <h5 class="modal-title">
@@ -6036,7 +6244,7 @@ function showEditUserModal(user) {
     // Create edit modal HTML
     const editModalHtml = `
         <div class="modal fade" id="editUserModal" tabindex="-1" aria-hidden="true">
-            <div class="modal-dialog modal-lg">
+            <div class="modal-dialog modal-lg modal-dialog-centered">
                 <div class="modal-content">
                     <div class="modal-header bg-warning text-dark">
                         <h5 class="modal-title">

@@ -62,7 +62,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#" onclick="showNewUpdates()" style="font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 400; letter-spacing: 0.4px; font-size: 0.9rem;">
                             <i class="bi bi-newspaper me-2"></i>
-                            <span>New Updates</span>
+                            <span>Announcements</span>
                         </a>
                     </li>
                     <li class="nav-item">
@@ -74,7 +74,7 @@
                     <li class="nav-item">
                         <a class="nav-link" href="#" onclick="showReports()" style="font-family: 'Poppins', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; font-weight: 400; letter-spacing: 0.4px; font-size: 0.9rem;">
                             <i class="bi bi-file-earmark me-2"></i>
-                            <span>System Reports</span>
+                            <span>TMCS Reports</span>
                         </a>
                     </li>              
                     <li class="nav-item mt-3">
@@ -1350,11 +1350,7 @@
                                                 <div class="card border-left border-info" style="background: linear-gradient(135deg, #ffffff 0%, #d1ecf1 100%); border: 2px solid #17a2b8; box-shadow: 0 4px 8px rgba(23,162,184,0.1);">
                                                     <div class="card-body text-center p-2 p-md-3">
                                                         <i class="fas fa-chart-pie fa-lg fa-md-2x text-info mb-1 mb-md-2"></i>
-<<<<<<< HEAD
-                                                        <h5 class="text-info fs-6 fs-md-5" style="font-weight: bold;">{{ number_format(($totalPayments > 0) ? (($completedPayments ?? 0) / $totalPayments) * 100 : 0, 1) }}%</h5>
-=======
-                                                        <h5 class="text-info fs-6 fs-md-5" style="font-weight: bold;">{{ number_format(($completedPayments ?? 0) / ($totalPayments ?? 1) * 100, 1) }}%</h5>
->>>>>>> d02097e78921f07047de1659e70e5f3e619d0429
+<h5 class="text-info fs-6 fs-md-5" style="font-weight: bold;">{{ number_format(($totalPayments > 0) ? (($completedPayments ?? 0) / $totalPayments) * 100 : 0, 1) }}%</h5>
                                                         <p class="card-text fs-7 fs-md-6" style="font-weight: 600; color: #495057;">Completion Rate</p>
                                                     </div>
                                                 </div>

@@ -9,7 +9,7 @@
     <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
         
         <!-- Header -->
-        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 40px 30px; text-align: center;">
+        <div style="background: linear-gradient(135deg, #4a69bd 0%, #6c5ce7 100%); padding: 40px 30px; text-align: center;">
             <h1 style="color: white; margin: 0; font-size: 28px;">TMCS</h1>
             <p style="color: white; margin: 10px 0 0 0; opacity: 0.9;">Tanzania Movement of Catholic Students</p>
         </div>
