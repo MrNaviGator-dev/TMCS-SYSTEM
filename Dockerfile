@@ -12,7 +12,10 @@ WORKDIR /var/www/html
 
 COPY . .
 
-RUN cp .env.example .env
+RUN cp .env.example .env && \
+    sed -i 's/SESSION_DRIVER=file/SESSION_DRIVER=cookie/' .env && \
+    sed -i 's/APP_ENV=local/APP_ENV=production/' .env && \
+    sed -i 's/APP_DEBUG=true/APP_DEBUG=false/' .env
 
 RUN composer install --no-dev --optimize-autoloader
 
