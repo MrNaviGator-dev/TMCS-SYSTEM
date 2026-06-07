@@ -12,10 +12,18 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('registration_number')->nullable()->unique()->after('email');
-            $table->string('home_diocese')->nullable()->after('registration_number');
-            $table->string('phone_number')->nullable()->after('home_diocese');
-            $table->string('profile_picture')->nullable()->after('phone_number');
+            if (!Schema::hasColumn('users', 'registration_number')) {
+                $table->string('registration_number')->nullable()->unique()->after('email');
+            }
+            if (!Schema::hasColumn('users', 'home_diocese')) {
+                $table->string('home_diocese')->nullable()->after('registration_number');
+            }
+            if (!Schema::hasColumn('users', 'phone_number')) {
+                $table->string('phone_number')->nullable()->after('home_diocese');
+            }
+            if (!Schema::hasColumn('users', 'profile_picture')) {
+                $table->string('profile_picture')->nullable()->after('phone_number');
+            }
         });
     }
 
@@ -25,7 +33,12 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['registration_number', 'home_diocese', 'phone_number', 'profile_picture']);
+            $columns = ['registration_number', 'home_diocese', 'phone_number', 'profile_picture'];
+            foreach ($columns as $column) {
+                if (Schema::hasColumn('users', $column)) {
+                    $table->dropColumn($column);
+                }
+            }
         });
     }
 };
